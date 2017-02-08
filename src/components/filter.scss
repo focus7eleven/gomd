@@ -1,0 +1,12 @@
+:local(.filter){
+  position: relative;
+  :local(.filterName){
+
+  }
+  :local(.filterItems){
+    position: absolute;
+    width: 100vw;
+    padding:15px 10px;
+    background: yellow;
+  }
+}

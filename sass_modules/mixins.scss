@@ -1,0 +1,84 @@
+@import "./theme.scss";
+
+@mixin loading {
+  width: 100%;
+  height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin headerWithoutFilter {
+  height: 35px;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  :local(.searchInput){
+    width: 300px;
+  }
+}
+
+@mixin body {
+  height: calc( 100% - 40px );
+  width: 100%;
+}
+
+@mixin tableDarkRow{
+  text-align: center;
+  background-color: #F5F5F5 !important;
+}
+
+@mixin tableLightRow {
+  text-align: center;
+  background-color: #FFFFFF !important;
+}
+
+@mixin tableColumn {
+  text-align: center;
+}
+
+@mixin editColumn {
+  text-align: center;
+  width: 200px
+}
+
+@mixin tableMsg {
+  position: absolute;
+  left: 10px;
+  bottom: 25px;
+}
+
+@mixin editButton {
+  background-color: $primary-color;
+  border-color: $primary-color;
+  margin-right: 10px;
+}
+
+@mixin deleteButton {
+  background-color: white;
+  border-color: $border-grey;
+  color: $warning-color;
+  &:hover{
+    color: white;
+    background-color: $warning-color;
+    border-color: $warning-color;
+  }
+}
+
+@mixin customFilterDropdown{
+  padding: 8px;
+  border-radius: 6px;
+  background: #fff;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, .2);
+}
+
+@mixin filterInput{
+  width: 150px;
+}
+
+@mixin highlight{
+  color: #f50;
+}

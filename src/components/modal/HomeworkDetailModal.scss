@@ -1,0 +1,61 @@
+:local(.container){
+  display: flex;
+  flex-direction: row;
+  padding-top: 8px;
+
+  :local(.column1){
+    border-right: 1px solid #E9E9E9;
+    width: 290px;
+  }
+
+  :local(.column2){
+    border-right: 1px solid #E9E9E9;
+    width: 310px;
+    padding-left: 20px;
+    >div{
+      height: 91%;
+    }
+  }
+
+  :local(.column3){
+    width: 300px;
+    padding-left: 20px;
+
+    :local(.verticalBox){
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 20px;
+      >span{
+        margin-bottom: 5px;
+      }
+      >textarea{
+        background-color: white;
+        color: #424242;
+      }
+    }
+  }
+
+  :local(.box){
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 24px;
+
+    >span:first-child{
+      font-size: 14px;
+      line-height: 28px;
+    }
+
+    >input{
+      background-color: white;
+      margin-left: 15px;
+      width: 210px;
+      color: #424242;
+    }
+    >textarea{
+      background-color: white;
+      margin-left: 15px;
+      width: 210px;
+      color: #424242;
+    }
+  }
+}

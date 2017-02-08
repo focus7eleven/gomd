@@ -1,0 +1,57 @@
+@import "~mixins.scss";
+
+:local(.container){
+  width: 100%;
+  height: 100%;
+
+  :local(.header){
+    @include headerWithoutFilter;
+  }
+
+  :local(.body){
+    height: calc( 100% - 40px );
+    width: 100%;
+    :local(.wrapper){
+      position:relative;
+      :local(.tableDarkRow){
+        @include tableDarkRow;
+      }
+      :local(.tableLightRow){
+        @include tableLightRow;
+      }
+      :local(.tableColumn){
+        @include tableColumn;
+      }
+      :local(.listColumn){
+        padding:16px 5px;
+        width: 150px;
+        text-align: center;
+      }
+      :local(.editColumn){
+        padding:16px 5px;
+        width: 200px;
+        text-align: center;
+        :local(.editAction){
+          display: flex;
+          justify-content: space-around;
+        }
+      }
+      :local(.tableMsg){
+        @include tableMsg;
+      }
+    }
+
+  }
+
+  :local(.editButton){
+    @include editButton;
+  }
+
+  :local(.deleteButton){
+    @include deleteButton;
+  }
+}
+:local(.permissionTree){
+  height: 300px;
+  overflow: scroll;
+}
