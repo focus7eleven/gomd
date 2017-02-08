@@ -5,4 +5,4 @@ dist/*
 !dist/index.html
 .idea/
 npm-debug.log
-.svn/*
+.svn/
