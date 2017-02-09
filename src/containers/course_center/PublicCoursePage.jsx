@@ -77,6 +77,7 @@ const PublicCoursePage = React.createClass({
     const tableBody = this.props.courseCenter.get('data').isEmpty()?[]:this.props.courseCenter.get('data').get('result').map((v,k) => ({
       key:k,
       ...v.toJS(),
+      num:k+1,
     })).toJS()
     return {
       tableHeader,

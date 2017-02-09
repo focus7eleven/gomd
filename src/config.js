@@ -226,7 +226,8 @@ const config = _.extend({
 		},
 		homework:{
 			course:{
-				existHomework:(subjectId,type='1')=>`${baseURL}/homework/course/existHomework?subjectId=${subjectId}&type=${type}`
+				existHomework:(subjectId,type='1')=>`${baseURL}/homework/course/existHomework?subjectId=${subjectId}&type=${type}`,
+				searchHomework:(subjectId,startTime,endTime,knowledgeId='',type='1')=>`${baseURL}/homework/course/existHomework?subjectId=${subjectId}&startTime=${startTime}&endTime=${endTime}&knowledgeId=${knowledgeId}&type=${type}`,
 			},
 			getHomeworkDetail:(homeworkId)=>`${baseURL}/homework/getHomeworkDetail?homeworkId=${homeworkId}`,
 			getHomeworkClass: (homeworkId) => `${baseURL}/homework/getClasses?homeworkId=${homeworkId}`,

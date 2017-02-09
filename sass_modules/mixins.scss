@@ -82,3 +82,10 @@
 @mixin highlight{
   color: #f50;
 }
+
+@mixin treeContainer {
+  min-width: 235px;
+  border-right: 1px solid $border-grey;
+  padding: 10px;
+  margin-right: 10px;
+}

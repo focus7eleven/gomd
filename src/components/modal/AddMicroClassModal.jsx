@@ -8,6 +8,7 @@ const Option = Select.Option
 const FormItem = Form.Item
 const Search = Input.Search
 
+//获取微课列表
 const getMicrovideo = (type,currentPage,pageShow,subjectId,gradeId,textbookId,search)=>{
   return fetch(config.api.microvideo.get(type,currentPage,pageShow,subjectId,gradeId,textbookId,search),{
     method:'get',
@@ -18,6 +19,7 @@ const getMicrovideo = (type,currentPage,pageShow,subjectId,gradeId,textbookId,se
   }).then(res => res.json())
 }
 
+//获取年级列表
 const getGradeList = (subjectList) => {
   return fetch(config.api.grade.getBySubject.get(subjectList),{
     method:'get',
@@ -28,8 +30,10 @@ const getGradeList = (subjectList) => {
   }).then(res => res.json())
 }
 
-const getTextbookList = (subjectId,term,gradeId,version,unit) =>{
-  return fetch(config.api.textbook.getTextBookByCondition(subjectId,term,gradeId,version,unit),{
+//获取章节列表
+
+const getTextbookList = (subjectId,gradeId,version,term,unit) =>{
+  return fetch(config.api.textbook.getTextBookByCondition(subjectId,gradeId,version,term,unit),{
     method:'get',
     headers:{
       'from':'nodejs',
@@ -62,6 +66,7 @@ const AddMicroClassModal = React.createClass({
       microVideo:List(),
     }
   },
+  //改变维克类型
   handleChangeMicroClassType(value){
     this.setState({
       microClassTypeOption:value,
@@ -73,14 +78,16 @@ const AddMicroClassModal = React.createClass({
       })
     })
   },
+  //改变学科
   handleChangeSubject(value){
     this.setState({
       subjectOption:value
     })
+
     Promise.all([
       getMicrovideo(this.state.microClassTypeOption,'1','10',value,'','',''),
       getGradeList(value),
-      getTextbookList(value,this.state.termOption||'',this.state.gradeOption||'',this.state.versionOption||'',''),
+      getTextbookList(value,this.state.gradeOption||'',this.state.versionOption||'',this.state.termOption||'',''),
     ]).then(result => {
       this.setState({
         microVideo:fromJS(result[0]),
@@ -89,13 +96,14 @@ const AddMicroClassModal = React.createClass({
       })
     })
   },
+  //选择版本
   handleChangeVersion(value){
     this.setState({
       versionOption:value
     })
     Promise.all([
-      getTextbookList(value,this.state.termOption||'',this.state.gradeOption||'',this.state.versionOption||'',''),
-      getMicrovideo(this.state.microClassTypeOption,'1','10',this.state.subjectOption,'','',''),
+      getTextbookList(this.state.subjectOption||'',this.state.gradeOption||'',value,this.state.termOption,''),
+      getMicrovideo(this.state.microClassTypeOption,'1','10',this.state.subjectOption||'',this.state.gradeOption||'',this.state.charpterOption||'',''),
     ]).then(result => {
       this.setState({
         charpterList:fromJS(result[0]),
@@ -103,22 +111,24 @@ const AddMicroClassModal = React.createClass({
       })
     })
   },
+  //改变年级
   handleChangeGrade(value){
     this.setState({
       gradeOption:value
     })
-    getMicrovideo(this.state.microClassTypeOption,'1','10',this.state.subjectOption,this.state.gradeOption,'','').then(res => {
+    getMicrovideo(this.state.microClassTypeOption,'1','10',this.state.subjectOption,value,'','').then(res => {
       this.setState({
         microVideo:fromJS(res)
       })
     })
   },
+  //改变学期
   handleChangeTerm(value){
     this.setState({
       termOption:value
     })
     Promise.all([
-      getTextbookList(this.state.subjectOption,value,this.state.gradeOption,this.state.versionOption,''),
+      getTextbookList(this.state.subjectOption||'',this.state.gradeOption||'',this.state.versionOption||'',value,''),
       getMicrovideo(this.state.microClassTypeOption,'1','10',this.state.subjectOption,this.state.gradeOption,this.state.charpterOption,'')
     ]).then(result => {
       this.setState({
@@ -131,7 +141,7 @@ const AddMicroClassModal = React.createClass({
     this.setState({
       charpterOption:value,
     })
-    getMicrovideo(this.state.microClassTypeOption,'1','10',this.state.subjectOption,this.state.gradeOption,this.state.charpterOption,'').then(res => {
+    getMicrovideo(this.state.microClassTypeOption,'1','10',this.state.subjectOption,this.state.gradeOption,value,'').then(res => {
       this.setState({
         microVideo:fromJS(res)
       })
@@ -249,8 +259,8 @@ const AddMicroClassModal = React.createClass({
                   <div className={styles.filterItem}>
                     <Select placeholder='选择章节课程' size="large" value={this.state.charpterOption||undefined} onChange={this.handleChangeCharpter}>
                     {
-                      this.state.charpterList.map(v => (
-                        <Option key={v.get('id')} value={v.get('id')} title={v.get('text')}>{v.get('text')}</Option>
+                      this.state.charpterList.map((v,k) => (
+                        <Option key={k} value={v.get('textbook_menu_id')} title={v.get('course')}>{v.get('course')}</Option>
                       ))
                     }
                     </Select>

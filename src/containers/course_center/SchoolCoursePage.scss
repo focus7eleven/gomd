@@ -6,10 +6,19 @@
 
   :local(.header){
     @include headerWithoutFilter;
+    border-bottom: 1px solid $border-grey;
+    height: 40px;
+    padding-bottom: 5px;
   }
 
   :local(.body){
     @include body;
+    display: flex;
+    flex-direction: row;
+    :local(.treeContainer){
+      // width: calc( 100% - 943px );
+      @include treeContainer;
+    }
   }
 
   :local(.tableColumn){

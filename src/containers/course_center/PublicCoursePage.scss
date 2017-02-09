@@ -18,10 +18,7 @@
 
     :local(.treeContainer){
       // width: calc( 100% - 943px );
-      min-width: 235px;
-      border-right: 1px solid $border-grey;
-      padding: 10px;
-      margin-right: 10px;
+      @include treeContainer;
     }
   }
 

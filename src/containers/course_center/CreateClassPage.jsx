@@ -206,6 +206,7 @@ const CreateClassPage = React.createClass({
     formData.append('video_content_id',this.state.videoHomeworkList.filter(v => v.get('type')=='video').map(v => v.get('id')).toJS().join(','))
     formData.append('homework_content_id',this.state.videoHomeworkList.filter(v => v.get('type')=='homework').map(v => v.get('homework_id')).toJS().join(','))
     formData.append('homeworkTypeList',this.state.videoHomeworkList.filter(v => v.get('type')=='homework').map(v => v.get('homework_id')+'|1').toJS().join(','))
+    formData.append('lesson_id',"")
     fetch(config.api.lesson.create,{
       method:'post',
       headers:{
@@ -369,7 +370,7 @@ const CreateClassPage = React.createClass({
               <Col span={24}>
                 <div className={styles.filterItem}>
                   <div ><span><Icon type="appstore" />课程说明</span></div>
-                  <Input value={this.state.courseDesc} onChange={(e)=>{this.setState({courseDesc:e.target.value})}} size='large' placeholder="请输入课程说明"/>
+                  <Input type='textarea' rows={2} value={this.state.courseDesc} onChange={(e)=>{this.setState({courseDesc:e.target.value})}} size='large' placeholder="请输入课程说明"/>
                 </div>
               </Col>
             </Row>
