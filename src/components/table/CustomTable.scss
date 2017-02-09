@@ -1,0 +1,33 @@
+@import "~mixins.scss";
+
+:local(.container) {
+
+  :local(.header) {
+    @include headerWithoutFilter;
+    :local(.filterItems) {
+      display: -webkit-flex; /* Safari */
+      display: flex;
+      flex-direction: row;
+      justify-content:flex-end;
+    }
+  }
+
+  :local(.wrapper) {
+    height: calc(100% - 40px);
+    width: 100%;
+    position: relative;
+
+    :local(.tableDarkRow) {
+      @include tableDarkRow;
+    }
+    :local(.tableLightRow) {
+      @include tableLightRow;
+    }
+    :local(.tableColumn) {
+      @include tableColumn;
+    }
+    :local(.tableMsg) {
+      @include tableMsg;
+    }
+  }
+}

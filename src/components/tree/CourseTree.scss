@@ -1,0 +1,18 @@
+:local(.container){
+  position: relative;
+  flex-grow: 2;
+  :local(.treeNode){
+    position:absolute;
+    font-size: 14px;
+  }
+}
+:local(.icon){
+  display: inline-block;
+  line-height: 16px;
+  text-align: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 8px;
+  background-color: #41DCA8;
+  margin-right: 10px;
+}

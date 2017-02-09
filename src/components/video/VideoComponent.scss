@@ -1,0 +1,99 @@
+:local(.videoComponent){
+  /* height: 200px; */
+  /* width: 254px; */
+  width: 100%;
+  height: 100%;
+  border: 1px solid #D9D9D9;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  :local(.videoContainer){
+    position:relative;
+    padding: 0;
+    border: none;
+    height: 162px;
+    width: 100%;
+    :local(.tag){
+      position:absolute;
+      top: 0;
+      right: 0;
+      z-index: 1;
+    }
+    :local(.microVideo){
+      top:0px;
+      left: 0px;
+      width: 100%;
+      height: 162px;
+      /* width: 252px; */
+      /* height: 142px; */
+    }
+    :local(.mask){
+      display: none;
+    }
+    &:hover{
+      // :local(.mask){
+      //   position: absolute;
+      //   bottom: 0;
+      //   left: 0;
+      //   z-index: 1;
+      //   color:white;
+      //   display: flex;
+      //   justify-content: space-between;
+      //   width: 100%;
+      //   padding:3px 5px;
+      //   font-size: 14px;
+      //   background-color: rgba(33, 25, 25, 0.36);
+      //   &:hover{
+      //     z-index: -1;
+      //   }
+      // }
+    }
+  }
+  :local(.description){
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    :local(.line){
+      width: calc( 100% - 20px );
+      height: 1px;
+      border-bottom: 1px solid #D9D9D9;
+      margin-left: 10px;
+      margin-right: 10px;
+      padding:0;
+    }
+    :local(.top){
+      flex-grow: 1;
+      display: flex;
+      padding: 10px 10px 0 10px;
+      justify-content: flex-start;;
+      /* overflow-x: auto; */
+      >span{
+        display: block;
+        font-size: 15px;
+        line-height: 14px;
+        margin-right: 10px;
+      }
+      >span:first-child{
+        flex-shrink: 0;
+      }
+      >span:nth-child(n+2){
+        flex-shrink: 1;
+        overflow-x: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    }
+    :local(.bottom){
+      flex-grow: 1;
+      display: flex;
+      padding: 5px 10px;
+      justify-content: space-between;
+      align-items: center;
+      >span{
+        display: block;
+        font-size: 14px;
+        line-height: 14px;
+      }
+    }
+  }
+}
