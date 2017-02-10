@@ -3,6 +3,7 @@ node_modules/
 .idea/
 dist/*
 !dist/index.html
+!dist/ueditor
 .idea/
 .svn/
 npm-debug.log
