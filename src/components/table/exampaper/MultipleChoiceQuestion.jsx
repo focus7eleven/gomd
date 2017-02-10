@@ -26,6 +26,12 @@ const MultipleChoiceQuestion = React.createClass({
       editingAnswerItem:[false,false,false,false],//编辑答案选项
     }
   },
+  componentDidMount(){
+    window.addEventListener('click',this.handleWindowEvent)
+  },
+  componentWillUnmount(){
+    window.removeEventListener('click',this.handleWindowEvent)
+  },
   getTableData(){
     const tableHeader = [{
       title:this.props.questionNo,
@@ -35,12 +41,14 @@ const MultipleChoiceQuestion = React.createClass({
       title:this.renderQuestion(),
       dataIndex:'answer',
       key:'answer',
-      render:(text,record)=>{
-        console.log("--->:",this.state.editingAnswerItem,record)
-        return (<div className={styles.answerItem} onClick={()=>{this.setState({
-          editingAnswerItem:this.state.editingAnswerItem.map((v,k) => k==record.key?!v:v)
-        })}}><div style={this.state.editingAnswerItem[record.key]?{display:'block'}:{display:'none'}}><Ueditor /></div><span style={this.state.editingAnswerItem[record.key]?{display:'none'}:{display:'block'}}>{text}</span></div>)
-      }
+      render:(text,record) => (
+        <div className={styles.question} onClick={(e)=>{e.stopPropagation();this.setState({
+          editingAnswerItem:this.state.editingAnswerItem.map((v,k) => k==record.key?!v:v)})}}>
+        {
+          this.state.editingAnswerItem[record.key]?<Ueditor />:<span >{text}</span>
+        }
+        </div>
+      )
     }]
     const tableBody = this.state.answerList.map((v,k) => ({
       answer:v.get('content'),
@@ -52,11 +60,19 @@ const MultipleChoiceQuestion = React.createClass({
       tableBody,
     }
   },
+  handleWindowEvent(){
+    this.setState({
+      editingQuestion:false,
+      editingAnswerItem:this.state.editingAnswerItem.map(v => false)
+    })
+  },
   renderQuestion(){
     console.log("-ninininiL:",this.state.editingQuestion)
     return (
-      <div className={styles.question} onClick={()=>{this.setState({editingQuestion:!this.state.editingQuestion})}}>
-        <div style={this.state.editingQuestion?{display:'block'}:{display:'none'}}><Ueditor /></div><span style={this.state.editingQuestion?{display:'none'}:{display:'block'}}>{this.state.question}</span>
+      <div className={styles.question} onClick={(e)=>{e.stopPropagation();this.setState({editingQuestion:true})}}>
+      {
+        this.state.editingQuestion?<Ueditor />:<span >输入题目</span>
+      }
       </div>
     )
   },
