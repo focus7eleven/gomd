@@ -10,6 +10,9 @@ const FormItem = Form.Item
 const Option = Select.Option
 const Search = Input.Search
 const CreateClassPage = React.createClass({
+  contextTypes: {
+    router: React.PropTypes.object
+  },
   getInitialState(){
     return {
       showHomeworkModal:false,
@@ -219,6 +222,7 @@ const CreateClassPage = React.createClass({
         notification.error({message:res.result})
       }else{
         notification.success({message:res.result})
+        this.context.router.push(type?`/index/courseCenter/schoolCourse`:`/index/courseCenter/courseInfo`)
       }
     })
   },

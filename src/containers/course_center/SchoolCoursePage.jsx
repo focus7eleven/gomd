@@ -98,7 +98,7 @@ const SchoolCoursePage = React.createClass({
     return (
       <div className={styles.container}>
         <div className={styles.header}>
-          <div></div>
+          <div><Button type='primary' onClick={()=>{this.context.router.push(`/index/courseCenter/newCourse`)}}>新建课程</Button></div>
           <CourseFilterComponent pageType="schoolPage"/>
         </div>
         <div className={styles.body}>

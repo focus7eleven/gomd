@@ -60,7 +60,7 @@ const AddHomeworkModal = React.createClass({
     })
   },
   getTableData(){
-    return this.state.homeworkList.isEmpty()?[]:this.state.homeworkList.get('result').map(v => v.set('key',v.get('homework_id'))).toJS()
+    return this.state.homeworkList.isEmpty()?[]:this.state.homeworkList.get('result').map((v,k) => v.set('key',v.get('homework_id')).set('num',k)).toJS()
   },
   render(){
     const microClassTypeList =fromJS([{id:'1',text:'公共微课'},{id:'2',text:'学校微课'},{id:'3',text:'个人微课'}])
@@ -68,6 +68,10 @@ const AddHomeworkModal = React.createClass({
     const {getFieldDecorator} = this.props.form
     const tableData = this.getTableData()
     const tableColumn = [{
+      title:'序号',
+      dataIndex:'num',
+      key:'num',
+    },{
       title:'布置日期',
       dataIndex:'create_dt',
       key:'create_dt',
