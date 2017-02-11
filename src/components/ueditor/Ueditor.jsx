@@ -4,11 +4,10 @@ import styles from './Ueditor.scss'
 const Ueditor = React.createClass({
   getDefaultProps(){
     return {
-
+      onDestory:()=>{}
     }
   },
   componentDidMount(){
-    console.log("asdfasdfasdf")
     this.ue = UE.getEditor('editor',{
   		toolbars: [[
   			'fullscreen', 'source', '|',
@@ -17,6 +16,7 @@ const Ueditor = React.createClass({
   	});
   },
   componentWillUnmount(){
+    this.props.onDestory(this.ue.getContent())
     this.ue.destroy()
   },
   render(){

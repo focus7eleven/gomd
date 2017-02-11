@@ -5,7 +5,7 @@
   :local(.question){
     width: 100%;
     display: flex;
-    justify-content: center;
+    justify-content: space-around;
     align-items: center;
   }
   :local(.answerItem){
@@ -13,6 +13,9 @@
     display: flex;
     justify-content: center;
     align-items: center;
+  }
+  :local(.columns){
+    text-align: center;
   }
   :local(.tag){
     position: absolute;
@@ -29,5 +32,11 @@
       font-size:14pt;
       color: #37B781;
     }
+  }
+  :local(.footer){
+    width: 100%;
+    max-width: 1000px;
+    margin-top: 20px;
+    padding:10px;
   }
 }
