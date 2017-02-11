@@ -3,6 +3,7 @@ import styles from './MultipleChoiceQuestion.scss'
 import {List,fromJS} from 'immutable'
 import {Table,Icon,Input,Radio,Select,Row,Col,Button,Rate,InputNumber} from 'antd'
 import Ueditor from '../../ueditor/Ueditor'
+import {updateOption} from './exampaper-utils'
 
 const Option = Select.Option
 const questionType = [{
@@ -30,7 +31,19 @@ const questionType = [{
 const MultipleChoiceQuestion = React.createClass({
   getDefaultProps(){
     return {
-      questionNo:1,
+      questionInfo:fromJS({
+        creatorUserId:"031218647663209576",
+        examinationPaperId:"240252698337873920",
+        id:'240252718520864768',
+        kind:'01',
+        optionPojoList:[{answer:false,content:"答案一",id:"240252718520864769",questionId:"240252718520864768",score:0},
+        {answer:false,content:"答案二",id:"240252718587973632",questionId:"240252718520864768",score:0},
+        {answer:false,content:"答案三",id:"240252718587973633",questionId:"240252718520864768",score:0},
+        {answer:false,content:"答案四",id:"240252718655082496",questionId:"240252718520864768",score:0}],
+        ownerId:'031218647663209576',
+        questionNo:1,
+      }),//题目的详细信息
+
 
       moveUp:()=>{},//上移
       moveDown:()=>{},//下移
@@ -40,12 +53,7 @@ const MultipleChoiceQuestion = React.createClass({
   },
   getInitialState(){
     return {
-      answerList:fromJS([
-        {answer:false,content:"答案一",id:"0",questionId:"1",score:0},
-        {answer:false,content:"答案二",id:"1",questionId:"1",score:0},
-        {answer:false,content:"答案三",id:"2",questionId:"1",score:0},
-        {answer:false,content:"答案四",id:"3",questionId:"1",score:0}
-      ]),//答案列表
+      answerList:this.props.questionInfo.get('optionPojoList'),//答案列表
       question:'输入题目内容',//
       editingQuestion:false,//是否编辑题目
       editingAnswerItem:[false,false,false,false],//编辑答案选项
@@ -62,11 +70,12 @@ const MultipleChoiceQuestion = React.createClass({
   },
   getTableData(){
     const tableHeader = [{
-      title:this.props.questionNo,
+      title:this.props.questionInfo.get('questionNo'),
       key:'num',
       className:styles.columns,
+      width:50,
       render:(text,record)=>{
-        return <Radio checked={this.state.radioCheck==record.key} onClick={()=>{this.setState({radioCheck:record.key})}}></Radio>
+        return <Radio checked={this.state.radioCheck==record.key} onClick={this.handleSetRightAnswer.bind(this,record.key)}></Radio>
       }
     },{
       title:this.renderQuestion(),
@@ -84,6 +93,7 @@ const MultipleChoiceQuestion = React.createClass({
     },{
       title:<Icon type='close' onClick={this.props.destroy}/>,
       className:styles.columns,
+      width:50,
       render:(text,record)=>{
         return <Icon type='close' onClick={this.handleDeleteAnswerItem.bind(this,record.key)}/>
       }
@@ -97,6 +107,19 @@ const MultipleChoiceQuestion = React.createClass({
       tableBody,
     }
   },
+  //确定正确的答案
+  handleSetRightAnswer(key){
+    updateOption({
+      optionId:this.state.answerList.get(key).get('id'),
+      content:this.state.answerList.get(key).get('content'),
+      score:this.state.answerList.get(key).get('score'),
+      isAnswer:true
+    }).then(res => {
+      this.setState({
+        radioCheck:key,
+      })
+    })
+  },
   handleDeleteAnswerItem(key){
     this.setState({
       answerList:this.state.answerList.filter((v,k) => k!=key)
@@ -109,7 +132,7 @@ const MultipleChoiceQuestion = React.createClass({
       showFooter:false,
     })
   },
-  //设定分支
+  //设定分值
   handleSetScore(){
     this.setState({
       showScoreSetting:!this.state.showScoreSetting
