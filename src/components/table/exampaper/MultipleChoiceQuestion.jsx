@@ -3,7 +3,7 @@ import styles from './MultipleChoiceQuestion.scss'
 import {List,fromJS} from 'immutable'
 import {Table,Icon,Input,Radio,Select,Row,Col,Button,Rate,InputNumber} from 'antd'
 import Ueditor from '../../ueditor/Ueditor'
-import {updateOption} from './exampaper-utils'
+import {updateOption,updateQuestion} from './exampaper-utils'
 
 const Option = Select.Option
 const questionType = [{
@@ -60,6 +60,11 @@ const MultipleChoiceQuestion = React.createClass({
       radioCheck:-1,//选择题的答案
       showFooter:false,//显示添加额外信息面板
       showScoreSetting:false,//显示设定分数的组件
+      comment:'',//备注
+      description:'',//描述
+      difficulty:0,
+      drawZone:'',
+      score:1,
     }
   },
   componentDidMount(){
@@ -85,7 +90,11 @@ const MultipleChoiceQuestion = React.createClass({
         <div className={styles.question} onClick={(e)=>{e.stopPropagation();this.setState({
           editingAnswerItem:this.state.editingAnswerItem.map((v,k) => k==record.key?!v:v)})}}>
         {
-          this.state.editingAnswerItem[record.key]?<Ueditor />:<span >{text}</span>
+          this.state.editingAnswerItem[record.key]?<Ueditor onDestory={(value)=>{
+            this.setState({
+              answerList:this.state.answerList.setIn([record.key,'content'],value)
+            })
+          }}/>:<span >{text||'输入选项内容'}</span>
         }
         {this.state.showScoreSetting?<InputNumber min={0} defaultValue={0} />:null}
         </div>
@@ -120,6 +129,28 @@ const MultipleChoiceQuestion = React.createClass({
       })
     })
   },
+  //修改题目
+  handleUpdateQuestion(value){
+    this.setState({
+      question:value
+    })
+    updateQuestion({
+      qid:this.props.questionInfo.get('id'),
+      examination:value,
+      comment:this.state.comment,
+      description:this.state.description,
+      difficulty:this.state.difficulty,
+      kind:this.props.questionInfo.get('kind'),
+      drawZone:'',
+      score:this.state.score,
+    })
+  },
+  //修改答案选项
+  handleUpdateOption(value){
+    this.setState({
+
+    })
+  },
   handleDeleteAnswerItem(key){
     this.setState({
       answerList:this.state.answerList.filter((v,k) => k!=key)
@@ -148,7 +179,7 @@ const MultipleChoiceQuestion = React.createClass({
     return (
       <div className={styles.question} onClick={(e)=>{e.stopPropagation();this.setState({editingQuestion:true,showFooter:true})}}>
       {
-        this.state.editingQuestion?<Ueditor />:<span >输入题目</span>
+        this.state.editingQuestion?<Ueditor onDestory={this.handleUpdateQuestion}/>:<span >{this.state.question}</span>
       }
       </div>
     )

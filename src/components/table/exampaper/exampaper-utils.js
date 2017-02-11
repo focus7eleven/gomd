@@ -9,7 +9,28 @@ export function updateOption(data){
   formData.append('isAnswer',data.isAnswer)
   return fetch(config.api.wordquestion.updateOption,{
     method:'post',
-    header:{
+    headers:{
+      'from':'nodejs',
+      'token':sessionStorage.getItem('accessToken')
+    },
+    body:formData
+  }).then(res => res.json())
+}
+
+//更新题目
+export function updateQuestion(data){
+  let formData = new FormData()
+  formData.append('qid',data.qid)
+  formData.append('examination',data.examination)
+  formData.append('comment',data.comment)
+  formData.append('description',data.description)
+  formData.append('difficulty',data.difficulty)
+  formData.append('kind',data.kind)
+  formData.append('drawZone',data.drawZone)
+  formData.append('score',data.score)
+  return fetch(config.api.wordquestion.updateQuestion,{
+    method:'post',
+    headers:{
       'from':'nodejs',
       'token':sessionStorage.getItem('accessToken')
     },

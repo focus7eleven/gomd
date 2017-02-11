@@ -14,9 +14,11 @@ const Ueditor = React.createClass({
   			'bold', 'italic', 'underline', '|', 'fontsize', '|', 'kityformula', 'preview'
   		]],
   	});
+    this.ue.destroy = ()=>{
+      this.props.onDestory(this.ue.getContent())
+    }
   },
   componentWillUnmount(){
-    this.props.onDestory(this.ue.getContent())
     this.ue.destroy()
   },
   render(){

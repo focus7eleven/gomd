@@ -253,6 +253,7 @@ const config = _.extend({
 			addJudge:`${baseURL}/wordquestion/addJudge`,
 			addShortAnswer:`${baseURL}/wordquestion/addShortAnswer`,
 			updateOption:`${baseURL}/wordquestion/updateOption`,
+			updateQuestion:`${baseURL}/wordquestion/updateQuestion`,
 		}
 	}
 })
