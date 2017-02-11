@@ -7,6 +7,7 @@ import {bindActionCreators} from 'redux'
 import {getTableData} from '../../actions/course_center/main'
 import {Button} from 'antd'
 import PublishModal from '../../components/modal/PublishModal'
+import CourseTree from '../../components/tree/CourseTree'
 const TeacherCoursePage = React.createClass({
   contextTypes: {
     router: React.PropTypes.object
@@ -73,6 +74,7 @@ const TeacherCoursePage = React.createClass({
       key:k,
       num:k+1,
       ...v.toJS(),
+      num:k+1,
     })).toJS()
     return {
       tableHeader,
@@ -100,6 +102,9 @@ const TeacherCoursePage = React.createClass({
           <CourseFilterComponent pageType="teacherPage"/>
         </div>
         <div className={styles.body}>
+          <div className={styles.treeContainer}>
+            <CourseTree></CourseTree>
+          </div>
           <TableComponent dataType="courseCenter" tableData={tableData} pageType="teacherPage" searchStr={this.state.searchStr}></TableComponent>
         </div>
         {this.state.showPublishModal?<PublishModal lessionId={this.state.selectedLesson} onOk={()=>{this.context.router.push(`/index/course-center/publishedCourse`)}} onCancel={()=>{this.setState({showPublishModal:false})}}/>:null}

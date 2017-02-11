@@ -29,8 +29,12 @@ module.exports = {
 	module: {
 		loaders: [{
 			test: /\.jsx?$/,
-			exclude: /node_modules/,
+			exclude: [/node_modules/,path.resolve('./src/utils/ueditor')],
 			loaders: ['react-hot', 'babel'],
+		},{
+			test: /\.jsx?$/,
+			include:[path.resolve('./src/utils/ueditor')],
+			loaders: ['babel'],
 		}, {
 			test: /\.scss$/,
 			loaders: ["style", 'css?modules&importLoaders=1' +

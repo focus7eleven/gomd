@@ -77,6 +77,7 @@ const PublicCoursePage = React.createClass({
       key:k,
       num:k+1,
       ...v.toJS(),
+      num:k+1,
     })).toJS()
     return {
       tableHeader,

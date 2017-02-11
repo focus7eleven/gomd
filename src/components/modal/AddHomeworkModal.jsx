@@ -40,6 +40,25 @@ const AddHomeworkModal = React.createClass({
 
     })
   },
+  onChangeTimeRange(dates, dateStrings) {
+    console.log('From: ', dates[0], ', to: ', dates[1]);
+    console.log('From: ', dateStrings[0], ', to: ', dateStrings[1]);
+    Promise.all([
+      fetch(config.api.homework.course.searchHomework(this.props.currentSubject,dateStrings[0],dateStrings[1]),{
+        method:'get',
+        headers:{
+          'from':'nodejs',
+          'token':sessionStorage.getItem('accessToken')
+        }
+      }).then(res => res.json()),
+    ]).then(result => {
+      this.setState({
+        homeworkList: fromJS(result[0])
+      })
+    }).catch(error => {
+
+    })
+  },
   getTableData(){
     return this.state.homeworkList.isEmpty()?[]:this.state.homeworkList.get('result').map(v => v.set('key',v.get('homework_id'))).toJS()
   },
@@ -88,6 +107,7 @@ const AddHomeworkModal = React.createClass({
                   showTime
                   format="YYYY-MM-DD HH:mm:ss"
                   placeholder={['开始时间', '结束时间']}
+                  onChange={this.onChangeTimeRange}
                   />
                   )}
                   </FormItem>
@@ -99,7 +119,7 @@ const AddHomeworkModal = React.createClass({
                   />
                 </Col>
                 <Col span={6}>
-                  <div className={styles.homeworkSum}><span>共{this.state.homeworkSum}条作业</span></div>
+                  <div className={styles.homeworkSum}><span>共{this.state.homeworkList.get('result').size}条作业</span></div>
                 </Col>
               </Row>
             </Form>

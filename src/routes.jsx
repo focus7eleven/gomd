@@ -53,6 +53,8 @@ import HomeworkLibPage from './containers/homework_center/HomeworkLibPage'
 
 import VideoComponent from './components/video/VideoComponent'
 import CourseTree from './components/tree/CourseTree'
+import UEditor from './components/ueditor/Ueditor'
+import MultipleChoiceQuestion from './components/table/exampaper/MultipleChoiceQuestion'
 const routes = (
 	<Router history={browserHistory}>
 		<Route path="/" component={AppContainer}>
@@ -65,6 +67,8 @@ const routes = (
 				<Route path='filter' component={Filter}></Route>
 				<Route path='videoComponent' component={VideoComponent}></Route>
 				<Route path='coursetree' component={CourseTree}></Route>
+				<Route path='ueditor' component={UEditor}></Route>
+				<Route path='multipleChoiceQuestion' component={MultipleChoiceQuestion}></Route>
 			</Route>
 			<Route path='login' component={LoginContainer}></Route>
 
