@@ -4,7 +4,8 @@ import styles from './Ueditor.scss'
 const Ueditor = React.createClass({
   getDefaultProps(){
     return {
-      onDestory:()=>{}
+      onDestory:()=>{},
+      initialContent:'',
     }
   },
   componentDidMount(){
@@ -14,11 +15,13 @@ const Ueditor = React.createClass({
   			'bold', 'italic', 'underline', '|', 'fontsize', '|', 'kityformula', 'preview'
   		]],
   	});
+    this.ue.setContent(this.props.initialContent)
     // this.ue.destroy = ()=>{
     //   this.props.onDestory(this.ue.getContent())
     // }
   },
   componentWillUnmount(){
+    this.props.onDestory(this.ue.getContent())
     this.ue.destroy()
   },
   render(){

@@ -181,7 +181,7 @@ const MultipleChoiceQuestion = React.createClass({
     return (
       <div className={styles.question} onClick={(e)=>{e.stopPropagation();this.setState({editingQuestion:true,showFooter:true})}}>
       {
-        this.state.editingQuestion?<Ueditor onDestory={this.handleUpdateQuestion}/>:<span >阿斯顿发斯蒂芬</span>
+        this.state.editingQuestion?<Ueditor onDestory={this.handleUpdateQuestion}/>:<span >{this.state.question}</span>
       }
       </div>
     )
