@@ -90,11 +90,7 @@ const MultipleChoiceQuestion = React.createClass({
         <div className={styles.question} onClick={(e)=>{e.stopPropagation();this.setState({
           editingAnswerItem:this.state.editingAnswerItem.map((v,k) => k==record.key?!v:v)})}}>
         {
-          this.state.editingAnswerItem[record.key]?<Ueditor onDestory={(value)=>{
-            this.setState({
-              answerList:this.state.answerList.setIn([record.key,'content'],value)
-            })
-          }}/>:<span >{text||'输入选项内容'}</span>
+          this.state.editingAnswerItem[record.key]?<Ueditor onDestory={this.handleUpdateOption.bind(this,record.key)}/>:<span >{text||'输入选项内容'}</span>
         }
         {this.state.showScoreSetting?<InputNumber min={0} defaultValue={0} />:null}
         </div>
@@ -146,9 +142,15 @@ const MultipleChoiceQuestion = React.createClass({
     })
   },
   //修改答案选项
-  handleUpdateOption(value){
+  handleUpdateOption(key,value){
     this.setState({
-
+      answerList:this.state.answerList.setIn([key,'content'],value)
+    })
+    updateOption({
+      optionId:this.state.answerList.get(key).get('id'),
+      content:value,
+      score:this.state.score,
+      isAnswer:this.state.radioCheck == key
     })
   },
   handleDeleteAnswerItem(key){
@@ -179,7 +181,7 @@ const MultipleChoiceQuestion = React.createClass({
     return (
       <div className={styles.question} onClick={(e)=>{e.stopPropagation();this.setState({editingQuestion:true,showFooter:true})}}>
       {
-        this.state.editingQuestion?<Ueditor onDestory={this.handleUpdateQuestion}/>:<span >{this.state.question}</span>
+        this.state.editingQuestion?<Ueditor onDestory={this.handleUpdateQuestion}/>:<span >阿斯顿发斯蒂芬</span>
       }
       </div>
     )
