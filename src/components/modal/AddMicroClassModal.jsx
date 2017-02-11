@@ -154,12 +154,13 @@ const AddMicroClassModal = React.createClass({
     })
   },
   getTableData(){
-    return this.state.microVideo.isEmpty()?[]:this.state.microVideo.get('result').map(v => ({
+    return this.state.microVideo.isEmpty()?[]:this.state.microVideo.get('result').map((v,k) => ({
       name:v.get('name'),
       uploaderName:v.get('uploaderName'),
       createdAt:v.get('createdAt'),
       description:v.get('description'),
-      key:v.get('id')
+      key:v.get('id'),
+      num:k
     })).toJS()
   },
   render(){
@@ -168,6 +169,10 @@ const AddMicroClassModal = React.createClass({
     const {getFieldDecorator} = this.props.form
     const tableData = this.getTableData()
     const tableColumn = [{
+      title:'序号',
+      dataIndex:'num',
+      key:'num',
+    },{
       title:'微课名称',
       dataIndex:'name',
       key:'name',
