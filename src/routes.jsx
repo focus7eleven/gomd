@@ -38,6 +38,7 @@ import DetailContainer from './containers/course_center/detail/DetailContainer'
 import DetailPage from './containers/course_center/detail/DetailPage'
 import TeacherCoursePage from './containers/course_center/TeacherCoursePage'
 import SchoolCoursePage from './containers/course_center/SchoolCoursePage'
+import UncheckedCoursePage from './containers/course_center/UncheckedCoursePage'
 import MicroCourseContainer from './containers/micro_course/MicroCourseContainer'
 import PublicVideoPage from './containers/micro_course/PublicVideoPage'
 import SchoolVideoPage from './containers/micro_course/SchoolVideoPage'
@@ -119,6 +120,7 @@ const routes = (
 					</Route>
 					<Route path='courseInfo' component={TeacherCoursePage} />
 					<Route path='schoolCourse' component={SchoolCoursePage} />
+					<Route path='uncheckCourse' component={UncheckedCoursePage} />
 				</Route>
 
 				{/* 微课中心 */}

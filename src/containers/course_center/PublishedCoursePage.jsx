@@ -64,7 +64,7 @@ const PublishedCoursePage = React.createClass({
     const tableData = this.props.courseCenter.get('data').isEmpty()?List():this.props.courseCenter.get('data').get('result').map((v,k) => ({
       ...v.toJS(),
       key:k,
-      num:k
+      num:k+1
     }))
     return {
       tableBody:tableData.toJS(),
@@ -81,6 +81,7 @@ const PublishedCoursePage = React.createClass({
     return (
       <div className={styles.container}>
         <div className={styles.header}>
+          <div></div>
           <CourseFilterComponent pageType="publishedPage"/>
         </div>
         <div className={styles.body}>

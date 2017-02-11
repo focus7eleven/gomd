@@ -19,6 +19,8 @@ export function getTableData(type,search,currentPage){
     realType = 'teacherPage'
   }else if(type=='schoolCourse'){
     realType = 'schoolPage'
+  }else if(type=='uncheckCourse'){
+    realType = 'uncheckPage'
   }
   return {
     types:GET_TABLEDATA,

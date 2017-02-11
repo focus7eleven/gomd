@@ -1,5 +1,5 @@
 import React from 'react'
-import CourseFilterComponent from '../../components/course_filter/CourseFilterComponent'
+import VideoFilterComponent from '../../components/microvideo_filter/VideoFilterComponent'
 import styles from './PublicVideoPage.scss'
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
@@ -19,7 +19,7 @@ const PublicVideoPage = React.createClass({
   },
 
   handleSearchVideo(value){
-    this.props.getTableData('public',value,this.props.microCourse.get('data').get('nowPage'));
+    this.props.getTableData('area',value,this.props.microCourse.get('data').get('nowPage'));
   },
 
   handleClickMenu(e) {
@@ -30,7 +30,7 @@ const PublicVideoPage = React.createClass({
   },
 
   handlePageChanged(pageNumber){
-    this.props.getTableData('public','',pageNumber);
+    this.props.getTableData('area','',pageNumber);
   },
 
   render(){
@@ -40,7 +40,7 @@ const PublicVideoPage = React.createClass({
         <div className={styles.header}>
           <div></div>
           <div className={styles.right}>
-            <CourseFilterComponent pageType="publicPage"/>
+            <VideoFilterComponent pageType="area"></VideoFilterComponent>
             <Search style={{width: '260px'}} placeholder="请输入微课名称" value={this.state.searchStr} onChange={(e)=>{this.setState({searchStr:e.target.value})}} onSearch={this.handleSearchVideo}/>
           </div>
         </div>

@@ -27,7 +27,7 @@ const TableComponent = React.createClass({
       workspace = this.props.exampaper
     }
     return (
-      <div>
+      <div style={{width: '100%'}}>
       <div className={styles.wrapper}>
         <Table
           rowClassName={(record,index)=>index%2?styles.tableDarkRow:styles.tableLightRow}

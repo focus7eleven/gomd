@@ -219,7 +219,7 @@ const config = _.extend({
 			publish:`${baseURL}/lesson/publish`,
 		},
 		microvideo:{
-			get:(type,currentPage,pageShow,subjectId,gradeId,textbookId,search)=>`${baseURL}/microvideo/${type}?currentPage=${currentPage}&pageShow=${pageShow}&subjectId=${subjectId}&gradeId=${gradeId}&textbookMenuId=${textbookId}&search=${search}`,
+			get:(type,currentPage,subjectId,gradeId,textbookId,search,term,version)=>`${baseURL}/microvideo/${type}?currentPage=${currentPage}&subjectId=${subjectId}&gradeId=${gradeId}&textbookMenuId=${textbookId}&search=${search}&term=${term}&version=${version}`,
 			getVideoDetailById:(videoId)=>`${baseURL}/microvideo/getVideoDetailById?videoId=${videoId}`,
 			getTableData: (type,search,currentPage) => `${baseURL}/microvideo/${type}?search=${search}&currentPage=${currentPage}`,
 			addVideo: `${baseURL}/microvideo/add`,

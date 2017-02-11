@@ -1,22 +1,25 @@
 import React from 'react'
 import CourseFilterComponent from '../../components/course_filter/CourseFilterComponent'
 import TableComponent from '../../components/table/TableComponent'
-import styles from './SchoolCoursePage.scss'
+import styles from './UncheckedCoursePage.scss'
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
 import {getTableData} from '../../actions/course_center/main'
 import {Button} from 'antd'
-import PublishModal from '../../components/modal/PublishModal'
-const SchoolCoursePage = React.createClass({
+import CourseTree from '../../components/tree/CourseTree'
+
+const UncheckedCoursePage = React.createClass({
   contextTypes: {
     router: React.PropTypes.object
   },
+
   getInitialState(){
     return {
       searchStr:'',
       showPublishModal:false,
     }
   },
+
   getTableData(){
     const tableHeader=[{
       title:'序号',
@@ -61,13 +64,6 @@ const SchoolCoursePage = React.createClass({
       render:(text,record)=>{
         return (<Button type='primary' onClick={this.handleCheckDetail.bind(this,text)}>详情</Button>)
       }
-    },{
-      title:'发布',
-      key:'publish',
-      className:styles.tableColumn,
-      render:(text,record)=>{
-        return (<Button type='primary' onClick={this.handlePublish.bind(this,text['lesson_id'])}>发布</Button>)
-      }
     }]
     const tableBody = this.props.courseCenter.get('data').isEmpty()?[]:this.props.courseCenter.get('data').get('result').map((v,k) => ({
       key:k,
@@ -80,10 +76,10 @@ const SchoolCoursePage = React.createClass({
     }
   },
 
-  handlePublish(lessonId){
+  handlePublish(lessionId){
     this.setState({
       showPublishModal:true,
-      selectedLesson:lessonId
+      selectedLesson:lessionId,
     })
   },
 
@@ -97,26 +93,31 @@ const SchoolCoursePage = React.createClass({
       <div className={styles.container}>
         <div className={styles.header}>
           <div></div>
-          <CourseFilterComponent pageType="schoolPage"/>
+          <CourseFilterComponent pageType="uncheckPage"/>
         </div>
         <div className={styles.body}>
-          <TableComponent dataType="courseCenter" tableData={tableData} pageType="schoolPage" searchStr={this.state.searchStr}></TableComponent>
+          <div className={styles.treeContainer}>
+            <CourseTree></CourseTree>
+          </div>
+          <TableComponent dataType="courseCenter" tableData={tableData} pageType="uncheckPage" searchStr={this.state.searchStr}></TableComponent>
         </div>
-        {this.state.showPublishModal?<PublishModal lessionId={this.state.selectedLesson} onOk={()=>{this.context.router.push(`/index/course-center/publishedCourse`)}} onCancel={()=>{this.setState({showPublishModal:false})}}/>:null}
+        {this.state.showPublishModal?<PublishModal lessonId={this.state.selectedLesson} onOk={()=>{this.context.router.push(`/index/course-center/publishedCourse`)}} onCancel={()=>{this.setState({showPublishModal:false})}}/>:null}
       </div>
     )
   }
 })
+
 function mapStateToProps(state){
   return{
     menu:state.get('menu'),
     courseCenter:state.get('courseCenter')
   }
 }
+
 function mapDispatchToProps(dispatch){
   return {
     getTableData:bindActionCreators(getTableData,dispatch),
   }
 }
 
-export default connect(mapStateToProps,mapDispatchToProps)(SchoolCoursePage)
+export default connect(mapStateToProps,mapDispatchToProps)(UncheckedCoursePage)

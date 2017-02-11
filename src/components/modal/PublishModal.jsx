@@ -3,6 +3,7 @@ import {Select,Modal} from 'antd'
 import {List,fromJS} from 'immutable'
 const Option = Select.Option
 import config from '../../config'
+import styles from './PublishModal.scss'
 
 const PublishModal = React.createClass({
   getDefaultProps(){
@@ -54,14 +55,17 @@ const PublishModal = React.createClass({
   },
   render(){
     return (
-      <Modal title='发布课程' visible={true} onCancel={this.props.onCancel} onOk={this.handlePublish}>
-        <Select style={{width:'100%'}} onChange={this.selectClass}>
-        {
-          this.state.classList.map((v,k) => (
-            <Option key={k} value={v.get('groupId')} title={v.get('className')}>{v.get('className')}</Option>
-          ))
-        }
-        </Select>
+      <Modal title='发布课程' visible={true} onCancel={this.props.onCancel} onOk={this.handlePublish} width={300}>
+        <div className={styles.content}>
+          <span>发布对象：</span>
+          <Select style={{width:'200px'}} onChange={this.selectClass}>
+          {
+            this.state.classList.map((v,k) => (
+              <Option key={k} value={v.get('groupId')} title={v.get('className')}>{v.get('className')}</Option>
+            ))
+          }
+          </Select>
+        </div>
       </Modal>
     )
   }

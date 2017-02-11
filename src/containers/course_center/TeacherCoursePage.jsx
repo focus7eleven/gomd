@@ -66,11 +66,12 @@ const TeacherCoursePage = React.createClass({
       key:'publish',
       className:styles.tableColumn,
       render:(text,record)=>{
-        return (<Button type='primary' onClick={this.handlePublish}>发布</Button>)
+        return (<Button type='primary' onClick={this.handlePublish.bind(this,text['lesson_id'])}>发布</Button>)
       }
     }]
     const tableBody = this.props.courseCenter.get('data').isEmpty()?[]:this.props.courseCenter.get('data').get('result').map((v,k) => ({
       key:k,
+      num:k+1,
       ...v.toJS(),
     })).toJS()
     return {
@@ -78,25 +79,30 @@ const TeacherCoursePage = React.createClass({
       tableBody,
     }
   },
-  handlePublish(){
+
+  handlePublish(lessonId){
     this.setState({
-      showPublishModal:true
+      showPublishModal:true,
+      lessonId:lessonId
     })
   },
+
   handleCheckDetail(text){
     this.context.router.push(`/index/courseCenter/detail/${text}`)
   },
+
   render(){
     const tableData = this.getTableData()
     return (
       <div className={styles.container}>
         <div className={styles.header}>
+          <div></div>
           <CourseFilterComponent pageType="teacherPage"/>
         </div>
         <div className={styles.body}>
           <TableComponent dataType="courseCenter" tableData={tableData} pageType="teacherPage" searchStr={this.state.searchStr}></TableComponent>
         </div>
-        {this.state.showPublishModal?<PublishModal onOk={()=>{this.context.router.push(`/index/course-center/publishedCourse`)}} onCancel={()=>{this.setState({showPublishModal:false})}}/>:null}
+        {this.state.showPublishModal?<PublishModal lessionId={this.state.selectedLesson} onOk={()=>{this.context.router.push(`/index/course-center/publishedCourse`)}} onCancel={()=>{this.setState({showPublishModal:false})}}/>:null}
       </div>
     )
   }

@@ -1,5 +1,5 @@
 import React from 'react'
-import CourseFilterComponent from '../../components/course_filter/CourseFilterComponent'
+import VideoFilterComponent from '../../components/microvideo_filter/VideoFilterComponent'
 import styles from './TeacherVideoPage.scss'
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
@@ -47,7 +47,6 @@ const TeacherVideoPage = React.createClass({
   },
 
   handleClickMenu(e) {
-    console.log('click ', e);
     this.setState({
       currentTab: e.key,
     });
@@ -95,8 +94,6 @@ const TeacherVideoPage = React.createClass({
   },
 
   handleFetchTextbook(subjectId,gradeId,versionId,termValue){
-    // const {subjectId,gradeId,versionId,termValue} = this.state;
-    console.log(subjectId,gradeId,versionId,termValue);
     this.setState({canSelectTextbook:false})
     fetch(config.api.textbook.getTextBookByCondition(subjectId,gradeId,versionId,termValue),{
       method:'GET',
@@ -345,7 +342,7 @@ const TeacherVideoPage = React.createClass({
             }
           </div>
           <div className={styles.right}>
-            <CourseFilterComponent pageType="publicPage"/>
+            <VideoFilterComponent pageType="area"></VideoFilterComponent>
             <Search style={{width: '260px'}} placeholder="请输入微课名称" value={this.state.searchStr} onChange={(e)=>{this.setState({searchStr:e.target.value})}} onSearch={this.handleSearchVideo}/>
           </div>
         </div>

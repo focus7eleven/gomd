@@ -35,11 +35,11 @@ export function getTableData(type,search,currentPage){
 }
 
 export const GET_FILTERED_TABLEDATA = actionNames('GET_FILTERED_TABLEDATA')
-export function getFilteredTableData(type,search,currentPage,phaseCode="",subjectId="",termId=""){
+export function getFilteredTableData(type,currentPage,subjectId,gradeId,textbookId,search,term,version){
   return {
     types:GET_FILTERED_TABLEDATA,
     callAPI:()=>{
-      return fetch(config.api.courseCenter.getTableData(type,search,currentPage,phaseCode,subjectId,termId),{
+      return fetch(config.api.microvideo.get(type,currentPage,subjectId,gradeId,textbookId,search,term,version),{
         method:'GET',
         headers:{
           'from':'nodejs',
