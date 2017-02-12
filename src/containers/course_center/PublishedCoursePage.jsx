@@ -29,17 +29,17 @@ const PublishedCoursePage = React.createClass({
       key:'name',
       className:styles.tableColumn,
     },{
-      title:'微课数量',
+      title:'微课',
       dataIndex:'content_num',
       key:'content_num',
       className:styles.tableColumn,
     },{
-      title:'预习作业数量',
+      title:'预习作业',
       dataIndex:'prepare_homework',
       key:'prepare_homework',
       className:styles.tableColumn,
     },{
-      title:'课后作业数量',
+      title:'课后作业',
       dataIndex:'after_class_homework',
       key:'after_class_homework',
       className:styles.tableColumn,

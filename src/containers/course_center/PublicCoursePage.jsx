@@ -33,17 +33,17 @@ const PublicCoursePage = React.createClass({
       key:'name',
       className:styles.tableColumn,
     },{
-      title:'微课数量',
+      title:'微课',
       dataIndex:'content_num',
       key:'content_num',
       className:styles.tableColumn,
     },{
-      title:'预习作业数量',
+      title:'预习作业',
       dataIndex:'prepare_homework',
       key:'prepare_homework',
       className:styles.tableColumn,
     },{
-      title:'课后作业数量',
+      title:'课后作业',
       dataIndex:'after_class_homework',
       key:'after_class_homework',
       className:styles.tableColumn,
@@ -66,7 +66,7 @@ const PublicCoursePage = React.createClass({
         return (<Button type='primary' onClick={this.handleCheckDetail.bind(this,text)}>详情</Button>)
       }
     },{
-      title:'发布',
+      title:'操作',
       key:'publish',
       className:styles.tableColumn,
       render:(text,record)=>{
@@ -77,7 +77,6 @@ const PublicCoursePage = React.createClass({
       key:k,
       num:k+1,
       ...v.toJS(),
-      num:k+1,
     })).toJS()
     return {
       tableHeader,
@@ -101,7 +100,7 @@ const PublicCoursePage = React.createClass({
     return (
       <div className={styles.container}>
         <div className={styles.header}>
-          <div><Button type='primary' onClick={()=>{this.context.router.push(`/index/courseCenter/newCourse`)}}>新建课程</Button></div>
+          <div><Button type='primary' className={styles.operationButton} onClick={()=>{this.context.router.push(`/index/courseCenter/newCourse`)}}>新建课程</Button></div>
           <CourseFilterComponent pageType="publicPage"/>
         </div>
         <div className={styles.body}>

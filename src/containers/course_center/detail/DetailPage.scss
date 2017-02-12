@@ -15,10 +15,24 @@
     display: flex;
     width: 100%;
     justify-content: center;
+    margin-top: 15px;
     >button{
       width: 72px;
       height: 32px;
       font-size: 13px;
+    }
+  }
+
+  :local(.courseCard){
+    >div:nth-child(2){
+      padding-left: 42px;
+      font-size: 13px;
+    }
+  }
+
+  :local(.cardHead){
+    >i{
+      margin-right: 3px;
     }
   }
 }

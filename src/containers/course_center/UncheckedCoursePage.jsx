@@ -4,9 +4,10 @@ import TableComponent from '../../components/table/TableComponent'
 import styles from './UncheckedCoursePage.scss'
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
-import {getTableData} from '../../actions/course_center/main'
+import {checkCourse,getTableData} from '../../actions/course_center/main'
 import {Button} from 'antd'
 import CourseTree from '../../components/tree/CourseTree'
+import config from '../../config'
 
 const UncheckedCoursePage = React.createClass({
   contextTypes: {
@@ -64,6 +65,19 @@ const UncheckedCoursePage = React.createClass({
       render:(text,record)=>{
         return (<Button type='primary' onClick={this.handleCheckDetail.bind(this,text)}>详情</Button>)
       }
+    },{
+      title:'操作',
+      dataIndex:'lesson_id',
+      key:'operation',
+      className:styles.operationColumn,
+      render:(text,record)=>{
+        return (
+          <div>
+            <Button type='primary' className={styles.rejectButton} onClick={this.handleCheckCourse.bind(this,text,false)}>打回</Button>
+            <Button type='primary' className={styles.agreeButton} onClick={this.handleCheckCourse.bind(this,text,true)}>同意</Button>
+          </div>
+        )
+      }
     }]
     const tableBody = this.props.courseCenter.get('data').isEmpty()?[]:this.props.courseCenter.get('data').get('result').map((v,k) => ({
       key:k,
@@ -76,10 +90,10 @@ const UncheckedCoursePage = React.createClass({
     }
   },
 
-  handlePublish(lessionId){
-    this.setState({
-      showPublishModal:true,
-      selectedLesson:lessionId,
+  handleCheckCourse(lessonId,result){
+    this.props.checkCourse(lessonId,result).then(res => {
+      console.log(res);
+      res.data==='success'?this.props.getTableData('uncheckPage','',1):null
     })
   },
 
@@ -116,6 +130,7 @@ function mapStateToProps(state){
 
 function mapDispatchToProps(dispatch){
   return {
+    checkCourse:bindActionCreators(checkCourse,dispatch),
     getTableData:bindActionCreators(getTableData,dispatch),
   }
 }

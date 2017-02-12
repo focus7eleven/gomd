@@ -72,6 +72,30 @@ export function getDetailData(lessonId){
   }
 }
 
+export const CHECK_COURSE = actionNames('CHECK_COURSE')
+export function checkCourse(lessonId,result){
+  return {
+    types: CHECK_COURSE,
+    callAPI:()=>{
+      return fetch(config.api.courseCenter.checkCourse(lessonId,result),{
+        method:'GET',
+        headers:{
+          'from':'nodejs',
+          'token':sessionStorage.getItem('accessToken'),
+        }
+      }).then(res => res.json()).then(res => {
+        if(res.title==='Success'){
+          notification.success({message:'审核成功'});
+          return 'success'
+        }else {
+          notification.error({message: '审核失败',description: res.result});
+          return 'error'
+        }
+      })
+    }
+  }
+}
+
 // 获取筛选器选项
 export const GET_GRADE_OPTIONS = actionNames('GET_GRADE_OPTIONS')
 export const GET_SUBJECT_OPTIONS = actionNames('GET_SUBJECT_OPTIONS')

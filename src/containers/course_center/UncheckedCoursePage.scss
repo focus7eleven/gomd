@@ -1,4 +1,5 @@
 @import "~mixins.scss";
+@import "~theme.scss";
 
 :local(.container){
   width: 100%;
@@ -27,5 +28,23 @@
 
   :local(.tableColumn){
     @include tableColumn;
+  }
+
+  :local(.operationColumn){
+    @include tableColumn;
+    white-space: nowrap;
+  }
+
+  :local(.rejectButton){
+    background-color: #b75959;
+    border-color: #b75959;
+    width: 58px;
+    margin-right: 5px;
+  }
+
+  :local(.agreeButton){
+    background-color: $primary-color;
+    border-color: $primary-color;
+    width: 58px;
   }
 }

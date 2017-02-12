@@ -57,7 +57,7 @@ const PublishModal = React.createClass({
     return (
       <Modal title='发布课程' visible={true} onCancel={this.props.onCancel} onOk={this.handlePublish} width={300}>
         <div className={styles.content}>
-          <span>发布对象：</span>
+          <span>班级：</span>
           <Select style={{width:'200px'}} onChange={this.selectClass}>
           {
             this.state.classList.map((v,k) => (

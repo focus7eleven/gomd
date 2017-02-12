@@ -9,6 +9,12 @@
     border-bottom: 1px solid $border-grey;
     height: 40px;
     padding-bottom: 5px;
+
+    :local(.operationButton){
+      background-color: $highlight-color;
+      border-color: $highlight-color;
+      height: 28px;
+    }
   }
 
   :local(.body){
