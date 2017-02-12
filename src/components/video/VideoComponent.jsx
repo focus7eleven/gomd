@@ -1,10 +1,32 @@
 import React,{PropTypes} from 'react'
 import styles from './VideoComponent.scss'
-import {Tag} from 'antd'
+import {Button,Tag} from 'antd'
 import plyr from 'plyr'
 import 'plyr/dist/plyr.css'
 import {baseURL} from '../../config'
 import subjectColor from '../../utils/subjectColor'
+import {getTableData,checkVideo} from '../../actions/micro_course/main'
+import {connect} from 'react-redux'
+import {bindActionCreators} from 'redux'
+
+const MicroCourseContainer = React.createClass({
+  componentDidMount(){
+    this.props.getTableData(this.props.location.pathname.split('/').slice(-1)[0],'',1)
+  },
+
+  componentWillReceiveProps(nextProps){
+    if(!this.props.microCourse.get('loading') && (nextProps.microCourse.get('data').isEmpty() || (this.props.location.pathname != nextProps.location.pathname))){
+      this.props.getTableData(nextProps.location.pathname.split('/').slice(-1)[0],'',1)
+    }
+  },
+
+  render(){
+    return this.props.microCourse.get('loading') || this.props.menu.get('data').isEmpty()?<div className={styles.loading}><Spin size="large" /></div>:this.props.children
+  }
+})
+
+function mapStateToProps(state){
+  return{
 
 const mockURL = 'https://cdn.selz.com/plyr/1.5/View_From_A_Blue_Moon_Trailer-HD.mp4'
 
@@ -65,6 +87,13 @@ const VideoComponent = React.createClass({
     }
   },
 
+  handleCheckVideo(value){
+    console.log(this.props.id);
+    let formdata = new FormData();
+    formdata.append("videoId",this.props.id);
+    formdata.append("pass",value);
+  },
+
   render(){
     return(
       <div className={styles.videoComponent}>
@@ -87,8 +116,18 @@ const VideoComponent = React.createClass({
           </div>
           <div className={styles.line}></div>
           <div className={styles.bottom}>
-            <span>播放：{this.props.description.playNums}</span>
-            <span>{this.props.description.collectNums}人收藏</span>
+            {
+              this.props.videoType==='check'?
+              <div className={styles.operationButton}>
+                <Button className={styles.editButton} type="primary" onClick={this.handleCheckVideo.bind(true)}>通过</Button>
+                <Button className={styles.deleteButton} type="primary" onClick={this.handleCheckVideo.bind(false)}>驳回</Button>
+              </div>
+              :
+              <div className={styles.info}>
+                <span>播放：{this.props.description.playNums}</span>
+                <span>{this.props.description.collectNums}人收藏</span>
+              </div>
+            }
           </div>
         </div>
       </div>
@@ -96,4 +135,15 @@ const VideoComponent = React.createClass({
   }
 })
 
-export default VideoComponent
+function mapStateToProps(state){
+  return {}
+}
+
+function mapDispatchToProps(dispatch){
+  return {
+    getTableData:bindActionCreators(getTableData,dispatch)
+    checkVideo:bindActionCreators(checkVideo,dispatch)
+  }
+}
+
+export default connect(mapStateToProps,mapDispatchToProps)(VideoComponent)
