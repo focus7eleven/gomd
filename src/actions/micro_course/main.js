@@ -19,6 +19,8 @@ export function getTableData(type,search,currentPage){
     realType = 'getTeacher'
   }else if(type=='mycollection'){
     realType = 'collection'
+  }else if(type=='uncheckedvideo'){
+    realType = 'unchecked'
   }
   return {
     types:GET_TABLEDATA,
@@ -111,6 +113,26 @@ export function addVideo(data,type){
         dispatch(getTableData(type,'',1)).then(res => {notification.success({message:'添加成功'});return res})
       }else{
         notification.error({message:'添加失败',description: res.result});
+        return "error";
+      }
+    })
+  }
+}
+
+export function checkVideo(data){
+  return dispatch => {
+    return fetch(config.api.microvideo.checkVideo,{
+      method:'post',
+      headers:{
+        'from':'nodejs',
+        'token':sessionStorage.getItem('accessToken'),
+      },
+      body: data
+    }).then(res => res.json()).then(res => {
+      if(res.title == 'Success'){
+        dispatch(getTableData('unchecked','',1)).then(res => {notification.success({message:'审核成功'});return res})
+      }else{
+        notification.error({message:'审核失败',description: res.result});
         return "error";
       }
     })

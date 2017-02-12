@@ -136,9 +136,9 @@ const TeacherVideoPage = React.createClass({
 
 
   renderModal(){
-    const gradeOptions = this.props.courseCenter.get('gradeOptions')
-    const subjectOptions = this.props.courseCenter.get('subjectOptions')
-    const versionOptions = this.props.courseCenter.get('versionOptions')
+    const gradeOptions = this.props.microCourse.get('gradeOptions')
+    const subjectOptions = this.props.microCourse.get('subjectOptions')
+    const versionOptions = this.props.microCourse.get('versionOptions')
     const {getFieldDecorator} = this.props.form;
     const {showAddVideoModal,textbook,canSelectTextbook} = this.state;
     const formItemLayout = {labelCol:{span:5},wrapperCol:{span:12}};
@@ -406,7 +406,6 @@ function mapStateToProps(state){
   return{
     menu:state.get('menu'),
     microCourse:state.get('microCourse'),
-    courseCenter: state.get('courseCenter'),
   }
 }
 

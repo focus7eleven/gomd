@@ -224,6 +224,7 @@ const config = _.extend({
 			getVideoDetailById:(videoId)=>`${baseURL}/microvideo/getVideoDetailById?videoId=${videoId}`,
 			getTableData: (type,search,currentPage) => `${baseURL}/microvideo/${type}?search=${search}&currentPage=${currentPage}`,
 			addVideo: `${baseURL}/microvideo/add`,
+			checkVideo: `${baseURL}/microvideo/check`,
 		},
 		homework:{
 			course:{
