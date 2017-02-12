@@ -1,5 +1,5 @@
 import React from 'react'
-import {Button,Icon,Form,Input,Row,Col,Modal,Table,Select,DatePicker,notification} from 'antd'
+import {Button,Icon,Form,Input,Row,Col,Modal,Table,Select,DatePicker,notification,Card} from 'antd'
 import {List,fromJS} from 'immutable'
 import styles from './CreateClassPage.scss'
 import config from '../../config'
@@ -292,36 +292,37 @@ const CreateClassPage = React.createClass({
            <Button type='primary' style={{marginRight:'10px'}} onClick={this.handleShowMicroClassModal}><Icon type="plus" />微课</Button><Button type='primary' onClick={this.handleShowHomeworkModal}><Icon type="plus" />作业</Button>
         </div>
         <div className={styles.body}>
-          <div className={styles.title}><Icon type='edit'/>教学计划</div>
           <Form>
             <Row type='flex' gutter={8}>
-              <Col span={6}>
+              <Col span={5}>
                 <div className={styles.filterItem}>
-                  <div ><span><Icon type="appstore" />学科</span></div>
-                  <Select placeholder='选择学科' size="large" value={this.state.subjectOption} onChange={this.handleFilterChange.bind(this,'subject')}>
-                  {
-                    this.state.subjectList.map(v => (
-                      <Option key={v.get('subject_id')} value={v.get('subject_id')} title={v.get('subject_name')}>{v.get('subject_name')}</Option>
-                    ))
-                  }
-                  </Select>
+                  <Card title={<span><Icon type='appstore'/>学科</span>} bordered={true}>
+                    <Select placeholder='选择学科' size="large" value={this.state.subjectOption} onChange={this.handleFilterChange.bind(this,'subject')}>
+                    {
+                      this.state.subjectList.map(v => (
+                        <Option key={v.get('subject_id')} value={v.get('subject_id')} title={v.get('subject_name')}>{v.get('subject_name')}</Option>
+                      ))
+                    }
+                    </Select>
+                  </Card>
                 </div>
               </Col>
-              <Col span={6}>
+              <Col span={5}>
                 <div className={styles.filterItem}>
-                  <div ><span><Icon type="appstore" />版本</span></div>
-                  <Select placeholder='选择版本' size="large" value={this.state.versionOption} onChange={this.handleFilterChange.bind(this,'version')}>
-                  {
-                    this.state.versionList.map(v => (
-                      <Option key={v.get('id')} value={v.get('id')} title={v.get('text')}>{v.get('text')}</Option>
-                    ))
-                  }
-                  </Select>
+                  <Card title={<span><Icon type='appstore'/>版本</span>} bordered={true}>
+                    <Select placeholder='选择版本' size="large" value={this.state.versionOption} onChange={this.handleFilterChange.bind(this,'version')}>
+                    {
+                      this.state.versionList.map(v => (
+                        <Option key={v.get('id')} value={v.get('id')} title={v.get('text')}>{v.get('text')}</Option>
+                      ))
+                    }
+                    </Select>
+                  </Card>
                 </div>
               </Col>
-              <Col span={6}>
+              <Col span={5}>
                 <div className={styles.filterItem}>
-                  <div ><span><Icon type="appstore" />年级</span></div>
+                  <Card title={<span><Icon type='appstore'/>年级</span>} bordered={true}>
                   <Select placeholder='选择年级' size="large" value={this.state.gradeOption} onChange={this.handleFilterChange.bind(this,'grade')}>
                   {
                     this.state.gradeList.map(v => (
@@ -329,11 +330,12 @@ const CreateClassPage = React.createClass({
                     ))
                   }
                   </Select>
+                  </Card>
                 </div>
               </Col>
-              <Col span={6}>
+              <Col span={5}>
                 <div className={styles.filterItem}>
-                  <div ><span><Icon type="appstore" />学期</span></div>
+                  <Card title={<span><Icon type='appstore'/>学期</span>} bordered={true}>
                   <Select placeholder='选择学期' size="large" value={this.state.termOption} onChange={this.handleFilterChange.bind(this,'term')}>
                   {
                     this.state.termList.map(v => (
@@ -341,40 +343,44 @@ const CreateClassPage = React.createClass({
                     ))
                   }
                   </Select>
+                  </Card>
+                </div>
+              </Col>
+              <Col span={4}>
+                <div className={styles.filterItem}>
+
+                  <Card title={<span><Icon type='appstore'/>上课时间</span>} bordered={true}>
+                    <DatePicker value={moment(this.state.chapterTime,'YYYY/MM/DD')} onChange={(date,dateString)=>{this.setState({chapterTime:dateString})}}  size='large' style={{width:'100%'}} showTime format="YYYY-MM-DD HH:mm" />
+                  </Card>
                 </div>
               </Col>
             </Row>
             <Row type='flex' gutter={8}>
-              <Col span={6}>
+              <Col span={10}>
                 <div className={styles.filterItem}>
-                  <div ><span><Icon type="appstore" />章节课程</span></div>
-                  <Select placeholder='选择章节课程' size="large" value={this.state.charpterList.isEmpty()?'':this.state.charpterOption[0]} onChange={this.handleFilterChange.bind(this,'charpter')}>
-                  {
-                    this.state.charpterList.map(v => (
-                      <Option key={v.get('teaching_schedule_id')} value={v.get('teaching_schedule_id')} title={`${v.get('course')}第${v.get('hours')}课时`}>{`${v.get('course')}第${v.get('hours')}课时`}</Option>
-                    ))
-                  }
-                  </Select>
+                  <Card title={<span><Icon type='appstore'/>章节课程</span>} bordered={true}>
+                    <Select placeholder='选择章节课程' size="large" value={this.state.charpterList.isEmpty()?'':this.state.charpterOption[0]} onChange={this.handleFilterChange.bind(this,'charpter')}>
+                    {
+                      this.state.charpterList.map(v => (
+                        <Option key={v.get('teaching_schedule_id')} value={v.get('teaching_schedule_id')} title={`${v.get('course')}第${v.get('hours')}课时`}>{`${v.get('course')}第${v.get('hours')}课时`}</Option>
+                      ))
+                    }
+                    </Select>
+                  </Card>
                 </div>
               </Col>
-              <Col span={6}>
+              <Col span={10}>
                 <div className={styles.filterItem}>
-                  <div ><span><Icon type="appstore" />上课时间</span></div>
-                  <DatePicker value={moment(this.state.chapterTime,'YYYY/MM/DD')} onChange={(date,dateString)=>{this.setState({chapterTime:dateString})}}  size='large' style={{width:'100%'}} showTime format="YYYY-MM-DD HH:mm:ss" />
+                  <Card title={<span><Icon type='appstore'/>课程名称</span>} bordered={true}>
+                    <Input value={this.state.courseName} onChange={(e)=>{this.setState({courseName:e.target.value})}} size='large' placeholder="输入小于30个字" />
+                  </Card>
                 </div>
               </Col>
-              <Col span={12}>
+              <Col span={4}>
                 <div className={styles.filterItem}>
-                  <div ><span><Icon type="appstore" />课程名称</span></div>
-                  <Input value={this.state.courseName} onChange={(e)=>{this.setState({courseName:e.target.value})}} size='large' placeholder="输入小于30个字" />
-                </div>
-              </Col>
-            </Row>
-            <Row type='flex' gutter={8}>
-              <Col span={24}>
-                <div className={styles.filterItem}>
-                  <div ><span><Icon type="appstore" />课程说明</span></div>
-                  <Input type='textarea' rows={2} value={this.state.courseDesc} onChange={(e)=>{this.setState({courseDesc:e.target.value})}} size='large' placeholder="请输入课程说明"/>
+                  <Card title={<span><Icon type='appstore'/>课程说明</span>} bordered={true}>
+                  <Input type='textarea' rows={1} value={this.state.courseDesc} onChange={(e)=>{this.setState({courseDesc:e.target.value})}} size='large' placeholder="请输入课程说明"/>
+                  </Card>
                 </div>
               </Col>
             </Row>

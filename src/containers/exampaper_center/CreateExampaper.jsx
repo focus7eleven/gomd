@@ -5,6 +5,7 @@ import {Row,Col,Checkbox,Button,Icon,Input} from 'antd'
 import {List,fromJS} from 'immutable'
 import config from '../../config'
 import CourseFilterComponent from '../../components/course_filter/CourseFilterComponent'
+import MultipleChoiceQuestion from '../../components/table/exampaper/MultipleChoiceQuestion'
 
 const Search = Input.Search;
 const CreateExampaper = React.createClass({
@@ -152,7 +153,15 @@ const CreateExampaper = React.createClass({
               </Row>
             </div>
             <div className={styles.paperContent}>
-
+            {
+              this.state.exerciseList.map((v,k) => {
+                if(v.get('kind')=='01'){
+                  return <MultipleChoiceQuestion questionInfo={v} key={k}/>
+                }else{
+                  return null
+                }
+              })
+            }
             </div>
           </div>
 
