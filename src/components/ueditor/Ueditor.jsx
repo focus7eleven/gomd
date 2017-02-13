@@ -26,7 +26,7 @@ const Ueditor = React.createClass({
   },
   render(){
     return (
-      <div className={styles.container}>
+      <div className={styles.container} onClick={(e)=>{e.stopPropagation()}}>
         <script id="editor" type="text/plain"></script>
       </div>
     )

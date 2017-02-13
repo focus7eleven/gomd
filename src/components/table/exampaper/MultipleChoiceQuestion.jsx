@@ -87,8 +87,7 @@ const MultipleChoiceQuestion = React.createClass({
       dataIndex:'answer',
       key:'answer',
       render:(text,record) => (
-        <div className={styles.question} onClick={(e)=>{e.stopPropagation();this.setState({
-          editingAnswerItem:this.state.editingAnswerItem.map((v,k) => k==record.key?!v:v)})}}>
+        <div className={styles.question} onClick={()=>{}}>
         {
           this.state.editingAnswerItem[record.key]?<Ueditor onDestory={this.handleUpdateOption.bind(this,record.key)}/>:<span >{text||'输入选项内容'}</span>
         }
@@ -161,14 +160,14 @@ const MultipleChoiceQuestion = React.createClass({
       optionId:this.state.answerList.find((v,k) => k!=key).get('id')
     })
   },
-  handleWindowEvent(){
-    console.log("Asdfasdf")
-    this.setState({
-      editingQuestion:false,
-      editingAnswerItem:this.state.editingAnswerItem.map(v => false),
-      showFooter:false,
-    })
-  },
+  // handleWindowEvent(){
+  //   console.log("Asdfasdf")
+  //   this.setState({
+  //     editingQuestion:false,
+  //     editingAnswerItem:this.state.editingAnswerItem.map(v => false),
+  //     showFooter:false,
+  //   })
+  // },
   //设定分值
   handleSetScore(){
     this.setState({
@@ -183,7 +182,7 @@ const MultipleChoiceQuestion = React.createClass({
   },
   renderQuestion(){
     return (
-      <div className={styles.question} onClick={(e)=>{e.stopPropagation();this.setState({editingQuestion:true,showFooter:true})}}>
+      <div className={styles.question} onClick={(e)=>{e.stopPropagation();this.setState({editingQuestion:!this.state.editingQuestion,showFooter:true})}}>
       {
         this.state.editingQuestion?<Ueditor onDestory={this.handleUpdateQuestion}/>:<span >{this.state.question}</span>
       }
@@ -235,7 +234,8 @@ const MultipleChoiceQuestion = React.createClass({
         <div className={styles.tag}>
           <span className={styles.text}>单选题</span>
         </div>
-        <Table bordered dataSource={tableData.tableBody} onClick={this.handleWindowEvent} columns={tableData.tableHeader} pagination={false}/>
+        <Table onRowClick={(record,index)=>{console.log("asdfasd");this.setState({
+          editingAnswerItem:this.state.editingAnswerItem.map((v,k) => k==record.key?!v:v)})}} bordered dataSource={tableData.tableBody} columns={tableData.tableHeader} pagination={false}/>
         <div className={styles.moveButton}>
           <div>
           </div>
