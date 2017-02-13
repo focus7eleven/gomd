@@ -256,6 +256,7 @@ const config = _.extend({
 			updateQuestion:`${baseURL}/wordquestion/updateQuestion`,
 			deleteOption:`${baseURL}/wordquestion/deleteOption`,
 			addOption:`${baseURL}/wordquestion/addOption`,
+			setScore:`${baseURL}/wordquestion/setScore`,
 		}
 	}
 })

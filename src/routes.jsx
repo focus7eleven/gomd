@@ -54,6 +54,7 @@ import VideoComponent from './components/video/VideoComponent'
 import CourseTree from './components/tree/CourseTree'
 import UEditor from './components/ueditor/Ueditor'
 import MultipleChoiceQuestion from './components/table/exampaper/MultipleChoiceQuestion'
+import NoteQuestion from './components/table/exampaper/NoteQuestion'
 const routes = (
 	<Router history={browserHistory}>
 		<Route path="/" component={AppContainer}>
@@ -68,6 +69,7 @@ const routes = (
 				<Route path='coursetree' component={CourseTree}></Route>
 				<Route path='ueditor' component={UEditor}></Route>
 				<Route path='multipleChoiceQuestion' component={MultipleChoiceQuestion}></Route>
+				<Route path='noteQuestion' component={NoteQuestion}></Route>
 			</Route>
 			<Route path='login' component={LoginContainer}></Route>
 

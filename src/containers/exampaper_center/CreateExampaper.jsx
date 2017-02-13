@@ -6,7 +6,7 @@ import {List,fromJS} from 'immutable'
 import config from '../../config'
 import CourseFilterComponent from '../../components/course_filter/CourseFilterComponent'
 import MultipleChoiceQuestion from '../../components/table/exampaper/MultipleChoiceQuestion'
-
+import NoteQuestion from '../../components/table/exampaper/NoteQuestion'
 const Search = Input.Search;
 const CreateExampaper = React.createClass({
   getInitialState(){
@@ -156,7 +156,14 @@ const CreateExampaper = React.createClass({
             {
               this.state.exerciseList.map((v,k) => {
                 if(v.get('kind')=='01'){
+                  //单选
                   return <MultipleChoiceQuestion questionInfo={v} key={k}/>
+                }else if(v.get('kind')=='03'){
+                  //多选
+                  return <MultipleChoiceQuestion questionInfo={v} key={k}/>
+                }else if(v.get('kind')=='04'){
+                  //填空
+                  return <NoteQuestion questionInfo={v} key={k}/>
                 }else{
                   return null
                 }

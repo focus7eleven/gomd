@@ -1,7 +1,7 @@
 import React from 'react'
 import styles from './MultipleChoiceQuestion.scss'
 import {List,fromJS} from 'immutable'
-import {Table,Icon,Input,Radio,Select,Row,Col,Button,Rate,InputNumber} from 'antd'
+import {Table,Icon,Input,Radio,Select,Row,Col,Button,Rate,InputNumber,Checkbox} from 'antd'
 import Ueditor from '../../ueditor/Ueditor'
 import {updateOption,updateQuestion,deleteOption} from './exampaper-utils'
 
@@ -75,13 +75,14 @@ const MultipleChoiceQuestion = React.createClass({
     window.removeEventListener('click',this.handleWindowEvent)
   },
   getTableData(){
+    const questionType = this.props.questionInfo.get('kind')
     const tableHeader = [{
       title:this.props.questionInfo.get('questionNo'),
       key:'num',
       className:styles.columns,
       width:50,
       render:(text,record)=>{
-        return <Radio checked={this.state.radioCheck==record.key} onClick={this.handleSetRightAnswer.bind(this,record.key)}></Radio>
+        return <div onClick={(e)=>{e.stopPropagation()}}>{questionType=='01'?<Radio checked={this.state.radioCheck==record.key} onClick={this.handleSetRightAnswer.bind(this,record.key)}></Radio>:<Checkbox checked={this.state.answerList.getIn([record.key,'answer'])} onChange={this.handleSetRightAnswer.bind(this,record.key)}/>}</div>
       }
     },{
       title:this.renderQuestion(),
@@ -116,16 +117,17 @@ const MultipleChoiceQuestion = React.createClass({
   },
   //确定正确的答案
   handleSetRightAnswer(key,e){
-    e.stopPropagation()
     updateOption({
       optionId:this.state.answerList.get(key).get('id'),
       content:this.state.answerList.get(key).get('content'),
       score:this.state.answerList.get(key).get('score'),
       isAnswer:true
     }).then(res => {
-      this.setState({
+      this.props.questionInfo.get('kind')=='01'?this.setState({
         radioCheck:key,
         answerList:this.state.answerList.map((v,k) => v.set('answer',key==k))
+      }):this.setState({
+        answerList:this.state.answerList.setIn([key,'answer'],true)
       })
     })
   },
@@ -212,6 +214,10 @@ const MultipleChoiceQuestion = React.createClass({
       score:this.state.score,
     })
   },
+  //添加注解
+  handleAddComment(){
+
+  },
   renderQuestion(){
     return (
       <div className={styles.question} onClick={(e)=>{e.stopPropagation();this.setState({editingQuestion:!this.state.editingQuestion,showFooter:true})}}>
@@ -250,10 +256,10 @@ const MultipleChoiceQuestion = React.createClass({
         </Row>
         <Row >
           <Col span={10}>
-            注解：<Input />
+            注解：<div><Input /></div>
           </Col>
           <Col span={10} offset={2}>
-            描述：<Input />
+            描述：<div><Input /></div>
           </Col>
         </Row>
       </div>
@@ -264,7 +270,7 @@ const MultipleChoiceQuestion = React.createClass({
     return(
       <div className={styles.multipleChoiceQuestion} >
         <div className={styles.tag}>
-          <span className={styles.text}>单选题</span>
+          <span className={styles.text}>{this.props.questionInfo.get('kind')=='01'?'单选题':'多选题'}</span>
         </div>
         <Table onRowClick={(record,index)=>{console.log("asdfasd");this.setState({
           editingAnswerItem:this.state.editingAnswerItem.map((v,k) => k==record.key?!v:v)})}} bordered dataSource={tableData.tableBody} columns={tableData.tableHeader} pagination={false}/>

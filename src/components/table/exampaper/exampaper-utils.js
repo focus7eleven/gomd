@@ -66,3 +66,18 @@ export function addOption(data){
     body:formData
   }).then(res => res.json())
 }
+
+//设定题目分值
+export function setScore(data){
+  let formData = new FormData()
+  formData.append('questionId',data.questionId)
+  formData.append('score',data.score)
+  return fetch(config.api.wordquestion.setScore,{
+    method:'post',
+    headers:{
+      'from':'nodejs',
+      'token':sessionStorage.getItem('accessToken')
+    },
+    body:formData
+  }).then(res => res.json())
+}
