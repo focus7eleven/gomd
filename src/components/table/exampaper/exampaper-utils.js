@@ -51,3 +51,18 @@ export function deleteOption(data){
     body:formData
   }).then(res => res.json())
 }
+
+//添加答案选项
+export function addOption(data){
+  let formData = new FormData()
+  formData.append('questionId',data.questionId)
+  formData.append('questionKind',data.questionKind)
+  return fetch(config.api.wordquestion.addOption,{
+    method:'post',
+    headers:{
+      'from':'nodejs',
+      'token':sessionStorage.getItem('accessToken')
+    },
+    body:formData
+  }).then(res => res.json())
+}

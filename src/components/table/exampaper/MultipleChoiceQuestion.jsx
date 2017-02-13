@@ -65,13 +65,14 @@ const MultipleChoiceQuestion = React.createClass({
       difficulty:0,
       drawZone:'',
       score:1,
+      scoreList:List([0,0,0,0]),//每个答案选项的分值
     }
   },
   componentDidMount(){
-    // window.addEventListener('click',this.handleWindowEvent)
+    window.addEventListener('click',this.handleWindowEvent)
   },
   componentWillUnmount(){
-    // window.removeEventListener('click',this.handleWindowEvent)
+    window.removeEventListener('click',this.handleWindowEvent)
   },
   getTableData(){
     const tableHeader = [{
@@ -91,7 +92,9 @@ const MultipleChoiceQuestion = React.createClass({
         {
           this.state.editingAnswerItem[record.key]?<Ueditor onDestory={this.handleUpdateOption.bind(this,record.key)}/>:<span >{text||'输入选项内容'}</span>
         }
-        {this.state.showScoreSetting?<InputNumber min={0} defaultValue={0} />:null}
+        {this.state.showScoreSetting?<div onClick={(e)=>{e.stopPropagation()}}><InputNumber min={0} defaultValue={0}
+          value={this.state.answerList.getIn([record.key,'score'])}
+          onChange={this.handleChangeScore.bind(this,record.key)}/></div>:null}
         </div>
       )
     },{
@@ -112,7 +115,8 @@ const MultipleChoiceQuestion = React.createClass({
     }
   },
   //确定正确的答案
-  handleSetRightAnswer(key){
+  handleSetRightAnswer(key,e){
+    e.stopPropagation()
     updateOption({
       optionId:this.state.answerList.get(key).get('id'),
       content:this.state.answerList.get(key).get('content'),
@@ -121,6 +125,7 @@ const MultipleChoiceQuestion = React.createClass({
     }).then(res => {
       this.setState({
         radioCheck:key,
+        answerList:this.state.answerList.map((v,k) => v.set('answer',key==k))
       })
     })
   },
@@ -160,24 +165,51 @@ const MultipleChoiceQuestion = React.createClass({
       optionId:this.state.answerList.find((v,k) => k!=key).get('id')
     })
   },
-  // handleWindowEvent(){
-  //   console.log("Asdfasdf")
-  //   this.setState({
-  //     editingQuestion:false,
-  //     editingAnswerItem:this.state.editingAnswerItem.map(v => false),
-  //     showFooter:false,
-  //   })
-  // },
+  handleWindowEvent(){
+    this.setState({
+      // editingQuestion:false,
+      // editingAnswerItem:this.state.editingAnswerItem.map(v => false),
+      showFooter:false,
+    })
+  },
   //设定分值
   handleSetScore(){
     this.setState({
       showScoreSetting:!this.state.showScoreSetting
     })
   },
+  //修改分值
+  handleChangeScore(key,value){
+    this.setState({
+      scoreList:this.state.answerList.setIn([key,'score'],value)
+    })
+    updateOption({
+      optionId:this.state.answerList.get(key).get('id'),
+      content:this.state.answerList.get(key).get('content'),
+      score:value,
+      isAnswer:this.state.answerList.get(key).get('answer'),
+    })
+  },
   //添加答案选项
   handleAddAnswerItem(){
     this.setState({
       answerList:this.state.answerList.push(fromJS({answer:false,content:"答案一",id:"0",questionId:"1",score:0}))
+    })
+  },
+  //设定难度
+  handlerSetHardness(value){
+    this.setState({
+      difficulty:value
+    })
+    updateQuestion({
+      qid:this.props.questionInfo.get('id'),
+      examination:this.state.question,
+      comment:this.state.comment,
+      description:this.state.description,
+      difficulty:value,
+      kind:this.props.questionInfo.get('kind'),
+      drawZone:'',
+      score:this.state.score,
     })
   },
   renderQuestion(){
@@ -210,7 +242,7 @@ const MultipleChoiceQuestion = React.createClass({
             </Select>
           </Col>
           <Col span={6}>
-            难度：<Rate />
+            难度：<Rate value={this.state.difficulty} onChange={this.handlerSetHardness}/>
           </Col>
           <Col>
             <Button onClick={this.handleSetScore}>设定分值</Button>

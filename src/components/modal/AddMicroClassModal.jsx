@@ -54,7 +54,7 @@ const AddMicroClassModal = React.createClass({
   getInitialState(){
     return {
       subjectOption:'',
-      typeOption:'',
+      microClassTypeOption:'areaList',
       versionOption:'',
       gradeOption:'',
       termOption:'',
@@ -65,6 +65,13 @@ const AddMicroClassModal = React.createClass({
 
       microVideo:List(),
     }
+  },
+  componentDidMount(){
+    getMicrovideo(this.state.microClassTypeOption,'1','10','','','','').then(res => {
+      this.setState({
+        microVideo:fromJS(res),
+      })
+    })
   },
   //改变维克类型
   handleChangeMicroClassType(value){
@@ -215,7 +222,8 @@ const AddMicroClassModal = React.createClass({
                 </Col>
                 <Col span={6}>
                   <div className={styles.filterItem}>
-                    <Select placeholder='选择学科' size="large" value={this.state.subjectOption||undefined} onChange={this.handleChangeSubject}>
+                    <Select placeholder='选择学科' size="large" value={this.state.subjectOption} onChange={this.handleChangeSubject}>
+                    <Option value='' title='所有学科' key='-1'>所有学科</Option>
                     {
                       this.props.subjectList.map(v => (
                         <Option key={v.get('subject_id')} value={v.get('subject_id')} title={v.get('subject_name')}>{v.get('subject_name')}</Option>
@@ -227,7 +235,8 @@ const AddMicroClassModal = React.createClass({
                 </Col>
                 <Col span={6}>
                   <div className={styles.filterItem}>
-                    <Select placeholder='选择版本' size="large" value={this.state.versionOption||undefined} onChange={this.handleChangeVersion}>
+                    <Select placeholder='选择版本' size="large" value={this.state.versionOption} onChange={this.handleChangeVersion}>
+                    <Option value='' title='所有版本' key='-1'>所有版本</Option>
                     {
                       this.props.versionList.map(v => (
                         <Option key={v.get('id')} value={v.get('id')} title={v.get('text')}>{v.get('text')}</Option>
@@ -238,7 +247,8 @@ const AddMicroClassModal = React.createClass({
                 </Col>
                 <Col span={6}>
                   <div className={styles.filterItem}>
-                    <Select placeholder='选择年级' size="large" value={this.state.gradeOption||undefined} onChange={this.handleChangeGrade}>
+                    <Select placeholder='选择年级' size="large" value={this.state.gradeOption} onChange={this.handleChangeGrade}>
+                    <Option value='' title='所有年级' key='-1'>所有年级</Option>
                     {
                       this.state.gradeList.map(v => (
                         <Option key={v.get('gradeId')} value={v.get('gradeId')} title={v.get('gradeName')}>{v.get('gradeName')}</Option>
@@ -251,7 +261,8 @@ const AddMicroClassModal = React.createClass({
               <Row gutter={8}>
                 <Col span={8}>
                   <div className={styles.filterItem}>
-                    <Select placeholder='选择学期' size="large" value={this.state.termOption||undefined} onChange={this.handleChangeTerm}>
+                    <Select placeholder='选择学期' size="large" value={this.state.termOption} onChange={this.handleChangeTerm}>
+                    <Option value='' title='所有学期' key='-1'>所有学期</Option>
                     {
                       termList.map(v => (
                         <Option key={v.get('id')} value={v.get('id')} title={v.get('text')}>{v.get('text')}</Option>
@@ -262,7 +273,8 @@ const AddMicroClassModal = React.createClass({
                 </Col>
                 <Col span={8}>
                   <div className={styles.filterItem}>
-                    <Select placeholder='选择章节课程' size="large" value={this.state.charpterOption||undefined} onChange={this.handleChangeCharpter}>
+                    <Select placeholder='选择章节课程' size="large" value={this.state.charpterOption} onChange={this.handleChangeCharpter}>
+                    <Option value='' title='所有章节' key='-1'>所有章节</Option>
                     {
                       this.state.charpterList.map((v,k) => (
                         <Option key={k} value={v.get('textbook_menu_id')} title={v.get('course')}>{v.get('course')}</Option>
