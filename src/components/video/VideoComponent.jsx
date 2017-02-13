@@ -1,6 +1,6 @@
 import React,{PropTypes} from 'react'
 import styles from './VideoComponent.scss'
-import {Button,Tag} from 'antd'
+import {Modal,Button,Tag} from 'antd'
 import {baseURL} from '../../config'
 import subjectColor from '../../utils/subjectColor'
 import {getTableData,checkVideo} from '../../actions/micro_course/main'
@@ -29,6 +29,7 @@ const VideoComponent = React.createClass({
   getInitialState(){
     return {
       tagColor: '',
+      showVideoDetail: false,
     }
   },
 
@@ -57,13 +58,6 @@ const VideoComponent = React.createClass({
 
   handlePlay(){
     console.log("this",this.refs.player)
-    if(this._played){
-      this._played = false
-      this.refs.player.pause()
-    }else{
-      this._played = true
-      this.refs.player.play()
-    }
   },
 
   handleCheckVideo(value){
@@ -74,23 +68,52 @@ const VideoComponent = React.createClass({
     this.props.checkVideo(formdata)
   },
 
+  handleShowModal(){
+    this.setState({showVideoDetail: true},()=>{
+      if(this._played){
+        this._played = false
+        this.refs.player.pause()
+      }else{
+        this._played = true
+        this.refs.player.play()
+      }
+    });
+},
+
+  handleCloseModal(){
+    this.setState({showVideoDetail: false});
+  },
+
+  renderModal(){
+    return (
+      <Modal wrapClassName={styles.modalWrapper} title='视频详情' visible={this.state.showVideoDetail}
+        onCancel={this.handleCloseModal} footer={null}
+      >
+        <div className={styles.detailContainer}>
+          <div>
+            <video ref="player" poster={baseURL+'/'+this.props.coverUrl} className={styles.microVideo} id={this.props.id} controls>
+              <source src={baseURL+'/'+this.props.videoUrl} type="video/mp4"/>
+            </video>
+          </div>
+        </div>
+      </Modal>
+    )
+  },
+
   render(){
     return(
       <div className={styles.videoComponent}>
         <div className={styles.videoContainer} onClick={this.handlePlay}>
           <Tag className={styles.tag} color={this.state.tagColor}>{this.props.description.grade}|{this.props.description.subject}</Tag>
-          <video ref="player" poster={baseURL+'/'+this.props.coverUrl} className={styles.microVideo} id={this.props.id} controls>
-            <source src={baseURL+'/'+this.props.videoUrl} type="video/mp4"/>
-          </video>
-          <div className={styles.mask}>
+
+          <img style={{width:'100%',height:'100%'}} src={baseURL+'/'+this.props.coverUrl} onClick={this.handleShowModal}/>
+          {/* <div className={styles.mask}>
             <span>{this.props.description.school}</span>
             <span>{this.props.description.teacher}</span>
-          </div>
+          </div> */}
         </div>
         <div className={styles.description}>
           <div className={styles.top}>
-            {/* <span>{this.props.description.grade}</span>
-            <span>{this.props.description.subject}</span> */}
             <span>{this.props.description.name}</span>
             <span>{this.props.description.chapter}</span>
           </div>
@@ -110,6 +133,7 @@ const VideoComponent = React.createClass({
             }
           </div>
         </div>
+        {this.renderModal()}
       </div>
     )
   }
