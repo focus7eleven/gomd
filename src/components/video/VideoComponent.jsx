@@ -1,8 +1,6 @@
 import React,{PropTypes} from 'react'
 import styles from './VideoComponent.scss'
 import {Button,Tag} from 'antd'
-import plyr from 'plyr'
-import 'plyr/dist/plyr.css'
 import {baseURL} from '../../config'
 import subjectColor from '../../utils/subjectColor'
 import {getTableData,checkVideo} from '../../actions/micro_course/main'
@@ -73,6 +71,7 @@ const VideoComponent = React.createClass({
     let formdata = new FormData();
     formdata.append("videoId",this.props.id);
     formdata.append("pass",value);
+    this.props.checkVideo(formdata)
   },
 
   render(){
@@ -100,8 +99,8 @@ const VideoComponent = React.createClass({
             {
               this.props.videoType==='check'?
               <div className={styles.operationButton}>
-                <Button className={styles.editButton} type="primary" onClick={this.handleCheckVideo.bind(true)}>通过</Button>
-                <Button className={styles.deleteButton} type="primary" onClick={this.handleCheckVideo.bind(false)}>驳回</Button>
+                <Button className={styles.editButton} type="primary" onClick={this.handleCheckVideo.bind(null,true)}>通过</Button>
+                <Button className={styles.deleteButton} type="primary" onClick={this.handleCheckVideo.bind(null,false)}>驳回</Button>
               </div>
               :
               <div className={styles.info}>

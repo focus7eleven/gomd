@@ -3,8 +3,9 @@ import {fromJS} from 'immutable'
 import config from '../config.js'
 import {notification} from 'antd'
 notification.config({
-  top: window.screen.availHeight-200,
   duration: 3,
+  placement: 'bottomRight',
+  bottom: 10,
 });
 //获取表格数据
 export const GET_WORKSPACEDATA = actionNames('GET_WORKSPACEDATA')

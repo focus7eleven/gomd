@@ -15,12 +15,14 @@
     border: none;
     height: 162px;
     width: 100%;
+
     :local(.tag){
       position:absolute;
-      top: 0;
+      top: 7px;
       right: 0;
       z-index: 1;
     }
+
     :local(.microVideo){
       top:0px;
       left: 0px;
@@ -91,7 +93,12 @@
       padding: 5px 10px;
       justify-content: space-between;
       align-items: center;
+
       :local(.info){
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        width: 100%;
         >span{
           display: block;
           font-size: 14px;

@@ -2,10 +2,6 @@ import {actionNames} from '../../utils/action-utils'
 import {fromJS} from 'immutable'
 import config from '../../config.js'
 import {notification} from 'antd'
-notification.config({
-  top: window.screen.availHeight-200,
-  duration: 3,
-});
 
 //获取表格数据
 export const GET_TABLEDATA = actionNames('GET_TABLEDATA')

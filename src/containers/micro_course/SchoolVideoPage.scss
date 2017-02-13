@@ -52,6 +52,7 @@
         height: calc( 100% - 60px );
         border-radius: 4px;
         border: 1px solid $border-grey;
+        overflow-y: scroll;
 
         :local(.menu){
           font-size: 14px;
