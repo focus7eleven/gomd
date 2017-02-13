@@ -37,3 +37,17 @@ export function updateQuestion(data){
     body:formData
   }).then(res => res.json())
 }
+
+//删除答案选项
+export function deleteOption(data){
+  let formData = new FormData()
+  formData.append('optionId',data.optionId)
+  return fetch(config.api.wordquestion.deleteOption,{
+    method:'post',
+    headers:{
+      'from':'nodejs',
+      'token':sessionStorage.getItem('accessToken')
+    },
+    body:formData
+  }).then(res => res.json())
+}

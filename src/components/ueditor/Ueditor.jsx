@@ -15,7 +15,7 @@ const Ueditor = React.createClass({
   			'bold', 'italic', 'underline', '|', 'fontsize', '|', 'kityformula', 'preview'
   		]],
   	});
-    this.ue.setContent(this.props.initialContent)
+    // this.ue.setContent(this.props.initialContent)
     // this.ue.destroy = ()=>{
     //   this.props.onDestory(this.ue.getContent())
     // }

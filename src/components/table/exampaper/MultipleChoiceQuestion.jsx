@@ -3,7 +3,7 @@ import styles from './MultipleChoiceQuestion.scss'
 import {List,fromJS} from 'immutable'
 import {Table,Icon,Input,Radio,Select,Row,Col,Button,Rate,InputNumber} from 'antd'
 import Ueditor from '../../ueditor/Ueditor'
-import {updateOption,updateQuestion} from './exampaper-utils'
+import {updateOption,updateQuestion,deleteOption} from './exampaper-utils'
 
 const Option = Select.Option
 const questionType = [{
@@ -68,10 +68,10 @@ const MultipleChoiceQuestion = React.createClass({
     }
   },
   componentDidMount(){
-    window.addEventListener('click',this.handleWindowEvent)
+    // window.addEventListener('click',this.handleWindowEvent)
   },
   componentWillUnmount(){
-    window.removeEventListener('click',this.handleWindowEvent)
+    // window.removeEventListener('click',this.handleWindowEvent)
   },
   getTableData(){
     const tableHeader = [{
@@ -157,8 +157,12 @@ const MultipleChoiceQuestion = React.createClass({
     this.setState({
       answerList:this.state.answerList.filter((v,k) => k!=key)
     })
+    deleteOption({
+      optionId:this.state.answerList.find((v,k) => k!=key).get('id')
+    })
   },
   handleWindowEvent(){
+    console.log("Asdfasdf")
     this.setState({
       editingQuestion:false,
       editingAnswerItem:this.state.editingAnswerItem.map(v => false),
@@ -188,16 +192,16 @@ const MultipleChoiceQuestion = React.createClass({
   },
   renderFooter(){
     return (
-      <div className={styles.footer} onClick={(e)=>{e.stopPropagation()}}>
+      <div className={styles.footer} onClick={(e)=>{e.stopPropagation()}} >
         <Row>
           <Col span={6}>
             <Button onClick={this.handleAddAnswerItem}>添加备选</Button>
           </Col>
           <Col span={6}>
             <Select style={{width:'200px'}} onFocus={()=>{
-              window.removeEventListener('click',this.handleWindowEvent)
+              // window.removeEventListener('click',this.handleWindowEvent)
             }} onBlur={()=>{
-              window.addEventListener('click',this.handleWindowEvent)
+              // window.addEventListener('click',this.handleWindowEvent)
             }} onChange={this.props.onChangeQuestionType}>
             {
               questionType.map(v => (
@@ -227,11 +231,11 @@ const MultipleChoiceQuestion = React.createClass({
   render(){
     const tableData = this.getTableData()
     return(
-      <div className={styles.multipleChoiceQuestion}>
+      <div className={styles.multipleChoiceQuestion} >
         <div className={styles.tag}>
           <span className={styles.text}>单选题</span>
         </div>
-        <Table bordered dataSource={tableData.tableBody} columns={tableData.tableHeader} pagination={false}/>
+        <Table bordered dataSource={tableData.tableBody} onClick={this.handleWindowEvent} columns={tableData.tableHeader} pagination={false}/>
         <div className={styles.moveButton}>
           <div>
           </div>
