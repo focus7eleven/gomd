@@ -1,9 +1,9 @@
 import React,{PropTypes} from 'react'
 import styles from './VideoComponent.scss'
-import {Modal,Button,Tag} from 'antd'
+import {Icon,Modal,Button,Tag} from 'antd'
 import {baseURL} from '../../config'
 import subjectColor from '../../utils/subjectColor'
-import {getTableData,checkVideo} from '../../actions/micro_course/main'
+import {getTableData,checkVideo,likeVideo,collectVideo} from '../../actions/micro_course/main'
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
 
@@ -17,8 +17,14 @@ const VideoComponent = React.createClass({
       subject:PropTypes.string,
       chapter:PropTypes.string,//章节
       playNums:PropTypes.number,//播放次数
+      like: PropTypes.bool, //是否赞
+      collect: PropTypes.bool, //是否收藏
+      likeNums:PropTypes.number,//赞次数,
       collectNums:PropTypes.number,//收藏次数,
       school:PropTypes.string,
+      term:PropTypes.string,
+      textBookMenuName:PropTypes.string,
+      info:PropTypes.string, // 内容简介
       teacher:PropTypes.string,
     }),//视频的描述信息
     videoUrl:PropTypes.string,
@@ -57,7 +63,13 @@ const VideoComponent = React.createClass({
   },
 
   handlePlay(){
-    console.log("this",this.refs.player)
+    if(this._played){
+      this._played = false
+      this.refs.player.pause()
+    }else{
+      this._played = true
+      this.refs.player.play()
+    }
   },
 
   handleCheckVideo(value){
@@ -69,31 +81,58 @@ const VideoComponent = React.createClass({
   },
 
   handleShowModal(){
-    this.setState({showVideoDetail: true},()=>{
-      if(this._played){
-        this._played = false
-        this.refs.player.pause()
-      }else{
-        this._played = true
-        this.refs.player.play()
-      }
-    });
+    this.setState({showVideoDetail: true});
 },
 
   handleCloseModal(){
     this.setState({showVideoDetail: false});
   },
 
+  handleLike(){
+    const type = this.props.description.like ? "nolike" : "like"
+    let formData = new FormData()
+    formData.append('videoId',this.props.id);
+    this.props.likeVideo(formData,type)
+  },
+
+  handleCollect(){
+    const type = this.props.description.collect ? "nocollect" : "collect"
+    let formData = new FormData()
+    formData.append('videoId',this.props.id);
+    this.props.collectVideo(formData,type)
+  },
+
   renderModal(){
+    const des = this.props.description;
     return (
-      <Modal wrapClassName={styles.modalWrapper} title='视频详情' visible={this.state.showVideoDetail}
+      <Modal width={672} wrapClassName={styles.modalWrapper} title='视频详情' visible={this.state.showVideoDetail}
         onCancel={this.handleCloseModal} footer={null}
       >
         <div className={styles.detailContainer}>
-          <div>
+          <div onClick={this.handlePlay}>
             <video ref="player" poster={baseURL+'/'+this.props.coverUrl} className={styles.microVideo} id={this.props.id} controls>
               <source src={baseURL+'/'+this.props.videoUrl} type="video/mp4"/>
             </video>
+          </div>
+          <div className={styles.videoInfo}>
+            <div className={styles.infoTitle}>
+              <div>{des.name}</div>
+              <div>
+                <span className={styles.like} onClick={this.handleLike}><Icon style={des.like?{color:'#F04134'}:null} type="like" />{des.likeNums}</span>
+                <span className={styles.collect} onClick={this.handleCollect}><Icon style={des.collect?{color:'#F04134'}:null} type="heart" />{des.collect?"取消收藏":"收藏"}</span>
+              </div>
+            </div>
+            <div style={{marginBottom:"18px"}}>
+              <span className={styles.firstLine}><span>学科：</span>{des.subject}</span>
+              <span className={styles.firstLine}><span>年级：</span>{des.grade}</span>
+              <span className={styles.firstLineEnd}><span>学期：</span>{des.term}</span>
+            </div>
+            <div style={{marginBottom:"18px"}}>
+              <span className={styles.firstLineEnd}><span>知识点：</span>{des.textBookMenuName}</span>
+            </div>
+            <div style={{marginBottom:"18px"}}>
+              <span className={styles.firstLineEnd}><span>内容简介：</span>{des.info}</span>
+            </div>
           </div>
         </div>
       </Modal>
@@ -103,7 +142,7 @@ const VideoComponent = React.createClass({
   render(){
     return(
       <div className={styles.videoComponent}>
-        <div className={styles.videoContainer} onClick={this.handlePlay}>
+        <div className={styles.videoContainer}>
           <Tag className={styles.tag} color={this.state.tagColor}>{this.props.description.grade}|{this.props.description.subject}</Tag>
 
           <img style={{width:'100%',height:'100%'}} src={baseURL+'/'+this.props.coverUrl} onClick={this.handleShowModal}/>
@@ -145,8 +184,10 @@ function mapStateToProps(state){
 
 function mapDispatchToProps(dispatch){
   return {
-    getTableData:bindActionCreators(getTableData,dispatch),
-    checkVideo:bindActionCreators(checkVideo,dispatch),
+    getTableData: bindActionCreators(getTableData,dispatch),
+    checkVideo: bindActionCreators(checkVideo,dispatch),
+    likeVideo: bindActionCreators(likeVideo,dispatch),
+    collectVideo: bindActionCreators(collectVideo,dispatch),
   }
 }
 

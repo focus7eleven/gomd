@@ -225,6 +225,8 @@ const config = _.extend({
 			getTableData: (type,search,currentPage) => `${baseURL}/microvideo/${type}?search=${search}&currentPage=${currentPage}`,
 			addVideo: `${baseURL}/microvideo/add`,
 			checkVideo: `${baseURL}/microvideo/check`,
+			likeVideo: (type) => `${baseURL}/microvideo/${type}`,
+			collectVideo: (type) => `${baseURL}/microvideo/${type}`,
 		},
 		homework:{
 			course:{

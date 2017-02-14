@@ -44,10 +44,9 @@ export function editResource(data){
       formData.append('resourceName',data.resourceName)
       formData.append('resourceUrl',data.resourceUrl)
       formData.append('resourceOrder',data.resourceOrder)
+      formData.append('resourceDesc',data.resourceDesc)
+      formData.append('parentId',data.parentId)
     }
-    // formData.append('resourceDesc',data.resourceDesc)
-    // formData.append('parentId',data.parentId)
-    // formData.append('logo',data.logo)
     // formData.append('authList',data.authList)
     return fetch(config.api.resource.editResource,{
       method:'post',

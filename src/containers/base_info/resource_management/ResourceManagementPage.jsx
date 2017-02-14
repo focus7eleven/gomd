@@ -254,7 +254,7 @@ const ResourceManagementPage = React.createClass({
 
   handleAddResource(){
     const {getFieldsValue,getFieldValue,getFieldError} = this.props.form
-    if(getFieldValue('resourceName') && !(getFieldError('resourceName') || getFieldError('resourceOrder') || getFieldError('resourceDesc') || getFieldError('resourceUrl') || getFieldError('logo'))){
+    if(getFieldValue('resourceName') && !(getFieldError('resourceName') || getFieldError('resourceOrder') || getFieldError('resourceDesc') || getFieldError('resourceUrl'))){
       const obj = getFieldsValue();
       delete obj['newAuth'];
       const str = JSON.stringify(obj);
@@ -269,10 +269,9 @@ const ResourceManagementPage = React.createClass({
   },
 
   handleEditResource(){
-    console.log("edit!!");
     const {validateFields,getFieldsValue,getFieldValue,getFieldError} = this.props.form
     validateFields();
-    if(getFieldValue('resourceName') && !(getFieldError('resourceName') || getFieldError('resourceOrder') || getFieldError('resourceUrl') || getFieldError('logo'))){
+    if(getFieldValue('resourceName') && !(getFieldError('resourceName') || getFieldError('resourceOrder') || getFieldError('resourceUrl') || getFieldError('resourceDesc'))){
       const obj = getFieldsValue();
       console.log(obj);
       this.props.editResource({
@@ -280,6 +279,8 @@ const ResourceManagementPage = React.createClass({
         resourceName: obj.resourceName,
         resourceUrl: obj.resourceUrl,
         resourceOrder: obj.resourceOrder,
+        resourceDesc: obj.resourceDesc,
+        parentId: obj.parentId,
         action: 'edit',
       })
       this.setState({
@@ -319,7 +320,8 @@ const ResourceManagementPage = React.createClass({
         'resourceName':this._currentRow.get('resourceName'),
         'resourceUrl':this._currentRow.get('resourceUrl'),
         'resourceOrder':this._currentRow.get('resourceOrder'),
-        'logo':this._currentRow.get('logo'),
+        'resourceDesc':this._currentRow.get('resourceDesc'),
+        'parentId':this._currentRow.get('parentId'),
       })
       this.setState({modalVisibility: visibility,modalType: 'edit'});
     }
@@ -388,7 +390,6 @@ const ResourceManagementPage = React.createClass({
         </FormItem>
       );
     });
-    console.log("modalType",modalType);
     return (
       <Modal title={modalType==="add"?"添加资源":"编辑资源"} visible={modalVisibility}
           onOk={modalType==="add"?this.handleAddResource:this.handleEditResource} onCancel={this.handleModalDispaly.bind(this,false,"")}
@@ -440,7 +441,6 @@ const ResourceManagementPage = React.createClass({
             }
             </FormItem>
             {
-              modalType=="add"?
               <FormItem
                 label="资源描述"
                 {...formItemLayout}
@@ -451,29 +451,8 @@ const ResourceManagementPage = React.createClass({
                   rules: [{max:200, message: '输入不超过200个字' }],
                 })(<Input type="textarea" placeholder='输入不超过200个字' rows={3}/>)
               }
-              </FormItem>:null
+              </FormItem>
             }
-            <FormItem
-              label="资源logo"
-              {...formItemLayout}
-              key='logo'
-            >
-            {
-              getFieldDecorator('logo', {
-                rules: [{
-                  validator(rule, value, callback, source, options) {
-                    var errors = [];
-                    if(value.length > 30){
-                      errors.push(
-                        new Error('资源logo应不超过30个字')
-                      )
-                    }
-                    callback(errors);
-                  }
-                }],
-              })(<Input placeholder='输入不超过30个字'/>)
-            }
-            </FormItem>
             {modalType=="add"?resourceAuthItems:null}
             {
               modalType=="add"?
@@ -487,7 +466,6 @@ const ResourceManagementPage = React.createClass({
               </FormItem>:null
             }
             {
-              modalType=="add"?
               <FormItem
                 label="父资源"
                 {...formItemLayout}
@@ -509,7 +487,7 @@ const ResourceManagementPage = React.createClass({
                   </Select>
                 )
               }
-              </FormItem>:null
+              </FormItem>
             }
             <FormItem
               label="权重"

@@ -378,8 +378,14 @@ const TeacherVideoPage = React.createClass({
                     description.subject = item.get('subjectName');
                     description.chapter = item.get('textBookMenuName');
                     description.playNums = item.get('playCount');
+                    description.like = item.get('liked');
+                    description.collect = item.get('collected');
+                    description.likeNums = item.get('likeCount');
                     description.collectNums = item.get('collectionCount');
                     description.school = item.get('schoolName');
+                    description.term = item.get('textbookMenuTerm');
+                    description.textBookMenuName = item.get('textBookMenuName');
+                    description.info = item.get('description');
                     description.teacher = 'teacher';
                     return <div key={index}>
                       <VideoComponent description={description} videoUrl={item.get('url')} coverUrl={item.get('coverUrl')} id={item.get('id')}></VideoComponent>

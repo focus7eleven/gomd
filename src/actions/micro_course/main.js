@@ -134,3 +134,59 @@ export function checkVideo(data){
     })
   }
 }
+
+export const LIKE_VIDEO = "LIKE_VIDEO"
+export function likeVideo(data,type){
+  return dispatch => {
+    return fetch(config.api.microvideo.likeVideo(type),{
+      method:'post',
+      headers:{
+        'from':'nodejs',
+        'token':sessionStorage.getItem('accessToken'),
+      },
+      body: data
+    }).then(res => res.json()).then(res => {
+      if(res.title == 'Success'){
+        dispatch({
+    			type: LIKE_VIDEO,
+    			payload: {
+            videoId: data.get('videoId'),
+    				result: res.result,
+            type: type,
+    			},
+    		})
+      }else{
+        notification.error({message:'操作失败',description: res.result});
+        return "error";
+      }
+    })
+  }
+}
+
+export const COLLECT_VIDEO = "COLLECT_VIDEO"
+export function collectVideo(data,type){
+  return dispatch => {
+    return fetch(config.api.microvideo.collectVideo(type),{
+      method:'post',
+      headers:{
+        'from':'nodejs',
+        'token':sessionStorage.getItem('accessToken'),
+      },
+      body: data
+    }).then(res => res.json()).then(res => {
+      if(res.title == 'Success'){
+        dispatch({
+    			type: COLLECT_VIDEO,
+    			payload: {
+            videoId: data.get('videoId'),
+    				result: res.result,
+            type: type,
+    			},
+    		})
+      }else{
+        notification.error({message:'操作失败',description: res.result});
+        return "error";
+      }
+    })
+  }
+}
