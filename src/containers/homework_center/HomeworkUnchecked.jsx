@@ -15,10 +15,7 @@ import {getGradeOptions,getSubjectOptions,getVersionOptions} from '../../actions
 import {AssignHomeworkModal} from './AssignHomeworkModal';
 //import {findMenuInTree} from '../../reducer/menu';
 
-const HomeworkLibPage = React.createClass({
-  contextTypes: {
-    router: React.PropTypes.object
-  },
+const HomeworkUnchecked = React.createClass({
   getInitialState(){
     return {
       type: "",
@@ -29,7 +26,6 @@ const HomeworkLibPage = React.createClass({
       subjectOptionList:[],
       versionOptionList:[],
 
-      assignHomeworkModalVisible:false
     }
   },
   getDefaultProps() {
@@ -81,7 +77,7 @@ const HomeworkLibPage = React.createClass({
     return (
       <div> {/* 过滤+表格+分页 */}
         <CustomTable columns={columns} showIndex={true} pageUrl={this.state.pageUrl}
-                     filters={filters}></CustomTable>
+                     filters={filters} ref="uncheckedTable"></CustomTable>
         <AssignHomeworkModal ref="assignHomeworkModal"></AssignHomeworkModal>
       </div>
     );
@@ -91,7 +87,7 @@ const HomeworkLibPage = React.createClass({
       {
         title: '作业名称', dataIndex: 'homework_name', key: 'homework_name',
         render: (text, record) => {
-          return <a onClick={() => {this.context.router.push(`/index/homework_detail/`+record.homework_id)}}>{text}</a>
+          return <a onClick={() => console.log(record.homework_name)}>{text}</a>
         }
       },
       {title: '创建时间', dataIndex: 'create_dt', key: 'create_dt'},
@@ -99,46 +95,59 @@ const HomeworkLibPage = React.createClass({
       {title: '学科', dataIndex: 'subject', key: 'subject'},
       {title: '年级', dataIndex: 'gradeName', key: 'gradeName'},
       {title: '学期', dataIndex: 'term', key: 'term'},
-      {title: '版本', dataIndex: 'textbook_version', key: 'textbook_version'}
+      {title: '版本', dataIndex: 'textbook_version', key: 'textbook_version'},
+      {title: permissionDic['edit'], dataIndex: 'edit', key: 'edit',
+        render: (text, record) => {
+          return (
+            <div>
+              <Button type="danger" onClick={()=>this.rejectHomework(record.homework_id)}>打回</Button>
+              <Button type="primary"onClick={()=>this.acceptHomework(record.homework_id)}>同意</Button>
+            </div>
+          )
+        }
+      }
     ]);
-    if (this.props.userInfo && this.props.userInfo.userStyle == ROLE_TEACHER) {
-      //是老师时，显示布置作业按钮
-      tableHeader = tableHeader.concat(
-        [{
-          title: permissionDic['edit'],
-          dataIndex: 'edit',
-          key: 'edit',
-          render: (text, record) => {
-            return (
-              <div>
-                <Button type="primary" onClick={()=>this.assignHomework(record.homework_id)}>布置作业</Button>
-              </div>
-            )
-          }
-        }]
-      )
-    }
     return tableHeader.toJS();
   },
   getSearchUrl(type) {
-    let url = "";
-    switch (type) {
-      case 'homework_area':
-        url = config.api.homework.areaHomeworkPageUrl;
-        break;
-      case 'homework_school':
-        url = config.api.homework.schoolHomeworkPageUrl;
-        break;
-      case 'homework_self':
-      default:
-        url = config.api.homework.selfHomeworkPageUrl;
-        break;
-    }
+    let url = config.api.homework.homeworkUncheckedUrl;
     return url;
   },
-  /* 布置作业 */
-  assignHomework(homeworkId) {
-    this.refs.assignHomeworkModal.showModal(homeworkId);
+  /* 打回 */
+  rejectHomework(homeworkId) {
+    let formData = new FormData()
+    formData.append('homeworkId',homeworkId)
+	formData.append('result', 'NG')
+    fetch(config.api.homework.checkHomeworkUrl,{
+      method:'post',
+      headers:{
+        'from':'nodejs',
+        'token':sessionStorage.getItem('accessToken')
+      },
+      body:formData
+    }).then(res => res.json()).then(res => {
+    //   if(res.title == 'Success'){
+          this.refs.uncheckedTable.refreshTableData();
+    //   }
+    })
+  },
+  /* 同意 */
+  acceptHomework(homeworkId) {
+    let formData = new FormData()
+    formData.append('homeworkId',homeworkId)
+	formData.append('result','OK')
+    fetch(config.api.homework.checkHomeworkUrl,{
+      method:'post',
+      headers:{
+        'from':'nodejs',
+        'token':sessionStorage.getItem('accessToken')
+      },
+      body:formData
+    }).then(res => res.json()).then(res => {
+      if(res.title == 'Success'){
+          this.refs.uncheckedTable.refreshTableData();
+      }
+    })
   }
 });
 
@@ -158,4 +167,4 @@ function mapDispatchToProps(dispatch) {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(HomeworkLibPage)
+export default connect(mapStateToProps, mapDispatchToProps)(HomeworkUnchecked)

@@ -194,4 +194,8 @@ export class CustomTable extends React.Component {
       });
     })
   }
+
+  refreshTableData() {
+    this.searchTableData();
+  }
 }

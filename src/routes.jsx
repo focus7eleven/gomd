@@ -47,10 +47,14 @@ import CollectionVideoPage from './containers/micro_course/CollectionVideoPage'
 import UncheckVideoPage from './containers/micro_course/UncheckVideoPage'
 import HomeworkContainer from './containers/homework_center/HomeworkContainer'
 import CreateHomeworkPage from './containers/homework_center/CreateHomework'
+import HomeworkUnchecked from './containers/homework_center/HomeworkUnchecked'
 import ExampaperContainer from './containers/exampaper_center/ExampaperContainer'
 import MyExampaperPage from './containers/exampaper_center/MyExampaperPage'
 import CreateExampaper from './containers/exampaper_center/CreateExampaper'
 import HomeworkLibPage from './containers/homework_center/HomeworkLibPage'
+import HomeworkDetailPage from './containers/homework_center/HomeworkDetailPage'
+import HomeworkPublished from './containers/homework_center/HomeworkPublished'
+import UncheckedHomeworkPage from './containers/homework_center/UncheckedHomeworkPage'
 
 import VideoComponent from './components/video/VideoComponent'
 import CourseTree from './components/tree/CourseTree'
@@ -141,8 +145,12 @@ const routes = (
 
 				{/* 作业中心 */}
 				<Route path="homework_lib/:type" component={HomeworkLibPage}/>
+				<Route path="homework_detail/:homeworkId" component={HomeworkDetailPage}/>
+				<Route path="unchecked_homework/:type" component={UncheckedHomeworkPage}/>
 				<Route path=':second' component={HomeworkContainer}>
 					<Route path='sethomework' component={CreateHomeworkPage}></Route>
+                    <Route path='homework' component={HomeworkPublished}></Route>
+					<Route path='homework_unchecked' component={HomeworkUnchecked}></Route>
 				</Route>
 
 				{/* 题库机组卷 */}

@@ -13,6 +13,9 @@ const menuRoutePath = {
   "homework_self": { //公共课程
     path: "/index/homework_lib/homework_self"
   },
+    "homework_unchecked": {//老师待审核的作业
+      path:"/index/unchecked_homework/homework_unchecked"
+    },
 };
 
 export default menuRoutePath;
