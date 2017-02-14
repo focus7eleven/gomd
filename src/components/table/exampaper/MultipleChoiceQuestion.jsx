@@ -3,7 +3,7 @@ import styles from './MultipleChoiceQuestion.scss'
 import {List,fromJS} from 'immutable'
 import {Table,Icon,Input,Radio,Select,Row,Col,Button,Rate,InputNumber,Checkbox} from 'antd'
 import Ueditor from '../../ueditor/Ueditor'
-import {updateOption,updateQuestion,deleteOption} from './exampaper-utils'
+import {updateOption,updateQuestion,deleteOption,addOption} from './exampaper-utils'
 
 const Option = Select.Option
 const questionType = [{
@@ -76,13 +76,27 @@ const MultipleChoiceQuestion = React.createClass({
   },
   getTableData(){
     const questionType = this.props.questionInfo.get('kind')
+    let selectComponent = null
+    switch (questionType) {
+      case '01'://单选
+        selectComponent = (record)=>(<Radio checked={this.state.radioCheck==record.key} onClick={this.handleSetRightAnswer.bind(this,record.key)}></Radio>)
+        break;
+      case '02'://判断
+        selectComponent = (record)=>(<Radio checked={this.state.radioCheck==record.key} onClick={this.handleSetRightAnswer.bind(this,record.key)}></Radio>)
+        break;
+      case '03'://多选
+        selectComponent = (record)=>(<Checkbox checked={this.state.answerList.getIn([record.key,'answer'])} onChange={this.handleSetRightAnswer.bind(this,record.key)}/>)
+        break;
+      default:
+        selectComponent = null
+    }
     const tableHeader = [{
       title:this.props.questionInfo.get('questionNo'),
       key:'num',
       className:styles.columns,
       width:50,
       render:(text,record)=>{
-        return <div onClick={(e)=>{e.stopPropagation()}}>{questionType=='01'?<Radio checked={this.state.radioCheck==record.key} onClick={this.handleSetRightAnswer.bind(this,record.key)}></Radio>:<Checkbox checked={this.state.answerList.getIn([record.key,'answer'])} onChange={this.handleSetRightAnswer.bind(this,record.key)}/>}</div>
+        return <div onClick={(e)=>{e.stopPropagation()}}>{selectComponent(record)}</div>
       }
     },{
       title:this.renderQuestion(),
@@ -197,6 +211,10 @@ const MultipleChoiceQuestion = React.createClass({
     this.setState({
       answerList:this.state.answerList.push(fromJS({answer:false,content:"答案一",id:"0",questionId:"1",score:0}))
     })
+    addOption({
+      questionId:this.props.questionInfo.get('id'),
+      questionKind:this.props.questionInfo.get('kind')
+    })
   },
   //设定难度
   handlerSetHardness(value){
@@ -231,9 +249,11 @@ const MultipleChoiceQuestion = React.createClass({
     return (
       <div className={styles.footer} onClick={(e)=>{e.stopPropagation()}} >
         <Row>
-          <Col span={6}>
-            <Button onClick={this.handleAddAnswerItem}>添加备选</Button>
-          </Col>
+          {
+            this.props.questionInfo.get('kind')!='02'?<Col span={6}>
+              <Button onClick={this.handleAddAnswerItem}>添加备选</Button>
+            </Col>:null
+          }
           <Col span={6}>
             <Select style={{width:'200px'}} onFocus={()=>{
               // window.removeEventListener('click',this.handleWindowEvent)
@@ -267,12 +287,26 @@ const MultipleChoiceQuestion = React.createClass({
   },
   render(){
     const tableData = this.getTableData()
+    let questionTypeName = ''
+    switch (this.props.questionInfo.get('kind')) {
+      case '01':
+        questionTypeName = '单选题'
+        break;
+      case '02':
+        questionTypeName = '判断题'
+        break;
+      case '03':
+        questionTypeName = '多选题'
+        break;
+      default:
+        questionTypeName = ''
+    }
     return(
       <div className={styles.multipleChoiceQuestion} >
         <div className={styles.tag}>
-          <span className={styles.text}>{this.props.questionInfo.get('kind')=='01'?'单选题':'多选题'}</span>
+          <span className={styles.text}>{questionTypeName}</span>
         </div>
-        <Table onRowClick={(record,index)=>{console.log("asdfasd");this.setState({
+        <Table onRowClick={(record,index)=>{this.setState({
           editingAnswerItem:this.state.editingAnswerItem.map((v,k) => k==record.key?!v:v)})}} bordered dataSource={tableData.tableBody} columns={tableData.tableHeader} pagination={false}/>
         <div className={styles.moveButton}>
           <div>

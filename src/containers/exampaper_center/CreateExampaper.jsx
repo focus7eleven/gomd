@@ -7,6 +7,7 @@ import config from '../../config'
 import CourseFilterComponent from '../../components/course_filter/CourseFilterComponent'
 import MultipleChoiceQuestion from '../../components/table/exampaper/MultipleChoiceQuestion'
 import NoteQuestion from '../../components/table/exampaper/NoteQuestion'
+import ShortAnswerQuestion from '../../components/table/exampaper/ShortAnswerQuestion'
 const Search = Input.Search;
 const CreateExampaper = React.createClass({
   getInitialState(){
@@ -158,12 +159,24 @@ const CreateExampaper = React.createClass({
                 if(v.get('kind')=='01'){
                   //单选
                   return <MultipleChoiceQuestion questionInfo={v} key={k}/>
+                }else if(v.get('kind')=='02'){
+                  //多选
+                  return <MultipleChoiceQuestion questionInfo={v} key={k}/>
                 }else if(v.get('kind')=='03'){
                   //多选
                   return <MultipleChoiceQuestion questionInfo={v} key={k}/>
                 }else if(v.get('kind')=='04'){
                   //填空
                   return <NoteQuestion questionInfo={v} key={k}/>
+                }else if(v.get('kind')=='05'){
+                  //填空
+                  return <ShortAnswerQuestion questionInfo={v} key={k}/>
+                }else if(v.get('kind')=='06'){
+                  //填空
+                  return <ShortAnswerQuestion questionInfo={v} key={k}/>
+                }else if(v.get('kind')=='07'){
+                  //填空
+                  return <ShortAnswerQuestion questionInfo={v} key={k}/>
                 }else{
                   return null
                 }
