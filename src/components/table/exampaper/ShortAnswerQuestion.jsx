@@ -32,7 +32,8 @@ const Option = Select.Option
 const ShortAnswerQuestion = React.createClass({
   getDefaultProps(){
     return {
-      questionInfo:{}
+      questionInfo:{},
+      onDelete:()=>{},//删除题目
     }
   },
   getInitialState(){
@@ -177,7 +178,7 @@ const ShortAnswerQuestion = React.createClass({
         }
       }
     },{
-      title:<Icon type='close' onClick={this.props.destroy}/>,
+      title:<Icon type='close' onClick={()=>this.props.onDelete(this.props.questionInfo.get('id'),this.state)}/>,
       className:styles.columns,
       width:50,
       render:(text,record)=>{

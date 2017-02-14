@@ -61,6 +61,7 @@ const NoteQuestion = React.createClass({
   getDefaultProps(){
     return {
       questionInfo:fromJS(mockData),
+      onDelete:()=>{},//删除题目
     }
   },
   getInitialState(){

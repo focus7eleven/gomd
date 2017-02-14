@@ -47,7 +47,7 @@ const MultipleChoiceQuestion = React.createClass({
 
       moveUp:()=>{},//上移
       moveDown:()=>{},//下移
-      onDestory:()=>{},//销毁该题目
+      onDelete:()=>{},//销毁该题目
       onChangeQuestionType:()=>{},//改变题目类型
     }
   },
@@ -72,6 +72,7 @@ const MultipleChoiceQuestion = React.createClass({
     window.addEventListener('click',this.handleWindowEvent)
   },
   componentWillUnmount(){
+    console.log("asdfasdfasdf")
     window.removeEventListener('click',this.handleWindowEvent)
   },
   getTableData(){
@@ -113,7 +114,7 @@ const MultipleChoiceQuestion = React.createClass({
         </div>
       )
     },{
-      title:<Icon type='close' onClick={this.props.destroy}/>,
+      title:<Icon type='close' onClick={()=>this.props.onDelete(this.props.questionInfo.get('id'))}/>,
       className:styles.columns,
       width:50,
       render:(text,record)=>{
@@ -143,6 +144,7 @@ const MultipleChoiceQuestion = React.createClass({
       }):this.setState({
         answerList:this.state.answerList.setIn([key,'answer'],true)
       })
+
     })
   },
   //修改题目
@@ -286,6 +288,7 @@ const MultipleChoiceQuestion = React.createClass({
     )
   },
   render(){
+    console.log("render",this.props.questionInfo.get('id'))
     const tableData = this.getTableData()
     let questionTypeName = ''
     switch (this.props.questionInfo.get('kind')) {
@@ -304,7 +307,7 @@ const MultipleChoiceQuestion = React.createClass({
     return(
       <div className={styles.multipleChoiceQuestion} >
         <div className={styles.tag}>
-          <span className={styles.text}>{questionTypeName}</span>
+          <span className={styles.text}>{questionTypeName}{this.props.questionInfo.get('id')}</span>
         </div>
         <Table onRowClick={(record,index)=>{this.setState({
           editingAnswerItem:this.state.editingAnswerItem.map((v,k) => k==record.key?!v:v)})}} bordered dataSource={tableData.tableBody} columns={tableData.tableHeader} pagination={false}/>
