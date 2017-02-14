@@ -123,7 +123,7 @@ const AddHomeworkModal = React.createClass({
                   />
                 </Col>
                 <Col span={6}>
-                  <div className={styles.homeworkSum}><span>共{this.state.homeworkList.get('result').size}条作业</span></div>
+                  <div className={styles.homeworkSum}><span>共{this.state.homeworkList.isEmpty()?0:this.state.homeworkList.get('result').size}条作业</span></div>
                 </Col>
               </Row>
             </Form>

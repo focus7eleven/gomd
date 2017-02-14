@@ -15,7 +15,7 @@ const Ueditor = React.createClass({
   			'bold', 'italic', 'underline', '|', 'fontsize', '|', 'kityformula', 'preview'
   		]],
   	});
-    this.ue.setContent(this.props.initialContent)
+    // this.ue.setContent(this.props.initialContent)
     // this.ue.destroy = ()=>{
     //   this.props.onDestory(this.ue.getContent())
     // }
@@ -26,7 +26,7 @@ const Ueditor = React.createClass({
   },
   render(){
     return (
-      <div className={styles.container}>
+      <div className={styles.container} onClick={(e)=>{e.stopPropagation()}}>
         <script id="editor" type="text/plain"></script>
       </div>
     )

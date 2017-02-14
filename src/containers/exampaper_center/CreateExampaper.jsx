@@ -6,7 +6,8 @@ import {List,fromJS} from 'immutable'
 import config from '../../config'
 import CourseFilterComponent from '../../components/course_filter/CourseFilterComponent'
 import MultipleChoiceQuestion from '../../components/table/exampaper/MultipleChoiceQuestion'
-
+import NoteQuestion from '../../components/table/exampaper/NoteQuestion'
+import ShortAnswerQuestion from '../../components/table/exampaper/ShortAnswerQuestion'
 const Search = Input.Search;
 const CreateExampaper = React.createClass({
   getInitialState(){
@@ -114,8 +115,23 @@ const CreateExampaper = React.createClass({
     })
   },
 
+  handleDeleteQuestion(questionId){
+    console.log("--->:",questionId,this.state.exerciseList.toJS())
+    this.setState({
+      exerciseList:this.state.exerciseList.filter(v => v.get('id')!=questionId)
+    })
+  },
+
+  update(questionId,changedAttribute,changedContent){
+
+    let index = this.state.exerciseList.findKey(v => v.get('id')==questionId)
+    this.setState({
+      exerciseList:this.state.exerciseList.setIn([index,changedAttribute],changedContent)
+    })
+  },
 
   render(){
+    console.log("--->:",this.state.exerciseList.toJS())
     return (
       <div className={styles.container}>
         <div className={styles.header}>
@@ -155,8 +171,15 @@ const CreateExampaper = React.createClass({
             <div className={styles.paperContent}>
             {
               this.state.exerciseList.map((v,k) => {
-                if(v.get('kind')=='01'){
-                  return <MultipleChoiceQuestion questionInfo={v} key={k}/>
+                if(v.get('kind')=='01'||v.get('kind')=='02'||v.get('kind')=='03'){
+                  //单选
+                  return <MultipleChoiceQuestion questionInfo={v} key={k} onDelete={this.handleDeleteQuestion} onUpdate={this.update}/>
+                }else if(v.get('kind')=='04'){
+                  //填空
+                  return <NoteQuestion questionInfo={v} key={k} onDelete={this.handleDeleteQuestion} onUpdate={this.update}/>
+                }else if(v.get('kind')=='05'||v.get('kind')=='06'||v.get('kind')=='07'){
+                  //填空
+                  return <ShortAnswerQuestion questionInfo={v} key={k} onDelete={this.handleDeleteQuestion} onUpdate={this.update}/>
                 }else{
                   return null
                 }

@@ -37,3 +37,47 @@ export function updateQuestion(data){
     body:formData
   }).then(res => res.json())
 }
+
+//删除答案选项
+export function deleteOption(data){
+  let formData = new FormData()
+  formData.append('optionId',data.optionId)
+  return fetch(config.api.wordquestion.deleteOption,{
+    method:'post',
+    headers:{
+      'from':'nodejs',
+      'token':sessionStorage.getItem('accessToken')
+    },
+    body:formData
+  }).then(res => res.json())
+}
+
+//添加答案选项
+export function addOption(data){
+  let formData = new FormData()
+  formData.append('questionId',data.questionId)
+  formData.append('questionKind',data.questionKind)
+  return fetch(config.api.wordquestion.addOption,{
+    method:'post',
+    headers:{
+      'from':'nodejs',
+      'token':sessionStorage.getItem('accessToken')
+    },
+    body:formData
+  }).then(res => res.json())
+}
+
+//设定题目分值
+export function setScore(data){
+  let formData = new FormData()
+  formData.append('questionId',data.questionId)
+  formData.append('score',data.score)
+  return fetch(config.api.wordquestion.setScore,{
+    method:'post',
+    headers:{
+      'from':'nodejs',
+      'token':sessionStorage.getItem('accessToken')
+    },
+    body:formData
+  }).then(res => res.json())
+}
