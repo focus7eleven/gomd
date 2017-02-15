@@ -1,7 +1,6 @@
 @import "~mixins.scss";
 :local(.multipleChoiceQuestion){
-  position: relative;
-  max-width: 1000px;
+  @include question;
   :local(.question){
     width: 100%;
     display: flex;
@@ -17,26 +16,5 @@
   :local(.columns){
     text-align: center;
   }
-  :local(.tag){
-    position: absolute;
-    top: 0;
-    right: -30px;
-    width: 30px;
-    border: 1px solid $border-grey;
-    border-top-right-radius: 5px;
-    border-bottom-right-radius: 5px;
-    padding: 3px 2px;
-    :local(.text){
-      writing-mode:tb-rl;
-      text-align:left;
-      font-size:14pt;
-      color: #37B781;
-    }
-  }
-  :local(.footer){
-    width: 100%;
-    max-width: 1000px;
-    margin-top: 20px;
-    padding:10px;
-  }
+
 }

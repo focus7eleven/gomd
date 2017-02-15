@@ -53,8 +53,6 @@ const MultipleChoiceQuestion = React.createClass({
   },
   getInitialState(){
     return {
-      answerList:this.props.questionInfo.get('optionPojoList'),//答案列表
-      question:'输入题目内容',//
       editingQuestion:false,//是否编辑题目
       editingAnswerItem:[false,false,false,false],//编辑答案选项
       radioCheck:-1,//选择题的答案
@@ -62,17 +60,12 @@ const MultipleChoiceQuestion = React.createClass({
       showScoreSetting:false,//显示设定分数的组件
       comment:'',//备注
       description:'',//描述
-      difficulty:0,
-      drawZone:'',
-      score:1,
-      scoreList:List([0,0,0,0]),//每个答案选项的分值
     }
   },
   componentDidMount(){
     window.addEventListener('click',this.handleWindowEvent)
   },
   componentWillUnmount(){
-    console.log("asdfasdfasdf")
     window.removeEventListener('click',this.handleWindowEvent)
   },
   getTableData(){
@@ -80,13 +73,13 @@ const MultipleChoiceQuestion = React.createClass({
     let selectComponent = null
     switch (questionType) {
       case '01'://单选
-        selectComponent = (record)=>(<Radio checked={this.state.radioCheck==record.key} onClick={this.handleSetRightAnswer.bind(this,record.key)}></Radio>)
+        selectComponent = (record)=>(<Radio checked={this.props.questionInfo.getIn(['optionPojoList',record.key,'answer'])} onClick={this.handleSetRightAnswer.bind(this,record.key)}></Radio>)
         break;
       case '02'://判断
-        selectComponent = (record)=>(<Radio checked={this.state.radioCheck==record.key} onClick={this.handleSetRightAnswer.bind(this,record.key)}></Radio>)
+        selectComponent = (record)=>(<Radio checked={this.props.questionInfo.getIn(['optionPojoList',record.key,'answer'])} onClick={this.handleSetRightAnswer.bind(this,record.key)}></Radio>)
         break;
       case '03'://多选
-        selectComponent = (record)=>(<Checkbox checked={this.state.answerList.getIn([record.key,'answer'])} onChange={this.handleSetRightAnswer.bind(this,record.key)}/>)
+        selectComponent = (record)=>(<Checkbox checked={this.props.questionInfo.getIn(['optionPojoList',record.key,'answer'])} onChange={this.handleSetRightAnswer.bind(this,record.key)}/>)
         break;
       default:
         selectComponent = null
@@ -114,14 +107,14 @@ const MultipleChoiceQuestion = React.createClass({
         </div>
       )
     },{
-      title:<Icon type='close' onClick={()=>this.props.onDelete(this.props.questionInfo.get('id'))}/>,
+      title:<Icon type='close' onClick={(e)=>{e.stopPropagation();this.props.onDelete(this.props.questionInfo.get('id'))}}/>,
       className:styles.columns,
       width:50,
       render:(text,record)=>{
-        return <Icon type='close' onClick={this.handleDeleteAnswerItem.bind(this,record.key)}/>
+        return <div onClick={(e)=>{e.stopPropagation()}}><Icon type='close' onClick={this.handleDeleteAnswerItem.bind(this,record.key)}/></div>
       }
     }]
-    const tableBody = this.state.answerList.map((v,k) => ({
+    const tableBody = this.props.questionInfo.get('optionPojoList').map((v,k) => ({
       answer:v.get('content'),
       key:k,
     })).toJS()
@@ -133,55 +126,55 @@ const MultipleChoiceQuestion = React.createClass({
   //确定正确的答案
   handleSetRightAnswer(key,e){
     updateOption({
-      optionId:this.state.answerList.get(key).get('id'),
-      content:this.state.answerList.get(key).get('content'),
-      score:this.state.answerList.get(key).get('score'),
-      isAnswer:true
+      optionId:this.props.questionInfo.getIn(["optionPojoList",key,'id']),
+      content:this.props.questionInfo.getIn(["optionPojoList",key,'content']),
+      score:this.props.questionInfo.getIn(["optionPojoList",key,'score']),
+      isAnswer:!this.props.questionInfo.getIn(["optionPojoList",key,'answer'])
     }).then(res => {
-      this.props.questionInfo.get('kind')=='01'?this.setState({
-        radioCheck:key,
-        answerList:this.state.answerList.map((v,k) => v.set('answer',key==k))
-      }):this.setState({
-        answerList:this.state.answerList.setIn([key,'answer'],true)
-      })
-
+      if(this.props.questionInfo.get('kind')=='03'){
+        //多选题
+        console.log(this.props.questionInfo.getIn(['optionPojoList',key,'answer']),this.props.questionInfo.get('optionPojoList').setIn([key,'answer'],!this.props.questionInfo.getIn(['optionPojoList',key,'answer'])).toJS())
+        let newOptions = this.props.questionInfo.get('optionPojoList').setIn([key,'answer'],!this.props.questionInfo.getIn(['optionPojoList',key,'answer']))
+        this.props.onUpdate(this.props.questionInfo.get('id'),['optionPojoList'],newOptions)
+      }else{
+        //单选，判断
+        let newOptions = this.props.questionInfo.get('optionPojoList').map(v => v.set('answer',false)).setIn([key,'answer'],true)
+        this.props.onUpdate(this.props.questionInfo.get('id'),['optionPojoList'],newOptions)
+      }
     })
   },
   //修改题目
   handleUpdateQuestion(value){
-    this.setState({
-      question:value
-    })
     updateQuestion({
       qid:this.props.questionInfo.get('id'),
       examination:value,
-      comment:this.state.comment,
-      description:this.state.description,
-      difficulty:this.state.difficulty,
+      comment:this.props.questionInfo.get('comment'),
+      description:this.props.questionInfo.get('description'),
+      difficulty:this.props.questionInfo.get('difficulty'),
       kind:this.props.questionInfo.get('kind'),
       drawZone:'',
-      score:this.state.score,
+      score:this.props.questionInfo.get('score'),
     })
+    this.props.onUpdate(this.props.questionInfo.get('id'),['examination'],value)
   },
-  //修改答案选项
+  //修改答案选项.
   handleUpdateOption(key,value){
-    this.setState({
-      answerList:this.state.answerList.setIn([key,'content'],value)
-    })
+
     updateOption({
-      optionId:this.state.answerList.get(key).get('id'),
+      optionId:this.props.questionInfo.get('optionPojoList').get(key).get('id'),
       content:value,
-      score:this.state.score,
-      isAnswer:this.state.radioCheck == key
+      score:this.props.questionInfo.getIn(['optionPojoList',key,'score']),
+      isAnswer:this.props.questionInfo.getIn(['optionPojoList',key,'answer'])
     })
+    this.props.onUpdate(this.props.questionInfo.get('id'),['optionPojoList',key,'content'],value)
   },
+  //删除答案选项
   handleDeleteAnswerItem(key){
-    this.setState({
-      answerList:this.state.answerList.filter((v,k) => k!=key)
-    })
     deleteOption({
-      optionId:this.state.answerList.find((v,k) => k!=key).get('id')
+      optionId:this.props.questionInfo.getIn(['optionPojoList',key]).get('id')
     })
+    let newOptions = this.props.questionInfo.get('optionPojoList').filter((v,k) => k!=key)
+    this.props.onUpdate(this.props.questionInfo.get('id'),['optionPojoList'],newOptions)
   },
   handleWindowEvent(){
     this.setState({
@@ -198,41 +191,38 @@ const MultipleChoiceQuestion = React.createClass({
   },
   //修改分值
   handleChangeScore(key,value){
-    this.setState({
-      scoreList:this.state.answerList.setIn([key,'score'],value)
-    })
     updateOption({
-      optionId:this.state.answerList.get(key).get('id'),
-      content:this.state.answerList.get(key).get('content'),
+      optionId:this.props.questionInfo.getIn(['optionPojoList',key,'id']),
+      content:this.props.questionInfo.getIn(['optionPojoList',key,'content']),
       score:value,
-      isAnswer:this.state.answerList.get(key).get('answer'),
+      isAnswer:this.props.questionInfo.getIn(['optionPojoList',key,'answer']),
     })
+    this.props.onUpdate(this.props.questionInfo.get('id'),['optionPojoList',key,'score'],value)
   },
   //添加答案选项
   handleAddAnswerItem(){
-    this.setState({
-      answerList:this.state.answerList.push(fromJS({answer:false,content:"答案一",id:"0",questionId:"1",score:0}))
-    })
     addOption({
       questionId:this.props.questionInfo.get('id'),
       questionKind:this.props.questionInfo.get('kind')
+    }).then(res => {
+      let newOptions = this.props.questionInfo.get('optionPojoList').push(fromJS(res))
+      this.props.onUpdate(this.props.questionInfo.get('id'),['optionPojoList'],newOptions)
     })
   },
   //设定难度
   handlerSetHardness(value){
-    this.setState({
-      difficulty:value
-    })
+
     updateQuestion({
       qid:this.props.questionInfo.get('id'),
-      examination:this.state.question,
-      comment:this.state.comment,
-      description:this.state.description,
+      examination:this.props.questionInfo.get('examination'),
+      comment:this.props.questionInfo.get('comment'),
+      description:this.props.questionInfo.get('description'),
       difficulty:value,
       kind:this.props.questionInfo.get('kind'),
       drawZone:'',
-      score:this.state.score,
+      score:this.props.questionInfo.get('score'),
     })
+    this.props.onUpdate(this.props.questionInfo.get('id'),['difficulty'],value)
   },
   //添加注解
   handleAddComment(){
@@ -242,7 +232,7 @@ const MultipleChoiceQuestion = React.createClass({
     return (
       <div className={styles.question} onClick={(e)=>{e.stopPropagation();this.setState({editingQuestion:!this.state.editingQuestion,showFooter:true})}}>
       {
-        this.state.editingQuestion?<Ueditor onDestory={this.handleUpdateQuestion}/>:<span >{this.state.question}</span>
+        this.state.editingQuestion?<Ueditor onDestory={this.handleUpdateQuestion}/>:<span >{this.props.questionInfo.get('examination')||'请输入题目内容'}</span>
       }
       </div>
     )
@@ -288,7 +278,6 @@ const MultipleChoiceQuestion = React.createClass({
     )
   },
   render(){
-    console.log("render",this.props.questionInfo.get('id'))
     const tableData = this.getTableData()
     let questionTypeName = ''
     switch (this.props.questionInfo.get('kind')) {
@@ -307,13 +296,13 @@ const MultipleChoiceQuestion = React.createClass({
     return(
       <div className={styles.multipleChoiceQuestion} >
         <div className={styles.tag}>
-          <span className={styles.text}>{questionTypeName}{this.props.questionInfo.get('id')}</span>
+          <span className={styles.text}>{questionTypeName}</span>
         </div>
         <Table onRowClick={(record,index)=>{this.setState({
           editingAnswerItem:this.state.editingAnswerItem.map((v,k) => k==record.key?!v:v)})}} bordered dataSource={tableData.tableBody} columns={tableData.tableHeader} pagination={false}/>
         <div className={styles.moveButton}>
-          <div>
-          </div>
+            <Button onClick={(e)=>{this.props.moveUp(this.props.questionInfo.get('id'))}}><Icon type="caret-up" /></Button>
+            <Button onClick={(e)=>{this.props.moveDown(this.props.questionInfo.get('id'))}}><Icon type="caret-down" /></Button>
         </div>
         {
           this.state.showFooter?this.renderFooter():null

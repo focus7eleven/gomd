@@ -2,7 +2,7 @@ import React from 'react'
 import Ueditor from '../../ueditor/Ueditor'
 import styles from './NoteQuestion.scss'
 import {fromJS} from 'immutable'
-import {Row,Col,Button,Select,Rate,Input,InputNumber} from 'antd'
+import {Row,Col,Button,Select,Rate,Input,InputNumber,Icon} from 'antd'
 import {updateQuestion,setScore} from './exampaper-utils'
 const mockData = {
     "id": "240958772334432256",
@@ -62,6 +62,7 @@ const NoteQuestion = React.createClass({
     return {
       questionInfo:fromJS(mockData),
       onDelete:()=>{},//删除题目
+      onUpdate:()=>{},//更新题目
     }
   },
   getInitialState(){
@@ -96,14 +97,21 @@ const NoteQuestion = React.createClass({
     }
   },
   //修改题目
-  handleUpdateQuestion(){
-
+  handleUpdateQuestion(value){
+    updateQuestion({
+      qid:this.props.questionInfo.get('id'),
+      examination:value,
+      comment:this.props.questionInfo.get('comment'),
+      description:this.props.questionInfo.get('description'),
+      difficulty:this.props.questionInfo.get('difficulty'),
+      kind:this.props.questionInfo.get('kind'),
+      drawZone:'',
+      score:this.props.questionInfo.get('score'),
+    })
+    this.props.onUpdate(this.props.questionInfo.get('id'),['examination'],value)
   },
   //修改难度
   handlerSetHardness(value){
-    this.setState({
-      difficulty:value
-    })
     updateQuestion({
       qid:this.props.questionInfo.get('id'),
       examination:this.state.question,
@@ -114,6 +122,7 @@ const NoteQuestion = React.createClass({
       drawZone:'',
       score:this.state.score,
     })
+    this.props.onUpdate(this.props.questionInfo.get('id'),['difficulty'],value)
   },
   //设定分值
   handleSetScore(){
@@ -123,13 +132,11 @@ const NoteQuestion = React.createClass({
   },
   //修改分值
   handleChangeScore(value){
-    this.setState({
-      score:value
-    })
     setScore({
       questionId:this.props.questionInfo.get('id'),
       score:value,
     })
+    this.props.onUpdate(this.props.questionInfo.get('id'),['score'],value)
   },
   renderFooter(){
     return (
@@ -152,7 +159,7 @@ const NoteQuestion = React.createClass({
             </Select>
           </Col>
           <Col span={6}>
-            难度：<Rate value={this.state.difficulty} onChange={this.handlerSetHardness}/>
+            难度：<Rate value={this.props.questionInfo.get('difficulty')} onChange={this.handlerSetHardness}/>
           </Col>
           <Col>
             <Button onClick={this.handleSetScore}>设定分值</Button>
@@ -183,18 +190,21 @@ const NoteQuestion = React.createClass({
           </div>
           <div className={styles.questionContent} onClick={this.handleEditQuestion}>
           {
-            this.state.editingQuestion?<div><Ueditor/></div>:<div>{this.state.question}</div>
+            this.state.editingQuestion?<div><Ueditor onDestory={this.handleUpdateQuestion}/></div>:<div>{this.props.questionInfo.get('examination')}</div>
           }
           {
             this.state.showScoreSetting?<div onClick={(e)=>{e.stopPropagation()}}><InputNumber min={0} defaultValue={0}
-              value={this.state.score}
+              value={this.props.questionInfo.get('score')}
               onChange={this.handleChangeScore}/></div>:null
           }
           </div>
+          <div className={styles.questionNo}>
+            <Icon type='close' onClick={(e)=>{e.stopPropagation();this.props.onDelete(this.props.questionInfo.get('id'))}}/>
+          </div>
         </div>
         <div className={styles.moveButton}>
-          <div>
-          </div>
+            <Button onClick={(e)=>{this.props.moveUp(this.props.questionInfo.get('id'))}}><Icon type="caret-up" /></Button>
+            <Button onClick={(e)=>{this.props.moveDown(this.props.questionInfo.get('id'))}}><Icon type="caret-down" /></Button>
         </div>
         {
           this.state.showFooter?this.renderFooter():null
