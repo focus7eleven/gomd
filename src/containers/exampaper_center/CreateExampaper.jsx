@@ -203,24 +203,19 @@ const CreateExampaper = React.createClass({
   handleImportExampaper(e){
     let file = e.target.files[0]
     let fileReader = new FileReader()
-    let that = this
-    fileReader.onload = function (evt){
-      console.log("--->:",evt.target.result)
-      let formData = new FormData()
-      formData.append('examId',that.state.examPaperId)
-      formData.append('file',file)
-      fetch(config.api.wordquestion.uploadWord,{
-        method:'post',
-        headers:{
-          'from':'nodejs',
-          'token':sessionStorage.getItem('accessToken')
-        },
-        body:formData
-      }).then(res => res.json()).then(res => {
-        notification.success({message:'上传成功'})
-      })
-    }
-    fileReader.readAsText(file)
+    let formData = new FormData()
+    formData.append('examId',this.state.examPaperId)
+    formData.append('file',file)
+    fetch(config.api.wordquestion.uploadWord,{
+      method:'post',
+      headers:{
+        'from':'nodejs',
+        'token':sessionStorage.getItem('accessToken')
+      },
+      body:formData
+    }).then(res => res.json()).then(res => {
+      notification.success({message:'上传成功'})
+    })
   },
   //导入答案
   handleImportAnswer(e){
