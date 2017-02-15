@@ -72,7 +72,6 @@ const CourseFilterComponent = React.createClass({
         </Select>
         {
           (userInfo.userStyleName==='学校资源审核员'&&page==='uncheckCourse')?null:
-          // (userInfo.userStyleName==='学校资源审核员')?null:
           <Select defaultValue="" style={{ marginLeft:20,width: 150 }} onChange={this.handleTermChange}>
             <Option value="">所有学期</Option>
             <Option value="上学期">上学期</Option>

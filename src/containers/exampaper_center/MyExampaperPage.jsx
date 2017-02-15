@@ -150,7 +150,7 @@ const MyExampaperPage = React.createClass({
 function mapStateToProps(state){
   return{
     menu:state.get('menu'),
-    exampaper:state.get('exampaper')
+    exampaper:state.get('examPaper')
   }
 }
 

@@ -61,6 +61,11 @@ import CourseTree from './components/tree/CourseTree'
 import UEditor from './components/ueditor/Ueditor'
 import MultipleChoiceQuestion from './components/table/exampaper/MultipleChoiceQuestion'
 import NoteQuestion from './components/table/exampaper/NoteQuestion'
+
+import AnswerSheetContainer from './containers/answer_sheet/AnswerSheetContainer'
+import CreateAnswerSheetPage from './containers/answer_sheet/CreateAnswerSheetPage'
+import AnswerSheetPage from './containers/answer_sheet/AnswerSheetPage'
+
 const routes = (
 	<Router history={browserHistory}>
 		<Route path="/" component={AppContainer}>
@@ -157,6 +162,12 @@ const routes = (
 				<Route path=':second' component={ExampaperContainer}>
 					<Route path='selfexampapercenter' component={MyExampaperPage}></Route>
 					<Route path='newexampaper' component={CreateExampaper}></Route>
+				</Route>
+
+				{/* 答题卡 */}
+				<Route path=':second' component={AnswerSheetContainer}>
+					<Route path='addAnswersheet' component={CreateAnswerSheetPage}></Route>
+					<Route path='answersheet' component={AnswerSheetPage}></Route>
 				</Route>
 
 			</Route>

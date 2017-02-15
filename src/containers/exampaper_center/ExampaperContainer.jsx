@@ -11,19 +11,19 @@ const ExampaperContainer = React.createClass({
   },
 
   componentWillReceiveProps(nextProps){
-    if(!this.props.exampaper.get('loading') && (nextProps.exampaper.get('data').isEmpty() || (this.props.location.pathname != nextProps.location.pathname))){
+    if(!this.props.examPaper.get('loading') && (nextProps.examPaper.get('data').isEmpty() || (this.props.location.pathname != nextProps.location.pathname))){
       this.props.getTableData(nextProps.location.pathname.split('/').slice(-1)[0],'',1)
     }
   },
 
   render(){
-    return this.props.exampaper.get('loading') || this.props.menu.get('data').isEmpty()?<div className={styles.loading}><Spin size="large" /></div>:this.props.children
+    return this.props.examPaper.get('loading') || this.props.menu.get('data').isEmpty()?<div className={styles.loading}><Spin size="large" /></div>:this.props.children
   }
 })
 
 function mapStateToProps(state){
   return{
-    exampaper:state.get('microCourse'),
+    examPaper:state.get('examPaper'),
     menu:state.get('menu'),
   }
 }

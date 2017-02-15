@@ -243,15 +243,14 @@ const config = _.extend({
       schoolHomeworkPageUrl:`${baseURL}/homework/school/homeworkLibPage`,
       //教师个人作业
       selfHomeworkPageUrl:`${baseURL}/homework/self/homeworkLibPage`,
-            //已发布作业
-            publishedHomeworkPageUrl:`${baseURL}/homework/page`,
+      //已发布作业
+      publishedHomeworkPageUrl:`${baseURL}/homework/page`,
 			//教师获取未审核的作业
-            teaUnCheckHomeworkPageUrl:`${baseURL}/homework/getTeaUncheckedHomework`,
-            teaDeleteHomeworkUrl:`${baseURL}/homework/delete`,
-			
-	  //待审核作业
-	  homeworkUncheckedUrl:`${baseURL}/homework/getUncheckedHomework`,
-	  checkHomeworkUrl:`${baseURL}/homework/checkHomework`,
+      teaUnCheckHomeworkPageUrl:`${baseURL}/homework/getTeaUncheckedHomework`,
+      teaDeleteHomeworkUrl:`${baseURL}/homework/delete`,
+		  //待审核作业
+		  homeworkUncheckedUrl:`${baseURL}/homework/getUncheckedHomework`,
+		  checkHomeworkUrl:`${baseURL}/homework/checkHomework`,
 
 		},
 		exampaper:{
@@ -264,6 +263,7 @@ const config = _.extend({
 		},
 		answersheet:{
 			getAll:`${baseURL}/answersheet/getAll`,
+			getTableData: (type, search, currentPage) => `${baseURL}/${type}/page?search=${search}&currentPage=${currentPage}`,
 		},
 		wordquestion:{
 			addChoose:`${baseURL}/wordquestion/addChoose`,
