@@ -81,3 +81,32 @@ export function setScore(data){
     body:formData
   }).then(res => res.json())
 }
+
+//删除题目
+export function deleteQuestion(data){
+  let formData = new FormData()
+  formData.append('questionId',data.questionId)
+  return fetch(config.api.wordquestion.deleteQuestion,{
+    method:'post',
+    headers:{
+      'from':'nodejs',
+      'token':sessionStorage.getItem('accessToken')
+    },
+    body:formData
+  }).then(res => res.json())
+}
+
+//改变题目的顺序
+export function changeQuestionPosition(data){
+  let formData = new FormData()
+  formData.append('moveDownQuestionId',data.moveDownQuestionId)
+  formData.append('moveUpQuestionId',data.moveUpQuestionId)
+  return fetch(config.api.wordquestion.changeQuestionPosition,{
+    method:'post',
+    headers:{
+      'from':'nodejs',
+      'token':sessionStorage.getItem('accessToken')
+    },
+    body:formData
+  }).then(res => res.json())
+}

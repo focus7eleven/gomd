@@ -34,6 +34,7 @@ const ShortAnswerQuestion = React.createClass({
     return {
       questionInfo:{},
       onDelete:()=>{},//删除题目
+      onUpdate:()=>{},//更新题目
     }
   },
   getInitialState(){
@@ -53,43 +54,35 @@ const ShortAnswerQuestion = React.createClass({
   },
   //设定分值
   handleChangeScore(key,value){
-    this.setState({
-      score:value
-    })
     setScore({
       questionId:this.props.questionInfo.get('id'),
       score:value
     })
+    this.props.onUpdate(this.props.questionInfo.get('id'),['score'],value)
   },
   //修改题目
   handleUpdateQuestion(type,value){
-    type=='title'?this.setState({
-      question:value||'请输入题目'
-    }):this.setState({
-      drawZone:value||'作图区'
-    })
     updateQuestion({
       qid:this.props.questionInfo.get('id'),
       examination:value,
-      comment:this.state.comment,
-      description:this.state.description,
-      difficulty:this.state.difficulty,
+      comment:this.props.questionInfo.get('comment'),
+      description:this.props.questionInfo.get('description'),
+      difficulty:this.props.questionInfo.get('difficulty'),
       kind:this.props.questionInfo.get('kind'),
-      drawZone:this.state.drawZone,
-      score:this.state.score,
+      drawZone:'',
+      score:this.props.questionInfo.get('score'),
     })
+    this.props.onUpdate(this.props.questionInfo.get('id'),type=='title'?['examination']:['drawZone'],value)
   },
   //修改答案选项
   handleUpdateOption(value){
-    this.setState({
-      answerList:this.state.answerList.setIn([0,'content'],value)
-    })
     updateOption({
-      optionId:this.state.answerList.get(0).get('id'),
+      optionId:this.props.questionInfo.get('optionPojoList').get(key).get('id'),
       content:value,
-      score:this.state.answerList.get(0).get('score'),
-      isAnswer:true,
+      score:this.props.questionInfo.getIn(['optionPojoList',key,'score']),
+      isAnswer:this.props.questionInfo.getIn(['optionPojoList',key,'answer'])
     })
+    this.props.onUpdate(this.props.questionInfo.get('id'),['optionPojoList',0,'content'],value)
   },
   //显示设定分值面板
   handleSetScore(){
@@ -136,10 +129,10 @@ const ShortAnswerQuestion = React.createClass({
     return (
       <div className={styles.question} onClick={(e)=>{e.stopPropagation();this.setState({editingQuestion:!this.state.editingQuestion,showFooter:!this.state.showFooter})}}>
       {
-        this.state.editingQuestion?<Ueditor onDestory={this.handleUpdateQuestion.bind(this,'title')}/>:<span >{this.state.question}</span>
+        this.state.editingQuestion?<Ueditor onDestory={this.handleUpdateQuestion.bind(this,'title')}/>:<span >{this.props.questionInfo.get('examination')||'请输入题目'}</span>
       }
       {this.state.showScoreSetting?<div onClick={(e)=>{e.stopPropagation()}}><InputNumber min={0} defaultValue={0}
-        value={this.state.answerList.getIn([0,'score'])}
+        value={this.props.questionInfo.get('optionPojoList').getIn([0,'score'])}
         onChange={this.handleChangeScore.bind(this,0)}/></div>:null}
       </div>
     )
@@ -188,10 +181,10 @@ const ShortAnswerQuestion = React.createClass({
     const tableBody = this.props.questionInfo.get('kind')=='05'?fromJS([{
       answer:this.state.drawZone,
       key:-1,
-    }]).concat(this.state.answerList.map((v,k) => ({
+    }]).concat(this.props.questionInfo.get('optionPojoList').map((v,k) => ({
       answer:v.get('content'),
       key:k,
-    }))).toJS():this.state.answerList.map((v,k) => ({
+    }))).toJS():this.props.questionInfo.get('optionPojoList').map((v,k) => ({
       answer:v.get('content'),
       key:k,
     })).toJS()

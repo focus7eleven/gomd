@@ -259,6 +259,8 @@ const config = _.extend({
 			getTableData:(type,search,currentPage,subjectId='',gradeId='')=>`${baseURL}/exampaper/${type}?search=${search}&currentPage=${currentPage}&subjectId=${subjectId}&gradeId=${gradeId}`,
 			createExam:`${baseURL}/exampaper/createExam`,
 			deletePaper:`${baseURL}/exampaper/deleteExam`,
+			publishExamPaper:`${baseURL}/exampaper/publishExamPaper`,
+			editExamInfo:`${baseURL}/exampaper/editExamInfo`,
 		},
 		answersheet:{
 			getAll:`${baseURL}/answersheet/getAll`,
@@ -273,6 +275,9 @@ const config = _.extend({
 			deleteOption:`${baseURL}/wordquestion/deleteOption`,
 			addOption:`${baseURL}/wordquestion/addOption`,
 			setScore:`${baseURL}/wordquestion/setScore`,
+			deleteQuestion:`${baseURL}/wordquestion/deleteQuestion`,
+			changeQuestionPosition:`${baseURL}/wordquestion/changeQuestionPosition`,
+			uploadWord:`${baseURL}/wordquestion/uploadWord`,
 		}
 	}
 })
