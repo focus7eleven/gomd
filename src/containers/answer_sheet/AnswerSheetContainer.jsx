@@ -11,8 +11,9 @@ const AnswerSheetContainer = React.createClass({
   },
 
   componentWillReceiveProps(nextProps){
+    const pathname = nextProps.location.pathname.split('/').slice(-1)[0];
     if(!this.props.answerSheet.get('loading') && (nextProps.answerSheet.get('data').isEmpty() || (this.props.location.pathname != nextProps.location.pathname))){
-      this.props.getTableData(nextProps.location.pathname.split('/').slice(-1)[0],'',1)
+      pathname==='addAnswersheet'?null:this.props.getTableData(nextProps.location.pathname.split('/').slice(-1)[0],'',1)
     }
   },
 

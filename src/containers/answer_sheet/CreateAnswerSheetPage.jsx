@@ -10,7 +10,7 @@ const CreateAnswerSheetPage = React.createClass({
 
   render(){
     return (
-      <div></div>
+      <div className={styles.container}></div>
     )
   }
 })
