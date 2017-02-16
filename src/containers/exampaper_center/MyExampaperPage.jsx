@@ -7,7 +7,7 @@ import {getExampaper,deletePaper} from '../../actions/exampaper_action/main'
 import {Input,Button,Select} from 'antd'
 import {List,fromJS} from 'immutable'
 import config from '../../config'
-
+import ExampaperFilter from './ExampaperFilter'
 const Search = Input.Search
 const Option = Select.Option
 
@@ -120,24 +120,7 @@ const MyExampaperPage = React.createClass({
     return (
       <div className={styles.container}>
         <div className={styles.header}>
-          <div className={styles.filters}>
-            <Select style={{ width: 200 ,marginRight: '10px'}} value={this.state.subjectOption} onChange={this.handleChangeSubject}>
-            <Option value='' title='所有学科'>所有学科</Option>
-            {
-              this.state.subjectList.map((v,k)=>(
-                <Option key={k} value={v.get('subject_id')} title={v.get('subject_name')}>{v.get('subject_name')}</Option>
-              ))
-            }
-            </Select>
-            <Select style={{ width: 200 }} value={this.state.gradeOption} onChange={this.handleChangeGrade}>
-            <Option value='' title='所有年级'>所有年级</Option>
-            {
-              this.state.gradeList.map((v,k)=>(
-                <Option key={k} value={v.get('gradeId')} title={v.get('gradeName')}>{v.get('gradeName')}</Option>
-              ))
-            }
-            </Select>
-          </div>
+          <ExampaperFilter />
         </div>
         <div className={styles.body}>
           <TableComponent dataType="exampaper" tableData={tableData} pageType="selfexampapercenter" searchStr={this.state.searchStr}></TableComponent>

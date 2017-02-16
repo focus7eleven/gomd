@@ -8,11 +8,17 @@ import CreateExampaperFilter from '../../components/exampaper_filter/CreateExamp
 import MultipleChoiceQuestion from '../../components/table/exampaper/MultipleChoiceQuestion'
 import NoteQuestion from '../../components/table/exampaper/NoteQuestion'
 import ShortAnswerQuestion from '../../components/table/exampaper/ShortAnswerQuestion'
-import {deleteQuestion,changeQuestionPosition} from '../../components/table/exampaper/exampaper-utils'
+import {deleteQuestion,changeQuestionPosition,getNewExamId,getExistExamInfo} from '../../components/table/exampaper/exampaper-utils'
 const Search = Input.Search;
 const CreateExampaper = React.createClass({
   contextTypes: {
     router: React.PropTypes.object
+  },
+  getDefaultProps(){
+    return {
+      exerciseList:List(),
+      type:'create'
+    }
   },
   getInitialState(){
     return {
@@ -24,21 +30,15 @@ const CreateExampaper = React.createClass({
     }
   },
   componentDidMount(){
-    let formData = new FormData()
-    formData.append('subjectId','')
-    formData.append('gradeId','')
-    fetch(config.api.exampaper.createExam,{
-      method:'post',
-      headers:{
-        'from':'nodejs',
-        'token':sessionStorage.getItem('accessToken')
-      },
-      body:formData
-    }).then(res => res.json()).then(res => {
-      this.setState({
-        examPaperId:res.examPaperId
+    if(this.props.type=='create'){
+      getNewExamId('','').then(res => {
+        this.setState({
+          examPaperId:res.examPaperId
+        })
       })
-    })
+    }else if(type=='edit'){
+
+    }
   },
   //添加选择题
   handleAddChoose(type){

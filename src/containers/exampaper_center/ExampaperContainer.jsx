@@ -7,12 +7,12 @@ import {getExampaper} from '../../actions/exampaper_action/main'
 
 const ExampaperContainer = React.createClass({
   componentDidMount(){
-    this.props.getTableData(this.props.location.pathname.split('/').slice(-1)[0],'',1)
+    this.props.getTableData(this.props.location.pathname.split('/').slice(-1)[0],'',1,'','')
   },
 
   componentWillReceiveProps(nextProps){
     if(!this.props.exampaper.get('loading') && (nextProps.exampaper.get('data').isEmpty() || (this.props.location.pathname != nextProps.location.pathname))){
-      this.props.getTableData(nextProps.location.pathname.split('/').slice(-1)[0],'',1)
+      this.props.getTableData(nextProps.location.pathname.split('/').slice(-1)[0],'',1,'','')
     }
   },
 

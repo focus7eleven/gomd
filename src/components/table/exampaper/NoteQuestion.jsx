@@ -77,6 +77,34 @@ const NoteQuestion = React.createClass({
       showScoreSetting:'',//显示修改分数面板
     }
   },
+  //添加备注
+  handleUpdateComment(e){
+    updateQuestion({
+      qid:this.props.questionInfo.get('id'),
+      examination:this.props.questionInfo.get('examination'),
+      comment:e.target.value,
+      description:this.props.questionInfo.get('description'),
+      difficulty:this.props.questionInfo.get('difficulty'),
+      kind:this.props.questionInfo.get('kind'),
+      drawZone:'',
+      score:this.props.questionInfo.get('score'),
+    })
+    this.props.onUpdate(this.props.questionInfo.get('id'),['comment'],e.target.value)
+  },
+  //添加描述
+  handleUpdateDescription(e){
+    updateQuestion({
+      qid:this.props.questionInfo.get('id'),
+      examination:this.props.questionInfo.get('examination'),
+      comment:this.props.questionInfo.get('comment'),
+      description:e.target.value,
+      difficulty:this.props.questionInfo.get('difficulty'),
+      kind:this.props.questionInfo.get('kind'),
+      drawZone:'',
+      score:this.props.questionInfo.get('score'),
+    })
+    this.props.onUpdate(this.props.questionInfo.get('id'),['description'],e.target.value)
+  },
   //显示编辑题目
   handleEditQuestion(e){
     e.stopPropagation()
@@ -167,10 +195,10 @@ const NoteQuestion = React.createClass({
         </Row>
         <Row >
           <Col span={10}>
-            注解：<div><Input /></div>
+            注解：<div><Input onBlur={this.handleUpdateComment}/></div>
           </Col>
           <Col span={10} offset={2}>
-            描述：<div><Input /></div>
+            描述：<div><Input onBlur={this.handleUpdateDescription}/></div>
           </Col>
         </Row>
       </div>

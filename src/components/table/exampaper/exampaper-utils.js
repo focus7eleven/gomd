@@ -110,3 +110,23 @@ export function changeQuestionPosition(data){
     body:formData
   }).then(res => res.json())
 }
+
+//获取一个新的examId
+export function getNewExamId(subjectId,gradeId){
+  let formData = new FormData()
+  formData.append('subjectId',subjectId)
+  formData.append('gradeId',gradeId)
+  return fetch(config.api.exampaper.createExam,{
+    method:'post',
+    headers:{
+      'from':'nodejs',
+      'token':sessionStorage.getItem('accessToken')
+    },
+    body:formData
+  }).then(res => res.json())
+}
+
+//获取已存在的试卷的详情
+export function getExistExamInfo(){
+
+}
