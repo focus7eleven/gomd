@@ -4,12 +4,14 @@ import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
 import {Select,Icon,Button,Input,Checkbox} from 'antd'
 import {Map,Record,List,fromJS} from 'immutable'
+import classnames from 'classnames'
 
 const Option = Select.Option;
 
 const questionProtoType = Record({
   questionType: '单选题',
   isChild: false,
+  questionTitle: '',
 })
 
 const CreateAnswerSheetPage = React.createClass({
@@ -20,9 +22,11 @@ const CreateAnswerSheetPage = React.createClass({
       questions: fromJS([{
         questionType: '章节',
         isChild: false,
+        questionTitle: '',
       },{
         questionType: '单选题',
         isChild: false,
+        questionTitle: '',
       }]),
       questionIndex: 1,
     }
@@ -36,26 +40,33 @@ const CreateAnswerSheetPage = React.createClass({
     this.setState({continuousIndex: e.target.checked})
   },
 
-  handleQuestionTypeChange(index,value){
+  handleFieldChange(index,key,e){
     const questions = this.state.questions;
-    this.setState({questions: questions.update(index, v => v.set('questionType', value))})
-  },
-
-  handleIsChildChange(index,e){
-    const questions = this.state.questions;
-    this.setState({questions: questions.update(index, v => v.set('isChild', e.target.value))})
+    let value
+    switch (key) {
+      case 'questionType':
+        value = e;
+        break;
+      case 'isChild':
+        value = e.target.checked;
+        break;
+      default:
+        value = e.target.value
+    }
+    this.setState({questions: questions.update(index, v => v.set(key, value))})
   },
 
   renderQuestion(item,index){
+    const questionType = item.get('questionType')
     return (
-      <div className={styles.questionContainer} key={index}>
+      <div className={classnames(styles.questionContainer,questionType==='章节'?styles.specialBackground:null)} key={index}>
         <div className={styles.block}>
           <span style={{paddingLeft: 0}}>序号</span>
           <span style={{fontSize: 14, textAlign: 'center', paddingTop: 5}}>{index+1}</span>
         </div>
         <div className={styles.block}>
           <span>题目类型</span>
-          <Select value={item.get('questionType')} defaultValue="单选题" style={{ width: 120 }} onChange={this.handleQuestionTypeChange.bind(null,index)}>
+          <Select value={questionType} defaultValue="单选题" style={{ width: 120 }} onChange={this.handleFieldChange.bind(null,index,'questionType')}>
             <Option value="单选题">单选题</Option>
             <Option value="多选题">多选题</Option>
             <Option value="判断题">判断题</Option>
@@ -67,12 +78,16 @@ const CreateAnswerSheetPage = React.createClass({
           </Select>
         </div>
         {
-          item.get('questionType') === '章节' ? null :
+          questionType === '章节' ? null :
             <div className={styles.block}>
               <span>子题目</span>
-              <Checkbox style={{marginTop: 3}} checked={item.isChild} onChange={this.handleIsChildChange.bind(null,index)}></Checkbox>
+              <Checkbox style={{marginTop: 3}} checked={item.get('isChild')} onChange={this.handleFieldChange.bind(null,index,'isChild')}></Checkbox>
             </div>
         }
+        <div className={styles.block}>
+          <span>标题</span>
+          <Input style={{width: 240}} value={item.get('questionTitle')} onChange={this.handleFieldChange.bind(null,index,'questionTitle')} />
+        </div>
         <div className={styles.block}>
           <span style={{height: 18}}>{" "}</span>
           <div>

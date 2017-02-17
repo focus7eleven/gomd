@@ -26,6 +26,10 @@
   :local(.body){
     @include body;
 
+    :local(.specialBackground){
+      background-color: #FEF8EE;
+    }
+
     :local(.questionContainer){
       width: 100%;
       min-height: 72px;
@@ -34,9 +38,6 @@
       display: flex;
       flex-direction: row;
       justify-content: flex-start;
-      &:hover{
-        background-color: #FEF8EE;
-      }
 
       :local(.block){
         display: flex;
