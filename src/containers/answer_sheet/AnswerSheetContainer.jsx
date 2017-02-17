@@ -7,7 +7,8 @@ import {getAnswerSheet} from '../../actions/answer_sheet/main'
 
 const AnswerSheetContainer = React.createClass({
   componentDidMount(){
-    this.props.getTableData(this.props.location.pathname.split('/').slice(-1)[0],'',1)
+    const pathname = this.props.location.pathname.split('/').slice(-1)[0];
+    pathname==='addAnswersheet'?null:this.props.getTableData(this.props.location.pathname.split('/').slice(-1)[0],'',1)
   },
 
   componentWillReceiveProps(nextProps){

@@ -6,7 +6,7 @@ import _ from 'lodash'
 
 const initialState = fromJS({
   data: [],
-  loading: true,
+  loading: false,
 })
 
 export default (state = initialState,action)=>{

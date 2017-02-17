@@ -8,7 +8,7 @@ import {getTableData} from '../../actions/course_center/main'
 const CourseCenterContainer = React.createClass({
   componentDidMount(){
     const pathname = this.props.location.pathname.split('/').slice(-1)[0];
-    this.props.getTableData(pathname,'',1)
+    pathname==='newCourse'?null:this.props.getTableData(pathname,'',1)
   },
 
   componentWillReceiveProps(nextProps){

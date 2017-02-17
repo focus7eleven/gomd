@@ -12,7 +12,7 @@ import _ from 'lodash'
 const initialState = fromJS({
   data: [],
   courseDetail: [],
-  loading: true,
+  loading: false,
   loadingDetail: true,
   gradeOptions: [],
   subjectOptions: [],
