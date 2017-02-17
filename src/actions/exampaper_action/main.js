@@ -54,7 +54,7 @@ export function deletePaper(examId){
                 'from':'nodejs',
                 'token':sessionStorage.getItem('accessToken'),
               }
-            }).then(res => res.json()).then(res => {notification.success({message:'删除成功'});return res})
+            }).then(res => res.json()).then(res => {notification.success({message:'删除成功'});return {mainData:res,otherMsg:{search:'',subjectId:'',gradeId:''}}})
           }
         })
       }else{

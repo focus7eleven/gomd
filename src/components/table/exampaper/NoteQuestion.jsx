@@ -3,64 +3,12 @@ import Ueditor from '../../ueditor/Ueditor'
 import styles from './NoteQuestion.scss'
 import {fromJS} from 'immutable'
 import {Row,Col,Button,Select,Rate,Input,InputNumber,Icon} from 'antd'
-import {updateQuestion,setScore} from './exampaper-utils'
-const mockData = {
-    "id": "240958772334432256",
-    "questionNo": 3,
-    "examination": "",
-    "parentId": "",
-    "comment": "",
-    "drawZone": null,
-    "description": "",
-    "difficulty": 0,
-    "score": 1.0,
-    "kind": "04",
-    "mustanswer": false,
-    "audioName": null,
-    "videoName": null,
-    "pdfName": null,
-    "haveAudio": false,
-    "haveVideo": false,
-    "havePdf": false,
-    "questionIndex": null,
-    "updateDate": null,
-    "creatorUserId": "031218647663209576",
-    "ownerId": "031218647663209576",
-    "subQuestion": "",
-    "abilityId": null,
-    "examinationPaperId": "240956727753838592",
-    "optionPojoList": null,
-    "importDate": null,
-    "select": false,
-    "draft": false,
-    "public": false
-}
-const questionType = [{
-  id:'0',
-  text:'单选'
-},{
-  id:'1',
-  text:'多选'
-},{
-  id:'2',
-  text:'填空'
-},{
-  id:'3',
-  text:'判断'
-},{
-  id:'4',
-  text:'简答（计算）'
-},{
-  id:'5',
-  text:'语文作文'
-},{
-  id:'6',
-  text:'英语作文'
-},]
+import {updateQuestion,setScore,QUESTION_TYPE} from './exampaper-utils'
+
 const NoteQuestion = React.createClass({
   getDefaultProps(){
     return {
-      questionInfo:fromJS(mockData),
+      questionInfo:fromJS({}),
       onDelete:()=>{},//删除题目
       onUpdate:()=>{},//更新题目
     }
@@ -180,7 +128,7 @@ const NoteQuestion = React.createClass({
               // window.addEventListener('click',this.handleWindowEvent)
             }} onChange={this.props.onChangeQuestionType}>
             {
-              questionType.map(v => (
+              QUESTION_TYPE.map(v => (
                 <Option value={v.id} title={v.text} key={v.id}>{v.text}</Option>
               ))
             }
@@ -218,7 +166,7 @@ const NoteQuestion = React.createClass({
           </div>
           <div className={styles.questionContent} onClick={this.handleEditQuestion}>
           {
-            this.state.editingQuestion?<div><Ueditor onDestory={this.handleUpdateQuestion}/></div>:<div>{this.props.questionInfo.get('examination')}</div>
+            this.state.editingQuestion?<div><Ueditor initialContent={this.props.questionInfo.get('examination')||'请输入题目内容'} onDestory={this.handleUpdateQuestion}/></div>:<div dangerouslySetInnerHTML={{__html:this.props.questionInfo.get('examination')||'请输入题目内容'}}></div>
           }
           {
             this.state.showScoreSetting?<div onClick={(e)=>{e.stopPropagation()}}><InputNumber min={0} defaultValue={0}

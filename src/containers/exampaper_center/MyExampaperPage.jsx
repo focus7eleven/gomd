@@ -108,7 +108,7 @@ const MyExampaperPage = React.createClass({
       render:(text,record)=>{
         return (<div>
           <Button onClick={this.handleDeletePaper.bind(this,text.id)} className={styles.deleteButton}>删除</Button>
-          <Button type="primary" onClick={this.handleEditPaper.bind(this,text.id)} >编辑</Button>
+          <Button type="primary" onClick={this.handleEditPaper.bind(this,text.id)} style={{marginLeft:'10px'}}>编辑</Button>
           </div>)
       }
     }]
@@ -126,7 +126,7 @@ const MyExampaperPage = React.createClass({
     return (
       <div className={styles.container}>
         <div className={styles.header}>
-          <ExampaperFilter />
+          <Button type='primary' onClick={()=>{this.context.router.push(`/index/question-exampaper/newexampaper`)}}>新建试卷</Button><ExampaperFilter />
         </div>
         <div className={styles.body}>
           <TableComponent dataType="exampaper" tableData={tableData} pageType="selfexampapercenter" searchStr={this.state.searchStr}></TableComponent>
