@@ -7,7 +7,7 @@ import {getExampaper} from '../../actions/exampaper_action/main'
 
 const ExampaperContainer = React.createClass({
   componentDidMount(){
-    this.props.getTableData(this.props.location.pathname.split('/').slice(-1)[0],'',1)
+    this.props.getTableData(this.props.location.pathname.split('/').slice(-1)[0],'',1,'','')
   },
 
   componentWillReceiveProps(nextProps){
