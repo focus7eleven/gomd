@@ -8,7 +8,7 @@ import {fromJS} from 'immutable'
 import _ from 'lodash'
 
 const initialState = fromJS({
-  data: [],
+  data: {},
   loading: true,
   gradeOptions: [],
   subjectOptions: [],
@@ -21,7 +21,7 @@ export default (state = initialState,action)=>{
     case GET_TABLEDATA[0]:
       return state.set('loading',true)
     case GET_TABLEDATA[1]:
-      return state.set('data',fromJS(action.data.mainData)).set('loading',false).set('otherMsg',fromJS(action.data.otherMsg))
+      return state.set('data',fromJS(action.data.mainData||{})).set('loading',false).set('otherMsg',fromJS(action.data.otherMsg||{}))
     case GET_FILTERED_TABLEDATA[1]:
       return state.set('data',fromJS(action.data))
     case GET_GRADE_OPTIONS[1]:

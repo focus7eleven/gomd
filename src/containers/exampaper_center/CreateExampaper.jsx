@@ -30,14 +30,20 @@ const CreateExampaper = React.createClass({
     }
   },
   componentDidMount(){
+    console.log("this.props.type:",this.context.router.params.examId)
     if(this.props.type=='create'){
       getNewExamId('','').then(res => {
         this.setState({
           examPaperId:res.examPaperId
         })
       })
-    }else if(type=='edit'){
-
+    }else if(this.props.type=='edit'){
+      getExistExamInfo(this.context.router.params.examId).then(res => {
+        this.setState({
+          examPaperId:this.context.router.params.examId,
+          exerciseList:fromJS(res)
+        })
+      })
     }
   },
   //添加选择题

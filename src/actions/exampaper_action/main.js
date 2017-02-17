@@ -26,7 +26,7 @@ export function getExampaper(type,search,currentPage,subjectId,gradeId){
       }).then(res => res.json()).then(res => ({mainData:res,otherMsg:{search,subjectId,gradeId}}))
     },
     shouldCallAPI:()=>{
-      return type!='newexampaper'
+      return type!='newexampaper' && isNaN(type)
     }
   }
 }

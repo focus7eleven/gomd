@@ -79,6 +79,9 @@ const MyExampaperPage = React.createClass({
   handleDeletePaper(examId){
     this.props.deletePaper(examId)
   },
+  handleEditPaper(examId){
+    this.context.router.push(`/index/question-exampaper/editExampaper/${examId}`)
+  },
   getTableData(){
     const tableHeader = [{
       title:'学科',
@@ -103,7 +106,10 @@ const MyExampaperPage = React.createClass({
     },{
       title:'操作',
       render:(text,record)=>{
-        return (<div><Button onClick={this.handleDeletePaper.bind(this,text.id)} className={styles.deleteButton}>删除</Button></div>)
+        return (<div>
+          <Button onClick={this.handleDeletePaper.bind(this,text.id)} className={styles.deleteButton}>删除</Button>
+          <Button type="primary" onClick={this.handleEditPaper.bind(this,text.id)} >编辑</Button>
+          </div>)
       }
     }]
     const tableBody = this.props.exampaper.get('data').isEmpty()?List():this.props.exampaper.get('data').get('result').map((v,k)=>({

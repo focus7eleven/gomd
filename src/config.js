@@ -245,6 +245,7 @@ const config = _.extend({
 			deletePaper:`${baseURL}/exampaper/deleteExam`,
 			publishExamPaper:`${baseURL}/exampaper/publishExamPaper`,
 			editExamInfo:`${baseURL}/exampaper/editExamInfo`,
+			showExamQuestions:(examId)=>`${baseURL}/exampaper/showExamQuestions?examId=${examId}`
 		},
 		answersheet:{
 			getAll:`${baseURL}/answersheet/getAll`,
@@ -262,6 +263,7 @@ const config = _.extend({
 			deleteQuestion:`${baseURL}/wordquestion/deleteQuestion`,
 			changeQuestionPosition:`${baseURL}/wordquestion/changeQuestionPosition`,
 			uploadWord:`${baseURL}/wordquestion/uploadWord`,
+
 		}
 	}
 })

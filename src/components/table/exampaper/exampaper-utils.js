@@ -127,6 +127,12 @@ export function getNewExamId(subjectId,gradeId){
 }
 
 //获取已存在的试卷的详情
-export function getExistExamInfo(){
-
+export function getExistExamInfo(examId){
+  return fetch(config.api.exampaper.showExamQuestions(examId),{
+    method:'get',
+    headers:{
+      'from':'nodejs',
+      'token':sessionStorage.getItem('accessToken')
+    }
+  }).then(res => res.json())
 }

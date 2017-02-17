@@ -146,6 +146,7 @@ const routes = (
 				<Route path=':second' component={ExampaperContainer}>
 					<Route path='selfexampapercenter' component={MyExampaperPage}></Route>
 					<Route path='newexampaper' component={CreateExampaper}></Route>
+					<Route path='editExampaper/(:examId)' component={()=><CreateExampaper type='edit'/>}></Route>
 				</Route>
 
 			</Route>
