@@ -3,31 +3,9 @@ import styles from './MultipleChoiceQuestion.scss'
 import {List,fromJS} from 'immutable'
 import {Table,Icon,Input,Radio,Select,Row,Col,Button,Rate,InputNumber,Checkbox} from 'antd'
 import Ueditor from '../../ueditor/Ueditor'
-import {updateOption,updateQuestion,deleteOption,addOption} from './exampaper-utils'
+import {updateOption,updateQuestion,deleteOption,addOption,QUESTION_TYPE} from './exampaper-utils'
 
 const Option = Select.Option
-const questionType = [{
-  id:'0',
-  text:'单选'
-},{
-  id:'1',
-  text:'多选'
-},{
-  id:'2',
-  text:'填空'
-},{
-  id:'3',
-  text:'判断'
-},{
-  id:'4',
-  text:'简答（计算）'
-},{
-  id:'5',
-  text:'语文作文'
-},{
-  id:'6',
-  text:'英语作文'
-},]
 const MultipleChoiceQuestion = React.createClass({
   getDefaultProps(){
     return {
@@ -96,16 +74,17 @@ const MultipleChoiceQuestion = React.createClass({
       title:this.renderQuestion(),
       dataIndex:'answer',
       key:'answer',
-      render:(text,record) => (
+      render:(text,record) => {
+        return (
         <div className={styles.question} onClick={()=>{}}>
         {
-          this.state.editingAnswerItem[record.key]?<Ueditor onDestory={this.handleUpdateOption.bind(this,record.key)}/>:<span >{text||'输入选项内容'}</span>
+          this.state.editingAnswerItem[record.key]?<Ueditor initialContent={text} onDestory={this.handleUpdateOption.bind(this,record.key)}/>:<span dangerouslySetInnerHTML={{__html: text||'请输入选项内容'}}></span>
         }
         {this.state.showScoreSetting?<div onClick={(e)=>{e.stopPropagation()}}><InputNumber min={0} defaultValue={0}
           value={this.state.answerList.getIn([record.key,'score'])}
           onChange={this.handleChangeScore.bind(this,record.key)}/></div>:null}
         </div>
-      )
+      )}
     },{
       title:<Icon type='close' onClick={(e)=>{e.stopPropagation();this.props.onDelete(this.props.questionInfo.get('id'))}}/>,
       className:styles.columns,
@@ -260,7 +239,7 @@ const MultipleChoiceQuestion = React.createClass({
     return (
       <div className={styles.question} onClick={(e)=>{e.stopPropagation();this.setState({editingQuestion:!this.state.editingQuestion,showFooter:true})}}>
       {
-        this.state.editingQuestion?<Ueditor onDestory={this.handleUpdateQuestion}/>:<span >{this.props.questionInfo.get('examination')||'请输入题目内容'}</span>
+        this.state.editingQuestion?<Ueditor initialContent={this.props.questionInfo.get('examination')||'请输入题目内容'} onDestory={this.handleUpdateQuestion}/>:<span dangerouslySetInnerHTML={{__html: this.props.questionInfo.get('examination')||'请输入题目内容'}}></span>
       }
       </div>
     )
@@ -281,7 +260,7 @@ const MultipleChoiceQuestion = React.createClass({
               // window.addEventListener('click',this.handleWindowEvent)
             }} onChange={this.props.onChangeQuestionType}>
             {
-              questionType.map(v => (
+              QUESTION_TYPE.map(v => (
                 <Option value={v.id} title={v.text} key={v.id}>{v.text}</Option>
               ))
             }

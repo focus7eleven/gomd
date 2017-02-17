@@ -1,5 +1,28 @@
 import config from '../../../config'
 
+export const QUESTION_TYPE = [{
+  id:'01',
+  text:'单选题',
+},{
+  id:'02',
+  text:'判断题',
+},{
+  id:'03',
+  text:'多选题',
+},{
+  id:'04',
+  text:'判断题',
+},{
+  id:'05',
+  text:'简答（计算题）',
+},{
+  id:'06',
+  text:'语文作文',
+},{
+  id:'07',
+  text:'英语作文',
+},]
+
 //更新答案
 export function updateOption(data){
   let formData = new FormData()

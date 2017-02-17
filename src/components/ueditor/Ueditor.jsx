@@ -19,6 +19,12 @@ const Ueditor = React.createClass({
     // this.ue.destroy = ()=>{
     //   this.props.onDestory(this.ue.getContent())
     // }
+    let that = this
+    this.ue.addListener( 'ready', function( editor ) {
+      // console.log("dfdf",editor)
+      that.ue.setContent(that.props.initialContent)
+    //  editor.setContent( 'focus' ); //编辑器家在完成后，让编辑器拿到焦点
+    });
   },
   componentWillUnmount(){
     this.props.onDestory(this.ue.getContent())

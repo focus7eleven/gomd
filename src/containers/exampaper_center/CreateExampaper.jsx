@@ -8,7 +8,7 @@ import CreateExampaperFilter from '../../components/exampaper_filter/CreateExamp
 import MultipleChoiceQuestion from '../../components/table/exampaper/MultipleChoiceQuestion'
 import NoteQuestion from '../../components/table/exampaper/NoteQuestion'
 import ShortAnswerQuestion from '../../components/table/exampaper/ShortAnswerQuestion'
-import {deleteQuestion,changeQuestionPosition,getNewExamId,getExistExamInfo} from '../../components/table/exampaper/exampaper-utils'
+import {deleteQuestion,changeQuestionPosition,getNewExamId,getExistExamInfo,updateQuestion} from '../../components/table/exampaper/exampaper-utils'
 const Search = Input.Search;
 const CreateExampaper = React.createClass({
   contextTypes: {
@@ -132,6 +132,24 @@ const CreateExampaper = React.createClass({
     })
   },
 
+  //改变题目类型
+  handleChangeQuestionType(questionId,type){
+    let index = this.state.exerciseList.findKey(v => v.get('id')==questionId)
+    updateQuestion({
+      qid:questionId,
+      examination:'',
+      comment:'',
+      description:'',
+      difficulty:0,
+      kind:type,
+      drawZone:'',
+      score:1,
+    }).then(res => {
+      this.setState({
+        exerciseList:this.state.exerciseList.set(index,fromJS(res))
+      })
+    })
+  },
 
 
 //更新题目
@@ -260,7 +278,7 @@ const CreateExampaper = React.createClass({
                 </Col>
                 <Col span={5} style={{display:'flex',justifyContent:'flex-end'}}>
                   <Button type='primary' style={{marginRight:'10px'}} onClick={()=>{this.refs.exampaperUploader.click()}}><Icon type='download'/>导入</Button>
-                  <Button type='primary' style={{marginRight:'10px'}}><Icon type='plus'/>发布</Button>
+                  <Button type='primary' style={{marginRight:'10px'}} onClick={this.handlePublishExampaper}><Icon type='plus'/>发布</Button>
                 </Col>
               </Row>
             </div>

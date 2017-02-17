@@ -4,30 +4,8 @@ import {Table,Icon,Row,Col,Select,Rate,Button,Input,InputNumber} from 'antd'
 import Ueditor from '../../ueditor/Ueditor'
 import _ from 'underscore'
 import {fromJS} from 'immutable'
-import {updateQuestion,updateOption,setScore} from './exampaper-utils'
+import {updateQuestion,updateOption,setScore,QUESTION_TYPE} from './exampaper-utils'
 
-const questionType = [{
-  id:'0',
-  text:'单选'
-},{
-  id:'1',
-  text:'多选'
-},{
-  id:'2',
-  text:'填空'
-},{
-  id:'3',
-  text:'判断'
-},{
-  id:'4',
-  text:'简答（计算）'
-},{
-  id:'5',
-  text:'语文作文'
-},{
-  id:'6',
-  text:'英语作文'
-},]
 const Option = Select.Option
 const ShortAnswerQuestion = React.createClass({
   getDefaultProps(){
@@ -129,7 +107,7 @@ const ShortAnswerQuestion = React.createClass({
               // window.addEventListener('click',this.handleWindowEvent)
             }} onChange={this.props.onChangeQuestionType}>
             {
-              questionType.map(v => (
+              QUESTION_TYPE.map(v => (
                 <Option value={v.id} title={v.text} key={v.id}>{v.text}</Option>
               ))
             }
@@ -157,7 +135,7 @@ const ShortAnswerQuestion = React.createClass({
     return (
       <div className={styles.question} onClick={(e)=>{e.stopPropagation();this.setState({editingQuestion:!this.state.editingQuestion,showFooter:!this.state.showFooter})}}>
       {
-        this.state.editingQuestion?<Ueditor onDestory={this.handleUpdateQuestion.bind(this,'title')}/>:<span >{this.props.questionInfo.get('examination')||'请输入题目'}</span>
+        this.state.editingQuestion?<Ueditor initialContent={this.props.questionInfo.get('examination')||'请输入题目'} onDestory={this.handleUpdateQuestion.bind(this,'title')}/>:<span dangerouslySetInnerHTML={{__html:this.props.questionInfo.get('examination')||'请输入题目'}}></span>
       }
       {this.state.showScoreSetting?<div onClick={(e)=>{e.stopPropagation()}}><InputNumber min={0} defaultValue={0}
         value={this.props.questionInfo.get('optionPojoList').getIn([0,'score'])}
@@ -183,7 +161,7 @@ const ShortAnswerQuestion = React.createClass({
           return (
             <div className={styles.question}>
             {
-              this.state.editingAnswerItem?<Ueditor onDestory={this.handleUpdateOption}/>:<span >{text||'输入选项内容'}</span>
+              this.state.editingAnswerItem?<Ueditor initialContent={text||'输入选项内容'} onDestory={this.handleUpdateOption}/>:<span dangerouslySetInnerHTML={{__html:text||'输入选项内容'}}></span>
             }
             </div>
           )
