@@ -8,8 +8,15 @@ import CreateExampaperFilter from '../../components/exampaper_filter/CreateExamp
 import MultipleChoiceQuestion from '../../components/table/exampaper/MultipleChoiceQuestion'
 import NoteQuestion from '../../components/table/exampaper/NoteQuestion'
 import ShortAnswerQuestion from '../../components/table/exampaper/ShortAnswerQuestion'
+import NestingQuestion from '../../components/table/exampaper/NestingQuestion'
+
 import {deleteQuestion,changeQuestionPosition,getNewExamId,getExistExamInfo,updateQuestion} from '../../components/table/exampaper/exampaper-utils'
 const Search = Input.Search;
+
+const mockNestingQuestion = {"id":"243122372377448448",'childQuestion':[
+  {"id":"243122372377448448",'childQuestion':[],"questionNo":1,"examination":"","parentId":"","comment":"","drawZone":null,"description":"","difficulty":0,"score":1.0,"kind":"04","mustanswer":false,"audioName":null,"videoName":null,"pdfName":null,"haveAudio":false,"haveVideo":false,"havePdf":false,"questionIndex":null,"updateDate":null,"creatorUserId":"031218647663209576","ownerId":"031218647663209576","subQuestion":"","abilityId":null,"examinationPaperId":"243122347933044736","optionPojoList":null,"importDate":null,"select":false,"draft":false,"public":false}
+],"questionNo":1,"examination":"","parentId":"","comment":"","drawZone":null,"description":"","difficulty":0,"score":1.0,"kind":"08","mustanswer":false,"audioName":null,"videoName":null,"pdfName":null,"haveAudio":false,"haveVideo":false,"havePdf":false,"questionIndex":null,"updateDate":null,"creatorUserId":"031218647663209576","ownerId":"031218647663209576","subQuestion":"","abilityId":null,"examinationPaperId":"243122347933044736","optionPojoList":null,"importDate":null,"select":false,"draft":false,"public":false}
+
 const CreateExampaper = React.createClass({
   contextTypes: {
     router: React.PropTypes.object
@@ -24,6 +31,7 @@ const CreateExampaper = React.createClass({
     return {
       examPaperId:'',//试卷的ID
       exerciseList:List(),//已经添加的试题的列表
+      nestingQuestion:'',//当前正在编辑的嵌套题
 
       withAnswer:false,
 
@@ -61,9 +69,14 @@ const CreateExampaper = React.createClass({
       },
       body:formData
     }).then(res => res.json()).then(res => {
-      this.setState({
-        exerciseList:this.state.exerciseList.push(fromJS(res))
-      })
+      if(!this.state.nestingQuestion){
+        this.setState({
+          exerciseList:this.state.exerciseList.push(fromJS(res))
+        })
+      }else{
+        //正在编辑嵌套题
+      }
+
     })
   },
   //添加填空题
@@ -80,9 +93,13 @@ const CreateExampaper = React.createClass({
       },
       body:formData
     }).then(res => res.json()).then(res => {
-      this.setState({
-        exerciseList:this.state.exerciseList.push(fromJS(res))
-      })
+      if(!this.state.nestingQuestion){
+        this.setState({
+          exerciseList:this.state.exerciseList.push(fromJS(res))
+        })
+      }else{
+        //正在编辑嵌套题
+      }
     })
   },
   //添加判断题
@@ -99,9 +116,13 @@ const CreateExampaper = React.createClass({
       },
       body:formData
     }).then(res => res.json()).then(res => {
-      this.setState({
-        exerciseList:this.state.exerciseList.push(fromJS(res))
-      })
+      if(!this.state.nestingQuestion){
+        this.setState({
+          exerciseList:this.state.exerciseList.push(fromJS(res))
+        })
+      }else{
+        //正在编辑嵌套题
+      }
     })
   },
   //添加简答题，语文作文，英语作文
@@ -119,9 +140,13 @@ const CreateExampaper = React.createClass({
       },
       body:formData
     }).then(res => res.json()).then(res => {
-      this.setState({
-        exerciseList:this.state.exerciseList.push(fromJS(res))
-      })
+      if(!this.state.nestingQuestion){
+        this.setState({
+          exerciseList:this.state.exerciseList.push(fromJS(res))
+        })
+      }else{
+        //正在编辑嵌套题
+      }
     })
   },
 
@@ -245,6 +270,13 @@ const CreateExampaper = React.createClass({
   handleImportAnswer(e){
 
   },
+  //添加嵌套题
+  handleAddNestingQuestion(){
+    this.setState({
+      nestingQuestion:mockNestingQuestion.id,
+      exerciseList:this.state.exerciseList.push(fromJS(mockNestingQuestion))
+    })
+  },
   render(){
     return (
       <div className={styles.container}>
@@ -275,6 +307,7 @@ const CreateExampaper = React.createClass({
                 <Col>
                   <ExamElement text='语文作文' onClick={this.handleAddShortAnswer.bind(this,'06')}/>
                   <ExamElement text='英语作文' onClick={this.handleAddShortAnswer.bind(this,'07')}/>
+                  <ExamElement text='嵌套题' onClick={this.handleAddNestingQuestion}/>
                 </Col>
                 <Col span={5} style={{display:'flex',justifyContent:'flex-end'}}>
                   <Button type='primary' style={{marginRight:'10px'}} onClick={()=>{this.refs.exampaperUploader.click()}}><Icon type='download'/>导入</Button>
@@ -294,6 +327,9 @@ const CreateExampaper = React.createClass({
                 }else if(v.get('kind')=='05'||v.get('kind')=='06'||v.get('kind')=='07'){
                   //填空
                   return <ShortAnswerQuestion questionInfo={v} key={k} onDelete={this.handleDeleteQuestion} onUpdate={this.update} moveUp={this.moveUp} moveDown={this.moveDown}/>
+                }else if(v.get('kind')=='08'){
+                  //嵌套题
+                  return <NestingQuestion questionInfo={v} key={k} onDelete={this.handleDeleteQuestion} onUpdate={this.update} moveUp={this.moveUp} moveDown={this.moveDown}/>
                 }else{
                   return null
                 }
