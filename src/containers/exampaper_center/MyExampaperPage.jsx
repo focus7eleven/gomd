@@ -7,7 +7,7 @@ import {getExampaper,deletePaper} from '../../actions/exampaper_action/main'
 import {Input,Button,Select} from 'antd'
 import {List,fromJS} from 'immutable'
 import config from '../../config'
-
+import ExampaperFilter from './ExampaperFilter'
 const Search = Input.Search
 const Option = Select.Option
 
@@ -79,6 +79,9 @@ const MyExampaperPage = React.createClass({
   handleDeletePaper(examId){
     this.props.deletePaper(examId)
   },
+  handleEditPaper(examId){
+    this.context.router.push(`/index/question-exampaper/editExampaper/${examId}`)
+  },
   getTableData(){
     const tableHeader = [{
       title:'学科',
@@ -103,7 +106,10 @@ const MyExampaperPage = React.createClass({
     },{
       title:'操作',
       render:(text,record)=>{
-        return (<div><Button onClick={this.handleDeletePaper.bind(this,text.id)} className={styles.deleteButton}>删除</Button></div>)
+        return (<div>
+          <Button onClick={this.handleDeletePaper.bind(this,text.id)} className={styles.deleteButton}>删除</Button>
+          <Button type="primary" onClick={this.handleEditPaper.bind(this,text.id)} style={{marginLeft:'10px'}}>编辑</Button>
+          </div>)
       }
     }]
     const tableBody = this.props.exampaper.get('data').isEmpty()?List():this.props.exampaper.get('data').get('result').map((v,k)=>({
@@ -120,24 +126,7 @@ const MyExampaperPage = React.createClass({
     return (
       <div className={styles.container}>
         <div className={styles.header}>
-          <div className={styles.filters}>
-            <Select style={{ width: 200 ,marginRight: '10px'}} value={this.state.subjectOption} onChange={this.handleChangeSubject}>
-            <Option value='' title='所有学科'>所有学科</Option>
-            {
-              this.state.subjectList.map((v,k)=>(
-                <Option key={k} value={v.get('subject_id')} title={v.get('subject_name')}>{v.get('subject_name')}</Option>
-              ))
-            }
-            </Select>
-            <Select style={{ width: 200 }} value={this.state.gradeOption} onChange={this.handleChangeGrade}>
-            <Option value='' title='所有年级'>所有年级</Option>
-            {
-              this.state.gradeList.map((v,k)=>(
-                <Option key={k} value={v.get('gradeId')} title={v.get('gradeName')}>{v.get('gradeName')}</Option>
-              ))
-            }
-            </Select>
-          </div>
+          <Button type='primary' onClick={()=>{this.context.router.push(`/index/question-exampaper/newexampaper`)}}>新建试卷</Button><ExampaperFilter />
         </div>
         <div className={styles.body}>
           <TableComponent dataType="exampaper" tableData={tableData} pageType="selfexampapercenter" searchStr={this.state.searchStr}></TableComponent>

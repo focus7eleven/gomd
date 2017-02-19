@@ -2,65 +2,15 @@ import React from 'react'
 import Ueditor from '../../ueditor/Ueditor'
 import styles from './NoteQuestion.scss'
 import {fromJS} from 'immutable'
-import {Row,Col,Button,Select,Rate,Input,InputNumber} from 'antd'
-import {updateQuestion,setScore} from './exampaper-utils'
-const mockData = {
-    "id": "240958772334432256",
-    "questionNo": 3,
-    "examination": "",
-    "parentId": "",
-    "comment": "",
-    "drawZone": null,
-    "description": "",
-    "difficulty": 0,
-    "score": 1.0,
-    "kind": "04",
-    "mustanswer": false,
-    "audioName": null,
-    "videoName": null,
-    "pdfName": null,
-    "haveAudio": false,
-    "haveVideo": false,
-    "havePdf": false,
-    "questionIndex": null,
-    "updateDate": null,
-    "creatorUserId": "031218647663209576",
-    "ownerId": "031218647663209576",
-    "subQuestion": "",
-    "abilityId": null,
-    "examinationPaperId": "240956727753838592",
-    "optionPojoList": null,
-    "importDate": null,
-    "select": false,
-    "draft": false,
-    "public": false
-}
-const questionType = [{
-  id:'0',
-  text:'单选'
-},{
-  id:'1',
-  text:'多选'
-},{
-  id:'2',
-  text:'填空'
-},{
-  id:'3',
-  text:'判断'
-},{
-  id:'4',
-  text:'简答（计算）'
-},{
-  id:'5',
-  text:'语文作文'
-},{
-  id:'6',
-  text:'英语作文'
-},]
+import {Row,Col,Button,Select,Rate,Input,InputNumber,Icon} from 'antd'
+import {updateQuestion,setScore,QUESTION_TYPE} from './exampaper-utils'
+
 const NoteQuestion = React.createClass({
   getDefaultProps(){
     return {
-      questionInfo:fromJS(mockData),
+      questionInfo:fromJS({}),
+      onDelete:()=>{},//删除题目
+      onUpdate:()=>{},//更新题目
     }
   },
   getInitialState(){
@@ -74,6 +24,34 @@ const NoteQuestion = React.createClass({
       description:'',//描述
       showScoreSetting:'',//显示修改分数面板
     }
+  },
+  //添加备注
+  handleUpdateComment(e){
+    updateQuestion({
+      qid:this.props.questionInfo.get('id'),
+      examination:this.props.questionInfo.get('examination'),
+      comment:e.target.value,
+      description:this.props.questionInfo.get('description'),
+      difficulty:this.props.questionInfo.get('difficulty'),
+      kind:this.props.questionInfo.get('kind'),
+      drawZone:'',
+      score:this.props.questionInfo.get('score'),
+    })
+    this.props.onUpdate(this.props.questionInfo.get('id'),['comment'],e.target.value)
+  },
+  //添加描述
+  handleUpdateDescription(e){
+    updateQuestion({
+      qid:this.props.questionInfo.get('id'),
+      examination:this.props.questionInfo.get('examination'),
+      comment:this.props.questionInfo.get('comment'),
+      description:e.target.value,
+      difficulty:this.props.questionInfo.get('difficulty'),
+      kind:this.props.questionInfo.get('kind'),
+      drawZone:'',
+      score:this.props.questionInfo.get('score'),
+    })
+    this.props.onUpdate(this.props.questionInfo.get('id'),['description'],e.target.value)
   },
   //显示编辑题目
   handleEditQuestion(e){
@@ -95,14 +73,21 @@ const NoteQuestion = React.createClass({
     }
   },
   //修改题目
-  handleUpdateQuestion(){
-
+  handleUpdateQuestion(value){
+    updateQuestion({
+      qid:this.props.questionInfo.get('id'),
+      examination:value,
+      comment:this.props.questionInfo.get('comment'),
+      description:this.props.questionInfo.get('description'),
+      difficulty:this.props.questionInfo.get('difficulty'),
+      kind:this.props.questionInfo.get('kind'),
+      drawZone:'',
+      score:this.props.questionInfo.get('score'),
+    })
+    this.props.onUpdate(this.props.questionInfo.get('id'),['examination'],value)
   },
   //修改难度
   handlerSetHardness(value){
-    this.setState({
-      difficulty:value
-    })
     updateQuestion({
       qid:this.props.questionInfo.get('id'),
       examination:this.state.question,
@@ -113,6 +98,7 @@ const NoteQuestion = React.createClass({
       drawZone:'',
       score:this.state.score,
     })
+    this.props.onUpdate(this.props.questionInfo.get('id'),['difficulty'],value)
   },
   //设定分值
   handleSetScore(){
@@ -122,13 +108,11 @@ const NoteQuestion = React.createClass({
   },
   //修改分值
   handleChangeScore(value){
-    this.setState({
-      score:value
-    })
     setScore({
       questionId:this.props.questionInfo.get('id'),
       score:value,
     })
+    this.props.onUpdate(this.props.questionInfo.get('id'),['score'],value)
   },
   renderFooter(){
     return (
@@ -144,14 +128,14 @@ const NoteQuestion = React.createClass({
               // window.addEventListener('click',this.handleWindowEvent)
             }} onChange={this.props.onChangeQuestionType}>
             {
-              questionType.map(v => (
+              QUESTION_TYPE.map(v => (
                 <Option value={v.id} title={v.text} key={v.id}>{v.text}</Option>
               ))
             }
             </Select>
           </Col>
           <Col span={6}>
-            难度：<Rate value={this.state.difficulty} onChange={this.handlerSetHardness}/>
+            难度：<Rate value={this.props.questionInfo.get('difficulty')} onChange={this.handlerSetHardness}/>
           </Col>
           <Col>
             <Button onClick={this.handleSetScore}>设定分值</Button>
@@ -159,10 +143,10 @@ const NoteQuestion = React.createClass({
         </Row>
         <Row >
           <Col span={10}>
-            注解：<div><Input /></div>
+            注解：<div><Input onBlur={this.handleUpdateComment}/></div>
           </Col>
           <Col span={10} offset={2}>
-            描述：<div><Input /></div>
+            描述：<div><Input onBlur={this.handleUpdateDescription}/></div>
           </Col>
         </Row>
       </div>
@@ -182,18 +166,21 @@ const NoteQuestion = React.createClass({
           </div>
           <div className={styles.questionContent} onClick={this.handleEditQuestion}>
           {
-            this.state.editingQuestion?<div><Ueditor/></div>:<div>{this.state.question}</div>
+            this.state.editingQuestion?<div><Ueditor initialContent={this.props.questionInfo.get('examination')||'请输入题目内容'} onDestory={this.handleUpdateQuestion}/></div>:<div dangerouslySetInnerHTML={{__html:this.props.questionInfo.get('examination')||'请输入题目内容'}}></div>
           }
           {
             this.state.showScoreSetting?<div onClick={(e)=>{e.stopPropagation()}}><InputNumber min={0} defaultValue={0}
-              value={this.state.score}
+              value={this.props.questionInfo.get('score')}
               onChange={this.handleChangeScore}/></div>:null
           }
           </div>
+          <div className={styles.questionNo}>
+            <Icon type='close' onClick={(e)=>{e.stopPropagation();this.props.onDelete(this.props.questionInfo.get('id'))}}/>
+          </div>
         </div>
         <div className={styles.moveButton}>
-          <div>
-          </div>
+            <Button onClick={(e)=>{this.props.moveUp(this.props.questionInfo.get('id'))}}><Icon type="caret-up" /></Button>
+            <Button onClick={(e)=>{this.props.moveDown(this.props.questionInfo.get('id'))}}><Icon type="caret-down" /></Button>
         </div>
         {
           this.state.showFooter?this.renderFooter():null
