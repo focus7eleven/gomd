@@ -54,12 +54,21 @@ const CreateExampaper = React.createClass({
       })
     }
   },
+  //添加嵌套题目子题目
+  handleAddSubQuestion(subjectQuestion){
+    let index = this.state.exerciseList.findKey(v => v.get('id')==this.state.nestingQuestion)
+    let question = this.state.exerciseList.get(index)
+    let newQuestion = question.get('subQuestion')?question.set('subQuestion',question.get('subQuestion').push(fromJS(subjectQuestion))):question.set('subQuestion',fromJS([subjectQuestion]))
+    this.setState({
+      exerciseList:this.state.exerciseList.set(index,newQuestion)
+    })
+  },
   //添加选择题
   handleAddChoose(type){
     let formData = new FormData()
     formData.append('examId',this.state.examPaperId)
     formData.append('kind',type)
-    formData.append('parentId','')
+    formData.append('parentId',this.state.nestingQuestion)
     formData.append('date',new Date().toString())
     fetch(config.api.wordquestion.addChoose,{
       method:'post',
@@ -75,6 +84,7 @@ const CreateExampaper = React.createClass({
         })
       }else{
         //正在编辑嵌套题
+        this.handleAddSubQuestion(res)
       }
 
     })
@@ -83,7 +93,7 @@ const CreateExampaper = React.createClass({
   handleAddNote(){
     let formData = new FormData()
     formData.append('examId',this.state.examPaperId)
-    formData.append('parentId','')
+    formData.append('parentId',this.state.nestingQuestion)
     formData.append('date',new Date().toString())
     fetch(config.api.wordquestion.addNote,{
       method:'post',
@@ -99,6 +109,7 @@ const CreateExampaper = React.createClass({
         })
       }else{
         //正在编辑嵌套题
+        this.handleAddSubQuestion(res)
       }
     })
   },
@@ -106,7 +117,7 @@ const CreateExampaper = React.createClass({
   handleAddJudge(){
     let formData = new FormData()
     formData.append('examId',this.state.examPaperId)
-    formData.append('parentId','')
+    formData.append('parentId',this.state.nestingQuestion)
     formData.append('date',new Date().toString())
     fetch(config.api.wordquestion.addJudge,{
       method:'post',
@@ -122,6 +133,7 @@ const CreateExampaper = React.createClass({
         })
       }else{
         //正在编辑嵌套题
+        this.handleAddSubQuestion(res)
       }
     })
   },
@@ -129,7 +141,7 @@ const CreateExampaper = React.createClass({
   handleAddShortAnswer(type){
     let formData = new FormData()
     formData.append('examId',this.state.examPaperId)
-    formData.append('parentId','')
+    formData.append('parentId',this.state.nestingQuestion)
     formData.append('date',new Date().toString())
     formData.append('kind',type)
     fetch(config.api.wordquestion.addShortAnswer,{
@@ -146,10 +158,11 @@ const CreateExampaper = React.createClass({
         })
       }else{
         //正在编辑嵌套题
+        this.handleAddSubQuestion(res)
       }
     })
   },
-
+  //删除题目
   handleDeleteQuestion(questionId){
     deleteQuestion({questionId})
     this.setState({
@@ -272,10 +285,30 @@ const CreateExampaper = React.createClass({
   },
   //添加嵌套题
   handleAddNestingQuestion(){
-    this.setState({
-      nestingQuestion:mockNestingQuestion.id,
-      exerciseList:this.state.exerciseList.push(fromJS(mockNestingQuestion))
-    })
+    if(!this.state.nestingQuestion){
+      let formData = new FormData()
+      formData.append('examId',this.state.examPaperId)
+      formData.append('date',new Date().toString())
+      fetch(config.api.wordquestion.addNest,{
+        method:'post',
+        headers:{
+          'from':'nodejs',
+          'token':sessionStorage.getItem('accessToken')
+        },
+        body:formData
+      }).then(res => res.json()).then(res => {
+        this.setState({
+          nestingQuestion:res.id,
+          exerciseList:this.state.exerciseList.push(fromJS(res))
+        })
+      })
+    }else{
+      //结束嵌套题
+      this.setState({
+        nestingQuestion:''
+      })
+    }
+
   },
   render(){
     return (
@@ -327,7 +360,7 @@ const CreateExampaper = React.createClass({
                 }else if(v.get('kind')=='05'||v.get('kind')=='06'||v.get('kind')=='07'){
                   //填空
                   return <ShortAnswerQuestion questionInfo={v} key={k} onDelete={this.handleDeleteQuestion} onUpdate={this.update} moveUp={this.moveUp} moveDown={this.moveDown}/>
-                }else if(v.get('kind')=='08'){
+                }else if(v.get('kind')=='09'){
                   //嵌套题
                   return <NestingQuestion questionInfo={v} key={k} onDelete={this.handleDeleteQuestion} onUpdate={this.update} moveUp={this.moveUp} moveDown={this.moveDown}/>
                 }else{

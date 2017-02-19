@@ -263,6 +263,8 @@ const config = _.extend({
 			deleteQuestion:`${baseURL}/wordquestion/deleteQuestion`,
 			changeQuestionPosition:`${baseURL}/wordquestion/changeQuestionPosition`,
 			uploadWord:`${baseURL}/wordquestion/uploadWord`,
+			addNest:`${baseURL}/wordquestion/addNest`,
+			addTitle:`${baseURL}/wordquestion/addTitle`,
 
 		}
 	}

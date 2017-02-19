@@ -1,10 +1,12 @@
 import React from 'react'
 import styles from './NestingQuestion.scss'
-import {Row,Col,Icon,Button} from 'antd'
+import {Row,Col,Icon,Button,Select,Rate,Input,InputNumber} from 'antd'
 import {fromJS} from 'immutable'
 import MultipleChoiceQuestion from './MultipleChoiceQuestion'
 import NoteQuestion from './NoteQuestion'
 import ShortAnswerQuestion from './ShortAnswerQuestion'
+import Ueditor from '../../ueditor/Ueditor'
+import {updateQuestion,setScore,QUESTION_TYPE} from './exampaper-utils'
 
 const NestingQuestion = React.createClass({
   getDefaultProps(){
@@ -21,6 +23,72 @@ const NestingQuestion = React.createClass({
       showFooter:false,//显示添加备注面板
       showScoreSetting:'',//显示修改分数面板
     }
+  },
+  //显示编辑题目
+  handleEditQuestion(e){
+    e.stopPropagation()
+    this.setState({
+      editingQuestion:!this.state.editingQuestion,
+      showFooter:!this.state.showFooter
+    })
+  },
+  //修改题目
+  handleUpdateQuestion(value){
+    updateQuestion({
+      qid:this.props.questionInfo.get('id'),
+      examination:value,
+      comment:this.props.questionInfo.get('comment'),
+      description:this.props.questionInfo.get('description'),
+      difficulty:this.props.questionInfo.get('difficulty'),
+      kind:this.props.questionInfo.get('kind'),
+      drawZone:'',
+      score:this.props.questionInfo.get('score'),
+    })
+    this.props.onUpdate(this.props.questionInfo.get('id'),['examination'],value)
+  },
+  //更新子题目
+  handleUpdateSubQuestion(questionId,path,value){
+    let index = this.props.questionInfo.get('subQuestion').findKey(v => v.get('id')==questionId)
+    let newQuestion = this.props.questionInfo.setIn(['subQuestion',index].concat(path),value)
+    this.props.onUpdate(this.props.questionInfo.get('id'),['subQuestion'],newQuestion.get('subQuestion'))
+  },
+  renderFooter(){
+    return (
+      <div className={styles.footer} >
+        <Row>
+          <Col span={6}>
+            <Button onClick={this.handleAddBlank}>添加填空</Button>
+          </Col>
+          <Col span={6}>
+            <Select style={{width:'200px'}} onFocus={()=>{
+              // window.removeEventListener('click',this.handleWindowEvent)
+            }} onBlur={()=>{
+              // window.addEventListener('click',this.handleWindowEvent)
+            }} onChange={this.props.onChangeQuestionType}>
+            {
+              QUESTION_TYPE.map(v => (
+                <Option value={v.id} title={v.text} key={v.id}>{v.text}</Option>
+              ))
+            }
+            </Select>
+          </Col>
+          <Col span={6}>
+            难度：<Rate value={this.props.questionInfo.get('difficulty')} onChange={this.handlerSetHardness}/>
+          </Col>
+          <Col>
+            <Button onClick={this.handleSetScore}>设定分值</Button>
+          </Col>
+        </Row>
+        <Row >
+          <Col span={10}>
+            注解：<div><Input onBlur={this.handleUpdateComment}/></div>
+          </Col>
+          <Col span={10} offset={2}>
+            描述：<div><Input onBlur={this.handleUpdateDescription}/></div>
+          </Col>
+        </Row>
+      </div>
+    )
   },
   render(){
     return (
@@ -50,23 +118,23 @@ const NestingQuestion = React.createClass({
         </div>
         <div className={styles.subQuestionContainer}>
         {
-          this.props.questionInfo.get('childQuestion').map((v,k)=>{
+          this.props.questionInfo.get('subQuestion')?this.props.questionInfo.get('subQuestion').map((v,k)=>{
             if(v.get('kind')=='01'||v.get('kind')=='02'||v.get('kind')=='03'){
               //单选
-              return <MultipleChoiceQuestion questionInfo={v} key={k} onDelete={this.handleDeleteQuestion} onUpdate={this.update} moveUp={this.moveUp} moveDown={this.moveDown}/>
+              return <MultipleChoiceQuestion questionInfo={v} key={k} onDelete={this.handleDeleteQuestion} onUpdate={this.handleUpdateSubQuestion} moveUp={this.moveUp} moveDown={this.moveDown}/>
             }else if(v.get('kind')=='04'){
               //填空
-              return <NoteQuestion questionInfo={v} key={k} onDelete={this.handleDeleteQuestion} onUpdate={this.update} moveUp={this.moveUp} moveDown={this.moveDown}/>
+              return <NoteQuestion questionInfo={v} key={k} onDelete={this.handleDeleteQuestion} onUpdate={this.handleUpdateSubQuestion} moveUp={this.moveUp} moveDown={this.moveDown}/>
             }else if(v.get('kind')=='05'||v.get('kind')=='06'||v.get('kind')=='07'){
               //填空
-              return <ShortAnswerQuestion questionInfo={v} key={k} onDelete={this.handleDeleteQuestion} onUpdate={this.update} moveUp={this.moveUp} moveDown={this.moveDown}/>
+              return <ShortAnswerQuestion questionInfo={v} key={k} onDelete={this.handleDeleteQuestion} onUpdate={this.handleUpdateSubQuestion} moveUp={this.moveUp} moveDown={this.moveDown}/>
             }else if(v.get('kind')=='08'){
               //嵌套题
-              return <NestingQuestion questionInfo={v} key={k} onDelete={this.handleDeleteQuestion} onUpdate={this.update} moveUp={this.moveUp} moveDown={this.moveDown}/>
+              return <NestingQuestion questionInfo={v} key={k} onDelete={this.handleDeleteQuestion} onUpdate={this.handleUpdateSubQuestion} moveUp={this.moveUp} moveDown={this.moveDown}/>
             }else{
               return null
             }
-          })
+          }):null
         }
         </div>
         <div className={styles.moveButton}>
