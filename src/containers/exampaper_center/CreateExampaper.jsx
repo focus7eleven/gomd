@@ -162,11 +162,37 @@ const CreateExampaper = React.createClass({
       }
     })
   },
+
+  //添加标题
+  handleAddTitle(){
+    let formData = new FormData()
+    formData.append('examId',this.state.examPaperId)
+    formData.append('date',new Date().toString())
+    fetch(config.api.wordquestion.addTitle,{
+      method:'post',
+      headers:{
+        'from':'nodejs',
+        'token':sessionStorage.getItem('accessToken')
+      },
+      body:formData
+    }).then(res => res.json()).then(res => {
+      if(!this.state.nestingQuestion){
+        this.setState({
+          exerciseList:this.state.exerciseList.push(fromJS(res))
+        })
+      }else{
+        //正在编辑嵌套题
+        this.handleAddSubQuestion(res)
+      }
+    })
+  },
+
   //删除题目
   handleDeleteQuestion(questionId){
     deleteQuestion({questionId})
     this.setState({
-      exerciseList:this.state.exerciseList.filter(v => v.get('id')!=questionId)
+      exerciseList:this.state.exerciseList.filter(v => v.get('id')!=questionId),
+      nestingQuestion:''
     })
   },
 
@@ -234,7 +260,7 @@ const CreateExampaper = React.createClass({
     let question = this.state.exerciseList.get(questionIndex)
     let nextQuestion = this.state.exerciseList.get(questionIndex+1)
     changeQuestionPosition({
-      moveDownQuestionId:Question.get('id'),
+      moveDownQuestionId:question.get('id'),
       moveUpQuestionId:nextQuestion.get('id'),
     })
     this.setState({
@@ -340,7 +366,8 @@ const CreateExampaper = React.createClass({
                 <Col>
                   <ExamElement text='语文作文' onClick={this.handleAddShortAnswer.bind(this,'06')}/>
                   <ExamElement text='英语作文' onClick={this.handleAddShortAnswer.bind(this,'07')}/>
-                  <ExamElement text='嵌套题' onClick={this.handleAddNestingQuestion}/>
+                  <ExamElement text='嵌套题' style={this.state.nestingQuestion?{backgroundColor:'#FC9E0A',borderColor:'#FC9E0A',color:'white'}:{}} onClick={this.handleAddNestingQuestion}/>
+                  <ExamElement text='章节' onClick={this.handleAddTitle}/>
                 </Col>
                 <Col span={5} style={{display:'flex',justifyContent:'flex-end'}}>
                   <Button type='primary' style={{marginRight:'10px'}} onClick={()=>{this.refs.exampaperUploader.click()}}><Icon type='download'/>导入</Button>
@@ -360,6 +387,9 @@ const CreateExampaper = React.createClass({
                 }else if(v.get('kind')=='05'||v.get('kind')=='06'||v.get('kind')=='07'){
                   //填空
                   return <ShortAnswerQuestion questionInfo={v} key={k} onDelete={this.handleDeleteQuestion} onUpdate={this.update} moveUp={this.moveUp} moveDown={this.moveDown}/>
+                }else if(v.get('kind')=='08'){
+                  //嵌套题
+                  return <div>标题</div>
                 }else if(v.get('kind')=='09'){
                   //嵌套题
                   return <NestingQuestion questionInfo={v} key={k} onDelete={this.handleDeleteQuestion} onUpdate={this.update} moveUp={this.moveUp} moveDown={this.moveDown}/>

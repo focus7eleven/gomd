@@ -6,7 +6,7 @@ import MultipleChoiceQuestion from './MultipleChoiceQuestion'
 import NoteQuestion from './NoteQuestion'
 import ShortAnswerQuestion from './ShortAnswerQuestion'
 import Ueditor from '../../ueditor/Ueditor'
-import {updateQuestion,setScore,QUESTION_TYPE} from './exampaper-utils'
+import {updateQuestion,setScore,QUESTION_TYPE,changeQuestionPosition,deleteQuestion} from './exampaper-utils'
 
 const NestingQuestion = React.createClass({
   getDefaultProps(){
@@ -51,6 +51,37 @@ const NestingQuestion = React.createClass({
     let index = this.props.questionInfo.get('subQuestion').findKey(v => v.get('id')==questionId)
     let newQuestion = this.props.questionInfo.setIn(['subQuestion',index].concat(path),value)
     this.props.onUpdate(this.props.questionInfo.get('id'),['subQuestion'],newQuestion.get('subQuestion'))
+  },
+  //删除子题目
+  handleDeleteSubQuestion(questionId){
+    let index = this.props.questionInfo.get('subQuestion').findKey(v => v.get('id')==questionId)
+    // let newQuestion = this.props.questionInfo.setIn(['subQuestion',index].concat(path),value)
+    let newSubQuestion = this.props.questionInfo.get('subQuestion').filter(v => v.get('id')!=questionId)
+    this.props.onUpdate(this.props.questionInfo.get('id'),['subQuestion'],newSubQuestion)
+  },
+  //向上移动子题目
+  handleMoveUpSubQuestion(questionId){
+    let subQuestionIndex = this.props.questionInfo.get('subQuestion').findKey(v => v.get('id')==questionId)
+    let subQuestion = this.props.questionInfo.get('subQuestion').get(subQuestionIndex)
+    let preSubQuestion = this.props.questionInfo.get('subQuestion').get(subQuestionIndex-1)
+    changeQuestionPosition({
+      moveDownQuestionId:preSubQuestion.get('id'),
+      moveUpQuestionId:subQuestion.get('id'),
+    })
+    let newSubQuestion = this.props.questionInfo.get('subQuestion').set(subQuestionIndex,preSubQuestion).set(subQuestionIndex-1,subQuestion)
+    this.props.onUpdate(this.props.questionInfo.get('id'),['subQuestion'],newSubQuestion)
+  },
+  //向下移动子题目
+  handleMoveDownSubQuestion(questionId){
+    let subQuestionIndex = this.props.questionInfo.get('subQuestion').findKey(v => v.get('id')==questionId)
+    let subQuestion = this.props.questionInfo.get('subQuestion').get(subQuestionIndex)
+    let nextSubQuestion = this.props.questionInfo.get('subQuestion').get(subQuestionIndex+1)
+    changeQuestionPosition({
+      moveDownQuestionId:subQuestion.get('id'),
+      moveUpQuestionId:nextSubQuestion.get('id'),
+    })
+    let newSubQuestion = this.props.questionInfo.get('subQuestion').set(subQuestionIndex,nextSubQuestion).set(subQuestionIndex+1,subQuestion)
+    this.props.onUpdate(this.props.questionInfo.get('id'),['subQuestion'],newSubQuestion)
   },
   renderFooter(){
     return (
@@ -121,16 +152,16 @@ const NestingQuestion = React.createClass({
           this.props.questionInfo.get('subQuestion')?this.props.questionInfo.get('subQuestion').map((v,k)=>{
             if(v.get('kind')=='01'||v.get('kind')=='02'||v.get('kind')=='03'){
               //单选
-              return <MultipleChoiceQuestion questionInfo={v} key={k} onDelete={this.handleDeleteQuestion} onUpdate={this.handleUpdateSubQuestion} moveUp={this.moveUp} moveDown={this.moveDown}/>
+              return <MultipleChoiceQuestion questionInfo={v} key={k} onDelete={this.handleDeleteSubQuestion} onUpdate={this.handleUpdateSubQuestion} moveUp={this.handleMoveUpSubQuestion} moveDown={this.handleMoveDownSubQuestion}/>
             }else if(v.get('kind')=='04'){
               //填空
-              return <NoteQuestion questionInfo={v} key={k} onDelete={this.handleDeleteQuestion} onUpdate={this.handleUpdateSubQuestion} moveUp={this.moveUp} moveDown={this.moveDown}/>
+              return <NoteQuestion questionInfo={v} key={k} onDelete={this.handleDeleteSubQuestion} onUpdate={this.handleUpdateSubQuestion} moveUp={this.handleMoveUpSubQuestion} moveDown={this.handleMoveDownSubQuestion}/>
             }else if(v.get('kind')=='05'||v.get('kind')=='06'||v.get('kind')=='07'){
               //填空
-              return <ShortAnswerQuestion questionInfo={v} key={k} onDelete={this.handleDeleteQuestion} onUpdate={this.handleUpdateSubQuestion} moveUp={this.moveUp} moveDown={this.moveDown}/>
+              return <ShortAnswerQuestion questionInfo={v} key={k} onDelete={this.handleDeleteSubQuestion} onUpdate={this.handleUpdateSubQuestion} moveUp={this.handleMoveUpSubQuestion} moveDown={this.handleMoveDownSubQuestion}/>
             }else if(v.get('kind')=='08'){
               //嵌套题
-              return <NestingQuestion questionInfo={v} key={k} onDelete={this.handleDeleteQuestion} onUpdate={this.handleUpdateSubQuestion} moveUp={this.moveUp} moveDown={this.moveDown}/>
+              return <NestingQuestion questionInfo={v} key={k} onDelete={this.handleDeleteSubQuestion} onUpdate={this.handleUpdateSubQuestion} moveUp={this.handleMoveUpSubQuestion} moveDown={this.handleMoveDownSubQuestion}/>
             }else{
               return null
             }
