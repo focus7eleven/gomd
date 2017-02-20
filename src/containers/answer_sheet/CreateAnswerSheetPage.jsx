@@ -87,6 +87,39 @@ const questionProtoType = fromJS({
   answerHeight: 1,
 })
 
+const getTypeName = (type) => {
+  let result
+  switch (type) {
+    case 'zhangjie':
+      result = '章节'
+      break;
+    case 'xuanze':
+      result = '单选题'
+      break;
+    case 'duoxuan':
+      result = '多选题'
+      break;
+    case 'panduan':
+      result = '判断题'
+      break;
+    case 'tiankong':
+      result = '填空题'
+      break;
+    case 'jianda':
+      result = '简答题'
+      break;
+    case 'zuowen_en':
+      result = '英语作文题'
+      break;
+    case 'zuowen_cn':
+      result = '语文作文题'
+      break;
+    default:
+      result = '单选题'
+  }
+  return result
+}
+
 const CreateAnswerSheetPage = React.createClass({
   getInitialState(){
     return {
@@ -95,7 +128,7 @@ const CreateAnswerSheetPage = React.createClass({
       questions: fromJS([{
         questionType: 'xuanze',
         isChild: false,
-        questionTitle: '',
+        questionTitle: '一、单选题',
         childQuestionTitle: '',
         questionNum: 1,
         optionType: 'en_zimu',
@@ -122,12 +155,46 @@ const CreateAnswerSheetPage = React.createClass({
     this.setState({questions});
   },
 
+  handleTypeChanged(index,value){
+    const questions = this.state.questions;
+    const newTitle = parseIndex(index+1) + '、' + getTypeName(value)
+    switch (value) {
+      case 'zhangjie':
+        this.setState({questions: questions.update(index, v => v.set('questionTitle',newTitle).set('optionType','left').set('questionType',value))})
+        break;
+      case 'xuanze':
+        this.setState({questions: questions.update(index, v => v.set('questionTitle',newTitle).set('questionType',value).set('childQuestionTitle','').set('optionType','en_zimu'))})
+        break;
+      case 'duoxuan':
+        this.setState({questions: questions.update(index, v => v.set('questionTitle',newTitle).set('questionType',value).set('childQuestionTitle','').set('optionType','en_zimu'))})
+        break;
+      case 'panduan':
+        this.setState({questions: questions.update(index, v => v.set('questionTitle',newTitle).set('questionType',value).set('childQuestionTitle','').set('optionType','dui_cuo'))})
+        break;
+      case 'tiankong':
+        this.setState({questions: questions.update(index, v => v.set('questionTitle',newTitle).set('questionType',value).set('childQuestionTitle','').set('answerWidth','1/3').set('answerHeight',1))})
+        break;
+      case 'jianda':
+        this.setState({questions: questions.update(index, v => v.set('questionTitle',newTitle).set('questionType',value).set('childQuestionTitle','').set('answerHeight',5).set('jiandaAnswerCol',1).set('jiandaAnswerRow',1))})
+        break;
+      case 'zuowen_cn':
+        this.setState({questions: questions.update(index, v => v.set('questionTitle',newTitle).set('questionType',value).set('childQuestionTitle','').set('answerHeight',40))})
+        break;
+      case 'zuowen_en':
+        this.setState({questions: questions.update(index, v => v.set('questionTitle',newTitle).set('questionType',value).set('childQuestionTitle','').set('answerHeight',10))})
+        break;
+      default:
+        this.setState({questions: questions.update(index, v => v.set('questionTitle',newTitle).set('questionType',value).set('childQuestionTitle','').set('optionType','en_zimu'))})
+    }
+  },
+
   handleFieldChange(index,key,e){
     const questions = this.state.questions;
     let value
     switch (key) {
       case 'questionType':
         value = e;
+        this.handleTypeChanged(index,value)
         break;
       case 'optionType':
         value = e;
@@ -138,7 +205,7 @@ const CreateAnswerSheetPage = React.createClass({
       default:
         value = e.target.value
     }
-    this.setState({questions: questions.update(index, v => v.set(key, value))})
+    key === 'questionType' ? null : this.setState({questions: questions.update(index, v => v.set(key, value))})
   },
 
   handleDeleteQuestion(index){
@@ -157,6 +224,22 @@ const CreateAnswerSheetPage = React.createClass({
 
   handleSaveAnswerSheet(){
     let formData = new FormData();
+    const {sheetName,questions} = this.state;
+    formData.append('answersheet_name',sheetName)
+    questions.map((item,index)=>{
+      formData.append('question_id',0);
+      formData.append('question_sort',index+1);
+      formData.append('question_type',item.get('questionType'));
+      item.get('isChild')?formData.append('child_question_flag',index+1):null
+      formData.append('question_title',item.get('questionTitle'));
+      formData.append('child_question_title',item.get('childQuestionTitle'));
+      formData.append('question_num',item.get('questionNum'));
+      formData.append('option_type',item.get('optionType'));
+      formData.append('option_num',item.get('optionNum'));
+      formData.append('answer_height',item.get('answerHeight'));
+      formData.append('answer_width',item.get('answerWidth'));
+    })
+    this.props.createAnswerSheet(formData);
   },
 
   renderChapter(item,index){
@@ -244,7 +327,7 @@ const CreateAnswerSheetPage = React.createClass({
             </div>
             <div className={styles.block}>
               <span>题目个数</span>
-              <Input type="number" min="1" max="999" style={{width: 80}} value={item.get('questionNum')} onChange={this.handleFieldChange.bind(null,index,'questionNum')} />
+              <Input type="number" min="1" max="999" placeholder="1-999" style={{width: 80}} value={item.get('questionNum')} onChange={this.handleFieldChange.bind(null,index,'questionNum')} />
             </div>
             {
               questionType === 'xuanze' || questionType === 'duoxuan' ?
@@ -258,7 +341,7 @@ const CreateAnswerSheetPage = React.createClass({
                 </div>
                 <div className={styles.block}>
                   <span>选项个数</span>
-                  <Input type="number" min="2" style={{width: 80}} value={item.get('optionNum')} onChange={this.handleFieldChange.bind(null,index,'optionNum')} />
+                  <Input type="number" min="2" max="9" placeholder="2-9" style={{width: 80}} value={item.get('optionNum')} onChange={this.handleFieldChange.bind(null,index,'optionNum')} />
                 </div>
               </div>:null
             }
@@ -290,7 +373,7 @@ const CreateAnswerSheetPage = React.createClass({
                 </div>
                 <div className={styles.block}>
                   <span>答题区域个数</span>
-                  <Input type="number" min="1" max="50" style={{width: 80}} value={item.get('answerHeight')} onChange={this.handleFieldChange.bind(null,index,'answerHeight')} />
+                  <Input type="number" min="1" max="50" placeholder="1-50" style={{width: 80}} value={item.get('answerHeight')} onChange={this.handleFieldChange.bind(null,index,'answerHeight')} />
                 </div>
               </div>:null
             }
@@ -298,7 +381,7 @@ const CreateAnswerSheetPage = React.createClass({
               questionType === 'zuowen_en' || questionType === 'zuowen_cn' || questionType === 'jianda'?
               <div className={styles.block}>
                 <span>答题区域高度(行)</span>
-                <Input type="number" min="5" max={questionType==='jianda'?'30':'150'} style={{width: 80}} value={item.get('answerHeight')} onChange={this.handleFieldChange.bind(null,index,'answerHeight')} />
+                <Input type="number" min={questionType==='jianda'?'5':'1'} max={questionType==='jianda'?'30':'150'} placeholder={questionType==='jianda'?'5-30':'1-150'} style={{width: 80}} value={item.get('answerHeight')} onChange={this.handleFieldChange.bind(null,index,'answerHeight')} />
               </div>:null
             }
             {
@@ -306,9 +389,9 @@ const CreateAnswerSheetPage = React.createClass({
               <div className={styles.block}>
                 <span>设置成</span>
                 <div className={styles.horizontalLayout}>
-                  <Input type="number" min="1" max="3" style={{width: 40}} value={item.get('jiandaAnswerRow')} onChange={this.handleFieldChange.bind(null,index,'jiandaAnswerRow')} />
+                  <Input type="number" min="1" max="3" placeholder="1-3" style={{width: 60}} value={item.get('jiandaAnswerRow')} onChange={this.handleFieldChange.bind(null,index,'jiandaAnswerRow')} />
                   <span style={{marginLeft: 3,marginRight: 3}}>排×</span>
-                  <Input type="number" min="1" max="3" style={{width: 40}} value={item.get('jiandaAnswerCol')} onChange={this.handleFieldChange.bind(null,index,'jiandaAnswerCol')} />
+                  <Input type="number" min="1" max="3" placeholder="1-3" style={{width: 60}} value={item.get('jiandaAnswerCol')} onChange={this.handleFieldChange.bind(null,index,'jiandaAnswerCol')} />
                   <span style={{marginLeft: 3}}>列</span>
                 </div>
               </div>:null
@@ -328,7 +411,6 @@ const CreateAnswerSheetPage = React.createClass({
 
   render(){
     const {sheetName, continuousIndex, questions} = this.state;
-    console.log(moment().format("YYYYMMDD-SSSSS"));
     return (
       <div className={styles.container}>
         <div className={styles.header}>
