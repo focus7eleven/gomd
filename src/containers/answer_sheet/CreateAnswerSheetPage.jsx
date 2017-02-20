@@ -2,12 +2,78 @@ import React from 'react'
 import styles from './CreateAnswerSheetPage.scss'
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
+import {createAnswerSheet} from '../../actions/answer_sheet/main'
 import {Select,Icon,Button,Input,Checkbox} from 'antd'
 import {Map,Record,List,fromJS} from 'immutable'
 import classnames from 'classnames'
 import parseIndex from '../../utils/chineseIndex'
+import moment from 'moment'
 
 const Option = Select.Option;
+
+const testData = fromJS([{
+  questionType: 'zhangjie',
+  isChild: false,
+  questionTitle: '',
+  childQuestionTitle: '',
+  questionNum: 1,
+  optionType: 'left',
+  optionNum: 4,
+  answerWidth: 0,
+  answerHeight: 0,
+},{
+  questionType: 'xuanze',
+  isChild: false,
+  questionTitle: '',
+  childQuestionTitle: '',
+  questionNum: 1,
+  optionType: 'en_zimu',
+  optionNum: 4,
+  answerWidth: 0,
+  answerHeight: 0,
+},{
+  questionType: 'panduan',
+  isChild: false,
+  questionTitle: '',
+  childQuestionTitle: '',
+  questionNum: 1,
+  optionType: 'gou_cha',
+  optionNum: 4,
+  answerWidth: 0,
+  answerHeight: 0,
+},{
+  questionType: 'tiankong',
+  isChild: false,
+  questionTitle: '',
+  childQuestionTitle: '',
+  questionNum: 1,
+  optionType: '',
+  optionNum: 4,
+  answerWidth: '1/3',
+  answerHeight: 1,
+},{
+  questionType: 'zuowen_cn',
+  isChild: false,
+  questionTitle: '',
+  childQuestionTitle: '',
+  questionNum: 1,
+  optionType: '',
+  optionNum: 4,
+  answerWidth: 0,
+  answerHeight: 6,
+},{
+  questionType: 'jianda',
+  isChild: false,
+  questionTitle: '',
+  childQuestionTitle: '',
+  questionNum: 1,
+  optionType: '',
+  optionNum: 4,
+  answerWidth: 0,
+  answerHeight: 6,
+  jiandaAnswerRow: 2,
+  jiandaAnswerCol: 2,
+}])
 
 const questionProtoType = fromJS({
   questionType: 'xuanze',
@@ -24,19 +90,9 @@ const questionProtoType = fromJS({
 const CreateAnswerSheetPage = React.createClass({
   getInitialState(){
     return {
-      sheetName: '',
+      sheetName: moment().format("YYYYMMDD-SSSSS"),
       continuousIndex: false,
       questions: fromJS([{
-        questionType: 'zhangjie',
-        isChild: false,
-        questionTitle: '',
-        childQuestionTitle: '',
-        questionNum: 1,
-        optionType: 'left',
-        optionNum: 4,
-        answerWidth: 0,
-        answerHeight: 0,
-      },{
         questionType: 'xuanze',
         isChild: false,
         questionTitle: '',
@@ -45,49 +101,7 @@ const CreateAnswerSheetPage = React.createClass({
         optionType: 'en_zimu',
         optionNum: 4,
         answerWidth: 0,
-        answerHeight: 0,
-      },{
-        questionType: 'panduan',
-        isChild: false,
-        questionTitle: '',
-        childQuestionTitle: '',
-        questionNum: 1,
-        optionType: 'gou_cha',
-        optionNum: 4,
-        answerWidth: 0,
-        answerHeight: 0,
-      },{
-        questionType: 'tiankong',
-        isChild: false,
-        questionTitle: '',
-        childQuestionTitle: '',
-        questionNum: 1,
-        optionType: '',
-        optionNum: 4,
-        answerWidth: '1/3',
         answerHeight: 1,
-      },{
-        questionType: 'zuowen_cn',
-        isChild: false,
-        questionTitle: '',
-        childQuestionTitle: '',
-        questionNum: 1,
-        optionType: '',
-        optionNum: 4,
-        answerWidth: 0,
-        answerHeight: 6,
-      },{
-        questionType: 'jianda',
-        isChild: false,
-        questionTitle: '',
-        childQuestionTitle: '',
-        questionNum: 1,
-        optionType: '',
-        optionNum: 4,
-        answerWidth: 0,
-        answerHeight: 6,
-        jiandaAnswerRow: 2,
-        jiandaAnswerCol: 2,
       }]),
       questionIndex: 1,
     }
@@ -141,6 +155,10 @@ const CreateAnswerSheetPage = React.createClass({
     }
   },
 
+  handleSaveAnswerSheet(){
+    let formData = new FormData();
+  },
+
   renderChapter(item,index){
     const questionType = item.get('questionType')
     return (
@@ -192,7 +210,7 @@ const CreateAnswerSheetPage = React.createClass({
       <div className={classnames(styles.questionContainer,isChild?null:styles.hasBorderTop)} key={index}>
         <div className={styles.block}>
           <span style={{paddingLeft: 0}}>序号</span>
-          <span style={{fontSize: 14, textAlign: 'center', paddingTop: 5}}>{index+1}</span>
+          <span style={{fontSize: 14, textAlign: 'center', paddingTop: 3}}>{index+1}</span>
         </div>
         <div className={styles.block}>
           <span>题目类型</span>
@@ -226,7 +244,7 @@ const CreateAnswerSheetPage = React.createClass({
             </div>
             <div className={styles.block}>
               <span>题目个数</span>
-              <Input type="number" min="1" style={{width: 80}} value={item.get('questionNum')} onChange={this.handleFieldChange.bind(null,index,'questionNum')} />
+              <Input type="number" min="1" max="999" style={{width: 80}} value={item.get('questionNum')} onChange={this.handleFieldChange.bind(null,index,'questionNum')} />
             </div>
             {
               questionType === 'xuanze' || questionType === 'duoxuan' ?
@@ -304,13 +322,13 @@ const CreateAnswerSheetPage = React.createClass({
             </div>
           </div>
         </div>
-
       </div>
     )
   },
 
   render(){
     const {sheetName, continuousIndex, questions} = this.state;
+    console.log(moment().format("YYYYMMDD-SSSSS"));
     return (
       <div className={styles.container}>
         <div className={styles.header}>
@@ -319,6 +337,7 @@ const CreateAnswerSheetPage = React.createClass({
             <Input onChange={this.handleSheetNameChange} value={sheetName} />
             <Checkbox checked={continuousIndex} onChange={this.handleContinuousIndex}>跨章节连续编号</Checkbox>
           </div>
+          <Button type="primary" onClick={this.handleSaveAnswerSheet}>保存</Button>
         </div>
         <div className={styles.body}>
           {questions.map((item,index) => item.get('questionType')==='zhangjie'?this.renderChapter(item,index):this.renderQuestion(item,index))}
@@ -335,6 +354,7 @@ function mapStateToProps(state){
 }
 function mapDispatchToProps(dispatch){
   return {
+    createAnswerSheet: bindActionCreators(createAnswerSheet,dispatch),
   }
 }
 

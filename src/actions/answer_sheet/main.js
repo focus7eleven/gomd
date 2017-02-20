@@ -19,3 +19,23 @@ export function getAnswerSheet(type,search,currentPage){
     },
   }
 }
+
+export function createAnswerSheet(data){
+  return dispatch => {
+    return fetch(config.api.answersheet.create,{
+      method:'post',
+      headers:{
+        'from':'nodejs',
+        'token':sessionStorage.getItem('accessToken'),
+      },
+      body: data
+    }).then(res => res.json()).then(res => {
+      if(res.title == 'Success'){
+        dispatch(getAnswerSheet('answersheet','',1)).then(res => {notification.success({message:'创建成功'});return res})
+      }else{
+        notification.error({message:'创建失败',description: res.result});
+        return "error";
+      }
+    })
+  }
+}
