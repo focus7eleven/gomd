@@ -390,7 +390,7 @@ const CreateExampaper = React.createClass({
                   return <ShortAnswerQuestion questionInfo={v} key={k} onDelete={this.handleDeleteQuestion} onUpdate={this.update} moveUp={this.moveUp} moveDown={this.moveDown}/>
                 }else if(v.get('kind')=='08'){
                   //title
-                  return <QuestionTitle questionInfo={v} key={k} onUpdate={this.update}/>
+                  return <QuestionTitle questionInfo={v} key={k} onUpdate={this.update} onDelete={this.handleDeleteQuestion}/>
                 }else if(v.get('kind')=='09'){
                   //嵌套题
                   return <NestingQuestion questionInfo={v} key={k} onDelete={this.handleDeleteQuestion} onUpdate={this.update} moveUp={this.moveUp} moveDown={this.moveDown}/>

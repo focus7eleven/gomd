@@ -7,6 +7,6 @@
   :local(.line){
     flex-grow:2;
     width: 1px;
-    border-top:1px solid $border-grey;
+    border-top:1px dashed $border-grey;
   }
 }

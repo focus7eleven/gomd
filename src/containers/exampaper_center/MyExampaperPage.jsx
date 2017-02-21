@@ -86,25 +86,31 @@ const MyExampaperPage = React.createClass({
     const tableHeader = [{
       title:'学科',
       dataIndex:'subject_name',
-      key:'subject_name'
+      key:'subject_name',
+      className:styles.tableColumn,
     },{
       title:'年级',
       dataIndex:'gradeName',
       key:'gradeName',
+      className:styles.tableColumn,
     },{
       title:'学期',
       dataIndex:'term',
       key:'term',
+      className:styles.tableColumn,
     },{
       title:'试卷名称',
       dataIndex:'name',
       key:'name',
+      className:styles.tableColumn,
     },{
       title:'题数',
       dataIndex:'questionNumber',
       key:'questionNumber',
+      className:styles.tableColumn,
     },{
       title:'操作',
+      className:styles.tableColumn,
       render:(text,record)=>{
         return (<div>
           <Button onClick={this.handleDeletePaper.bind(this,text.id)} className={styles.deleteButton}>删除</Button>

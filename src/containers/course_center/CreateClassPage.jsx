@@ -369,14 +369,17 @@ const CreateClassPage = React.createClass({
                   </Card>
                 </div>
               </Col>
-              <Col span={10}>
+              <Col span={14}>
                 <div className={styles.filterItem}>
                   <Card title={<span><Icon type='appstore'/>课程名称</span>} bordered={true}>
                     <Input value={this.state.courseName} onChange={(e)=>{this.setState({courseName:e.target.value})}} size='large' placeholder="输入小于30个字" />
                   </Card>
                 </div>
               </Col>
-              <Col span={4}>
+
+            </Row>
+            <Row type='flex' gutter={8}>
+              <Col span={24}>
                 <div className={styles.filterItem}>
                   <Card title={<span><Icon type='appstore'/>课程说明</span>} bordered={true}>
                   <Input type='textarea' rows={1} value={this.state.courseDesc} onChange={(e)=>{this.setState({courseDesc:e.target.value})}} size='large' placeholder="请输入课程说明"/>
