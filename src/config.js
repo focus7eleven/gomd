@@ -266,6 +266,7 @@ const config = _.extend({
 			getAll:`${baseURL}/answersheet/getAll`,
 			getTableData: (type, search, currentPage) => `${baseURL}/${type}/page?search=${search}&currentPage=${currentPage}`,
 			create: `${baseURL}/answersheet/add`,
+			download: (id) => `${baseURL}/answersheet/answersheetview?answersheet_id=${id}`,
 		},
 		wordquestion:{
 			addChoose:`${baseURL}/wordquestion/addChoose`,

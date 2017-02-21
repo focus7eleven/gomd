@@ -48,6 +48,16 @@ const AnswerSheetPage = React.createClass({
       dataIndex: 'created_at',
       key: 'created_at',
       className:styles.tableColumn,
+    },{
+      title: '查看',
+      dataIndex: 'answersheet_id',
+      key: 'answersheet_id',
+      className:styles.tableColumn,
+      render: (text,record) => {
+        return (
+          <Icon type="search" onClick={this.handleDownload.bind(null,text)}/>
+        )
+      }
     }])
     tableHeader = tableHeader.concat(authList.filter(v => (v.get('authUrl').split('/')[2] != 'view')&&(v.get('authUrl').split('/')[2] != 'add')).map( v => {
       return {
@@ -75,6 +85,10 @@ const AnswerSheetPage = React.createClass({
       tableHeader:tableHeader.toJS(),
       tableBody:tableBody.toJS(),
     }
+  },
+
+  handleDownload(id){
+    console.log(id);
   },
 
   handleShowEditModal(value){
