@@ -255,7 +255,7 @@ const config = _.extend({
 		},
 		exampaper:{
 			showExamSelectList:(subjectId,gradeId,term)=>`${baseURL}/exampaper/showExamSelectList?subjectId=${subjectId}&gradeId=${gradeId}&term=${term}`,
-			getTableData:(type,search,currentPage,subjectId='',gradeId='')=>`${baseURL}/exampaper/${type}?search=${search}&currentPage=${currentPage}&subjectId=${subjectId}&gradeId=${gradeId}`,
+			getTableData:(type,search,currentPage,subjectId='',gradeId='',isDraft=0)=>`${baseURL}/exampaper/${type}?search=${search}&currentPage=${currentPage}&subjectId=${subjectId}&gradeId=${gradeId}&isDraft=${isDraft}`,
 			createExam:`${baseURL}/exampaper/createExam`,
 			deletePaper:`${baseURL}/exampaper/deleteExam`,
 			publishExamPaper:`${baseURL}/exampaper/publishExamPaper`,
@@ -281,6 +281,8 @@ const config = _.extend({
 			deleteQuestion:`${baseURL}/wordquestion/deleteQuestion`,
 			changeQuestionPosition:`${baseURL}/wordquestion/changeQuestionPosition`,
 			uploadWord:`${baseURL}/wordquestion/uploadWord`,
+			addNest:`${baseURL}/wordquestion/addNest`,
+			addTitle:`${baseURL}/wordquestion/addTitle`,
 
 		}
 	}

@@ -20,6 +20,9 @@
   :local(.tableColumn){
     @include tableColumn;
   }
+  :local(.actionColumn){
+    width: 200px;
+  }
 }
 :local(.deleteButton){
   @include deleteButton;

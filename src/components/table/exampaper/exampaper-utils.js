@@ -21,6 +21,9 @@ export const QUESTION_TYPE = [{
 },{
   id:'07',
   text:'英语作文',
+},{
+  id:'09',
+  text:'嵌套题',
 },]
 
 //更新答案

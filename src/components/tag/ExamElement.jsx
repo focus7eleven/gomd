@@ -6,12 +6,13 @@ const ExamElement = React.createClass({
   getDefaultProps(){
     return {
       text:'',
-      onClick:()=>{}
+      onClick:()=>{},
+      style:{},
     }
   },
   render(){
     return (
-      <div className={styles.tag} onClick={this.props.onClick}>
+      <div className={styles.tag} style={this.props.style} onClick={this.props.onClick}>
         <span className={styles.content}><Icon type='plus' style={{color:'#FDAA29'}}/>{this.props.text}</span>
       </div>
     )

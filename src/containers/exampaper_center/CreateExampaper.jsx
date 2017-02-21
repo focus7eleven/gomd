@@ -8,8 +8,18 @@ import CreateExampaperFilter from '../../components/exampaper_filter/CreateExamp
 import MultipleChoiceQuestion from '../../components/table/exampaper/MultipleChoiceQuestion'
 import NoteQuestion from '../../components/table/exampaper/NoteQuestion'
 import ShortAnswerQuestion from '../../components/table/exampaper/ShortAnswerQuestion'
+import NestingQuestion from '../../components/table/exampaper/NestingQuestion'
+import QuestionTitle from '../../components/table/exampaper/QuestionTitle'
+
+import {setExamInfo} from '../../components/exampaper_filter/utils'
+
 import {deleteQuestion,changeQuestionPosition,getNewExamId,getExistExamInfo,updateQuestion} from '../../components/table/exampaper/exampaper-utils'
 const Search = Input.Search;
+
+const mockNestingQuestion = {"id":"243122372377448448",'childQuestion':[
+  {"id":"243122372377448448",'childQuestion':[],"questionNo":1,"examination":"","parentId":"","comment":"","drawZone":null,"description":"","difficulty":0,"score":1.0,"kind":"04","mustanswer":false,"audioName":null,"videoName":null,"pdfName":null,"haveAudio":false,"haveVideo":false,"havePdf":false,"questionIndex":null,"updateDate":null,"creatorUserId":"031218647663209576","ownerId":"031218647663209576","subQuestion":"","abilityId":null,"examinationPaperId":"243122347933044736","optionPojoList":null,"importDate":null,"select":false,"draft":false,"public":false}
+],"questionNo":1,"examination":"","parentId":"","comment":"","drawZone":null,"description":"","difficulty":0,"score":1.0,"kind":"08","mustanswer":false,"audioName":null,"videoName":null,"pdfName":null,"haveAudio":false,"haveVideo":false,"havePdf":false,"questionIndex":null,"updateDate":null,"creatorUserId":"031218647663209576","ownerId":"031218647663209576","subQuestion":"","abilityId":null,"examinationPaperId":"243122347933044736","optionPojoList":null,"importDate":null,"select":false,"draft":false,"public":false}
+
 const CreateExampaper = React.createClass({
   contextTypes: {
     router: React.PropTypes.object
@@ -24,6 +34,7 @@ const CreateExampaper = React.createClass({
     return {
       examPaperId:'',//试卷的ID
       exerciseList:List(),//已经添加的试题的列表
+      nestingQuestion:'',//当前正在编辑的嵌套题
 
       withAnswer:false,
 
@@ -46,12 +57,21 @@ const CreateExampaper = React.createClass({
       })
     }
   },
+  //添加嵌套题目子题目
+  handleAddSubQuestion(subjectQuestion){
+    let index = this.state.exerciseList.findKey(v => v.get('id')==this.state.nestingQuestion)
+    let question = this.state.exerciseList.get(index)
+    let newQuestion = question.get('subQuestion')?question.set('subQuestion',question.get('subQuestion').push(fromJS(subjectQuestion))):question.set('subQuestion',fromJS([subjectQuestion]))
+    this.setState({
+      exerciseList:this.state.exerciseList.set(index,newQuestion)
+    })
+  },
   //添加选择题
   handleAddChoose(type){
     let formData = new FormData()
     formData.append('examId',this.state.examPaperId)
     formData.append('kind',type)
-    formData.append('parentId','')
+    formData.append('parentId',this.state.nestingQuestion)
     formData.append('date',new Date().toString())
     fetch(config.api.wordquestion.addChoose,{
       method:'post',
@@ -61,16 +81,22 @@ const CreateExampaper = React.createClass({
       },
       body:formData
     }).then(res => res.json()).then(res => {
-      this.setState({
-        exerciseList:this.state.exerciseList.push(fromJS(res))
-      })
+      if(!this.state.nestingQuestion){
+        this.setState({
+          exerciseList:this.state.exerciseList.push(fromJS(res))
+        })
+      }else{
+        //正在编辑嵌套题
+        this.handleAddSubQuestion(res)
+      }
+
     })
   },
   //添加填空题
   handleAddNote(){
     let formData = new FormData()
     formData.append('examId',this.state.examPaperId)
-    formData.append('parentId','')
+    formData.append('parentId',this.state.nestingQuestion)
     formData.append('date',new Date().toString())
     fetch(config.api.wordquestion.addNote,{
       method:'post',
@@ -80,16 +106,21 @@ const CreateExampaper = React.createClass({
       },
       body:formData
     }).then(res => res.json()).then(res => {
-      this.setState({
-        exerciseList:this.state.exerciseList.push(fromJS(res))
-      })
+      if(!this.state.nestingQuestion){
+        this.setState({
+          exerciseList:this.state.exerciseList.push(fromJS(res))
+        })
+      }else{
+        //正在编辑嵌套题
+        this.handleAddSubQuestion(res)
+      }
     })
   },
   //添加判断题
   handleAddJudge(){
     let formData = new FormData()
     formData.append('examId',this.state.examPaperId)
-    formData.append('parentId','')
+    formData.append('parentId',this.state.nestingQuestion)
     formData.append('date',new Date().toString())
     fetch(config.api.wordquestion.addJudge,{
       method:'post',
@@ -99,16 +130,21 @@ const CreateExampaper = React.createClass({
       },
       body:formData
     }).then(res => res.json()).then(res => {
-      this.setState({
-        exerciseList:this.state.exerciseList.push(fromJS(res))
-      })
+      if(!this.state.nestingQuestion){
+        this.setState({
+          exerciseList:this.state.exerciseList.push(fromJS(res))
+        })
+      }else{
+        //正在编辑嵌套题
+        this.handleAddSubQuestion(res)
+      }
     })
   },
   //添加简答题，语文作文，英语作文
   handleAddShortAnswer(type){
     let formData = new FormData()
     formData.append('examId',this.state.examPaperId)
-    formData.append('parentId','')
+    formData.append('parentId',this.state.nestingQuestion)
     formData.append('date',new Date().toString())
     formData.append('kind',type)
     fetch(config.api.wordquestion.addShortAnswer,{
@@ -119,16 +155,47 @@ const CreateExampaper = React.createClass({
       },
       body:formData
     }).then(res => res.json()).then(res => {
-      this.setState({
-        exerciseList:this.state.exerciseList.push(fromJS(res))
-      })
+      if(!this.state.nestingQuestion){
+        this.setState({
+          exerciseList:this.state.exerciseList.push(fromJS(res))
+        })
+      }else{
+        //正在编辑嵌套题
+        this.handleAddSubQuestion(res)
+      }
     })
   },
 
+  //添加标题
+  handleAddTitle(){
+    let formData = new FormData()
+    formData.append('examId',this.state.examPaperId)
+    formData.append('date',new Date().toString())
+    fetch(config.api.wordquestion.addTitle,{
+      method:'post',
+      headers:{
+        'from':'nodejs',
+        'token':sessionStorage.getItem('accessToken')
+      },
+      body:formData
+    }).then(res => res.json()).then(res => {
+      if(!this.state.nestingQuestion){
+        this.setState({
+          exerciseList:this.state.exerciseList.push(fromJS(res))
+        })
+      }else{
+        //正在编辑嵌套题
+        this.handleAddSubQuestion(res)
+      }
+    })
+  },
+
+  //删除题目
   handleDeleteQuestion(questionId){
     deleteQuestion({questionId})
     this.setState({
-      exerciseList:this.state.exerciseList.filter(v => v.get('id')!=questionId)
+      exerciseList:this.state.exerciseList.filter(v => v.get('id')!=questionId),
+      nestingQuestion:''
     })
   },
 
@@ -196,7 +263,7 @@ const CreateExampaper = React.createClass({
     let question = this.state.exerciseList.get(questionIndex)
     let nextQuestion = this.state.exerciseList.get(questionIndex+1)
     changeQuestionPosition({
-      moveDownQuestionId:Question.get('id'),
+      moveDownQuestionId:question.get('id'),
       moveUpQuestionId:nextQuestion.get('id'),
     })
     this.setState({
@@ -245,15 +312,62 @@ const CreateExampaper = React.createClass({
   handleImportAnswer(e){
 
   },
+  //添加嵌套题
+  handleAddNestingQuestion(){
+    if(!this.state.nestingQuestion){
+      let formData = new FormData()
+      formData.append('examId',this.state.examPaperId)
+      formData.append('date',new Date().toString())
+      fetch(config.api.wordquestion.addNest,{
+        method:'post',
+        headers:{
+          'from':'nodejs',
+          'token':sessionStorage.getItem('accessToken')
+        },
+        body:formData
+      }).then(res => res.json()).then(res => {
+        this.setState({
+          nestingQuestion:res.id,
+          exerciseList:this.state.exerciseList.push(fromJS(res))
+        })
+      })
+    }else{
+      //结束嵌套题
+      this.setState({
+        nestingQuestion:''
+      })
+    }
+
+  },
+  //修改试卷名称
+  handleUpdateExampaperName(e){
+    const {
+      subjectId,
+      gradeId,
+      termId,
+    } = this.refs.filters.getData()
+    setExamInfo({
+      examId:this.state.examPaperId,
+      name:e.target.value,
+      subjectId:subjectId,
+      term:termId,
+      gradeId:gradeId,
+      oneAnswer:0,
+      oneAnswerContent:'',
+    })
+    this.setState({
+      examPaperName:e.target.value
+    })
+  },
   render(){
     return (
       <div className={styles.container}>
         <div className={styles.header}>
-          <Search
-            placeholder="输入搜索条件"
+          <Input
+            placeholder="试卷名称"
             style={{ width: 200 }}
-            onSearch={value => console.log(value)}
-          /><CreateExampaperFilter examId={this.state.examPaperId}/>
+            onBlur={this.handleUpdateExampaperName}
+          /><CreateExampaperFilter ref='filters' name={this.state.examPaperName} examId={this.state.examPaperId}/>
         </div>
         <div className={styles.body}>
           <div className={styles.center}>
@@ -275,6 +389,8 @@ const CreateExampaper = React.createClass({
                 <Col>
                   <ExamElement text='语文作文' onClick={this.handleAddShortAnswer.bind(this,'06')}/>
                   <ExamElement text='英语作文' onClick={this.handleAddShortAnswer.bind(this,'07')}/>
+                  <ExamElement text='嵌套题' style={this.state.nestingQuestion?{backgroundColor:'#FC9E0A',borderColor:'#FC9E0A',color:'white'}:{}} onClick={this.handleAddNestingQuestion}/>
+                  <ExamElement text='章节' onClick={this.handleAddTitle}/>
                 </Col>
                 <Col span={5} style={{display:'flex',justifyContent:'flex-end'}}>
                   <Button type='primary' style={{marginRight:'10px'}} onClick={()=>{this.refs.exampaperUploader.click()}}><Icon type='download'/>导入</Button>
@@ -294,6 +410,12 @@ const CreateExampaper = React.createClass({
                 }else if(v.get('kind')=='05'||v.get('kind')=='06'||v.get('kind')=='07'){
                   //填空
                   return <ShortAnswerQuestion questionInfo={v} key={k} onDelete={this.handleDeleteQuestion} onUpdate={this.update} moveUp={this.moveUp} moveDown={this.moveDown}/>
+                }else if(v.get('kind')=='08'){
+                  //title
+                  return <QuestionTitle questionInfo={v} key={k} onUpdate={this.update} onDelete={this.handleDeleteQuestion}/>
+                }else if(v.get('kind')=='09'){
+                  //嵌套题
+                  return <NestingQuestion questionInfo={v} key={k} onDelete={this.handleDeleteQuestion} onUpdate={this.update} moveUp={this.moveUp} moveDown={this.moveDown}/>
                 }else{
                   return null
                 }

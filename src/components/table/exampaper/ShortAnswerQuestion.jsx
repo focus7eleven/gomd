@@ -83,10 +83,10 @@ const ShortAnswerQuestion = React.createClass({
   //修改答案选项
   handleUpdateOption(value){
     updateOption({
-      optionId:this.props.questionInfo.get('optionPojoList').get(key).get('id'),
+      optionId:this.props.questionInfo.get('optionPojoList').get(0).get('id'),
       content:value,
-      score:this.props.questionInfo.getIn(['optionPojoList',key,'score']),
-      isAnswer:this.props.questionInfo.getIn(['optionPojoList',key,'answer'])
+      score:this.props.questionInfo.getIn(['optionPojoList',0,'score']),
+      isAnswer:this.props.questionInfo.getIn(['optionPojoList',0,'answer'])
     })
     this.props.onUpdate(this.props.questionInfo.get('id'),['optionPojoList',0,'content'],value)
   },

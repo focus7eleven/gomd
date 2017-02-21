@@ -163,6 +163,7 @@ const routes = (
 					<Route path='selfexampapercenter' component={MyExampaperPage}></Route>
 					<Route path='newexampaper' component={CreateExampaper}></Route>
 					<Route path='editExampaper/(:examId)' component={()=><CreateExampaper type='edit'/>}></Route>
+					<Route path='draftpapercenter' component={(props)=><MyExampaperPage type='draft' {...props}/>}></Route>
 				</Route>
 
 				{/* 答题卡 */}

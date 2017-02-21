@@ -1,0 +1,12 @@
+@import '~theme.scss';
+
+:local(.questionTitleContainer){
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  :local(.line){
+    flex-grow:2;
+    width: 1px;
+    border-top:1px dashed $border-grey;
+  }
+}
