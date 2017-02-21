@@ -63,7 +63,8 @@ const NoteQuestion = React.createClass({
   },
   //给题目添加一个空格
   handleAddBlank(){
-    this.ue = UE.instants.ueditorInstant0
+    // this.ue = UE.instants.ueditorInstant0
+    this.ue = window.currentEditor
     let range = this.ue.selection.getRange()
     range.select()
     let content = this.ue.selection.getText()
