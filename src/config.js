@@ -245,7 +245,8 @@ const config = _.extend({
 			deletePaper:`${baseURL}/exampaper/deleteExam`,
 			publishExamPaper:`${baseURL}/exampaper/publishExamPaper`,
 			editExamInfo:`${baseURL}/exampaper/editExamInfo`,
-			showExamQuestions:(examId)=>`${baseURL}/exampaper/showExamQuestions?examId=${examId}`
+			showExamQuestions:(examId)=>`${baseURL}/exampaper/showExamQuestions?examId=${examId}`,
+			uploadStandardAnswer:`${baseURL}/exampaper/uploadStandardAnswer`,
 		},
 		answersheet:{
 			getAll:`${baseURL}/answersheet/getAll`,
