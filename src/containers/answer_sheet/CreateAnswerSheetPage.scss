@@ -1,4 +1,5 @@
 @import "~mixins.scss";
+@import "~theme.scss";
 
 :local(.container){
   width: 100%;
@@ -96,6 +97,37 @@
       background-color: #DF4B3B;
       border-color: #DF4B3B;
       color: white;
+    }
+  }
+
+  :local(.customizeButton){
+    width: 50px;
+    text-align: center;
+    padding: 0 4px;
+    font-size: 12px;
+    height: 28px;
+    background-color: $primary-color;
+    border-color: $primary-color;
+    margin-right: 10px;
+    &:hover{
+      background-color: $primary-color;
+      border-color: $primary-color;
+    }
+  }
+
+  :local(.cancelButton){
+    background-color: white;
+    border-color: $border-grey;
+    color: $warning-color;
+    width: 76px;
+    text-align: center;
+    padding: 0 4px;
+    font-size: 12px;
+    height: 28px;
+    &:hover{
+      background-color: white;
+      border-color: $border-grey;
+      color: $warning-color;
     }
   }
 }

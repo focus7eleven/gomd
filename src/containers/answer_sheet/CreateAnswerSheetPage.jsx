@@ -3,7 +3,7 @@ import styles from './CreateAnswerSheetPage.scss'
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
 import {createAnswerSheet} from '../../actions/answer_sheet/main'
-import {Select,Icon,Button,Input,Checkbox} from 'antd'
+import {Modal,Select,Icon,Button,Input,Checkbox} from 'antd'
 import {Map,Record,List,fromJS} from 'immutable'
 import classnames from 'classnames'
 import parseIndex from '../../utils/chineseIndex'
@@ -85,6 +85,9 @@ const questionProtoType = fromJS({
   optionNum: 4,
   answerWidth: 0,
   answerHeight: 1,
+  isCustomized: false,
+  widthArr:['1/3'],
+  heightArr:[1],
 })
 
 const getTypeName = (type) => {
@@ -106,7 +109,7 @@ const getTypeName = (type) => {
       result = '填空题'
       break;
     case 'jianda':
-      result = '简答题'
+      result = '简答题(计算题)'
       break;
     case 'zuowen_en':
       result = '英语作文题'
@@ -135,8 +138,17 @@ const CreateAnswerSheetPage = React.createClass({
         optionNum: 4,
         answerWidth: 0,
         answerHeight: 1,
+        isCustomized: false,
+        widthArr: fromJS(['1/3']),
+        heightArr:fromJS([1]),
       }]),
-      questionIndex: 1,
+      showCustomizeBlankModal: false,
+      showCustomizeCalcModal: false,
+      currentQuestionIndex: 0,
+      currentWidthArr: fromJS(['1/3']),
+      currentHeightArr: fromJS([1]),
+      currentRowColArr: fromJS([[5,1,1]]),
+      currentTitleArr: fromJS(['']),
     }
   },
 
@@ -156,35 +168,56 @@ const CreateAnswerSheetPage = React.createClass({
   },
 
   handleTypeChanged(index,value){
-    const questions = this.state.questions;
     const newTitle = parseIndex(index+1) + '、' + getTypeName(value)
+    const questions = this.state.questions.update(index, v => v.set('questionTitle',newTitle).set('questionNum',1).set('questionType',value).set('childQuestionTitle',''));
     switch (value) {
       case 'zhangjie':
-        this.setState({questions: questions.update(index, v => v.set('questionTitle',newTitle).set('optionType','left').set('questionType',value))})
+        this.setState({questions: questions.update(index, v => v.set('optionType','left'))})
         break;
       case 'xuanze':
-        this.setState({questions: questions.update(index, v => v.set('questionTitle',newTitle).set('questionType',value).set('childQuestionTitle','').set('optionType','en_zimu'))})
+        this.setState({questions: questions.update(index, v => v.set('optionType','en_zimu'))})
         break;
       case 'duoxuan':
-        this.setState({questions: questions.update(index, v => v.set('questionTitle',newTitle).set('questionType',value).set('childQuestionTitle','').set('optionType','en_zimu'))})
+        this.setState({questions: questions.update(index, v => v.set('optionType','en_zimu'))})
         break;
       case 'panduan':
-        this.setState({questions: questions.update(index, v => v.set('questionTitle',newTitle).set('questionType',value).set('childQuestionTitle','').set('optionType','dui_cuo'))})
+        this.setState({questions: questions.update(index, v => v.set('optionType','dui_cuo'))})
         break;
       case 'tiankong':
-        this.setState({questions: questions.update(index, v => v.set('questionTitle',newTitle).set('questionType',value).set('childQuestionTitle','').set('answerWidth','1/3').set('answerHeight',1))})
+        this.setState({questions: questions.update(index, v => v.set('answerWidth','1/3').set('answerHeight',1).set('widthArr',fromJS(['1/3'])).set('heightArr',fromJS([1])))})
         break;
       case 'jianda':
-        this.setState({questions: questions.update(index, v => v.set('questionTitle',newTitle).set('questionType',value).set('childQuestionTitle','').set('answerHeight',5).set('jiandaAnswerCol',1).set('jiandaAnswerRow',1))})
+        this.setState({questions: questions.update(index, v => v.set('answerHeight',5).set('titleArr',fromJS([''])).set('heightArr',fromJS([[5,1,1]])).set('jiandaAnswerCol',1).set('jiandaAnswerRow',1))})
         break;
       case 'zuowen_cn':
-        this.setState({questions: questions.update(index, v => v.set('questionTitle',newTitle).set('questionType',value).set('childQuestionTitle','').set('answerHeight',40))})
+        this.setState({questions: questions.update(index, v => v.set('answerHeight',40))})
         break;
       case 'zuowen_en':
-        this.setState({questions: questions.update(index, v => v.set('questionTitle',newTitle).set('questionType',value).set('childQuestionTitle','').set('answerHeight',10))})
+        this.setState({questions: questions.update(index, v => v.set('answerHeight',10))})
         break;
       default:
-        this.setState({questions: questions.update(index, v => v.set('questionTitle',newTitle).set('questionType',value).set('childQuestionTitle','').set('optionType','en_zimu'))})
+        this.setState({questions: questions.update(index, v => v.set('optionType','en_zimu'))})
+    }
+  },
+
+  handleInitWidthAndHeight(index,num){
+    const questions = this.state.questions;
+    const question = questions.get(index)
+    if(question.get('questionType')==='tiankong'){
+      const h = question.get('answerHeight')
+      const w = question.get('answerWidth')
+      const newWidth = Array.from({length: num},(v,i)=>w)
+      const newHeight = Array.from({length: num},(v,i)=>h)
+      this.setState({questions: questions.update(index, v => v.set('questionNum',num).set('widthArr',fromJS(newWidth)).set('heightArr',fromJS(newHeight)))})
+    }else if(question.get('questionType')==='jianda'){
+      const h = question.get('answerHeight')
+      const r = question.get('jiandaAnswerRow')
+      const c = question.get('jiandaAnswerCol')
+      const newHeight = Array.from({length: num},(v,i)=>[h,r,c])
+      const newTitle = Array.from({length: num}, (v,i)=>question.get('childQuestionTitle'))
+      this.setState({questions: questions.update(index, v => v.set('questionNum',num).set('titleArr',fromJS(newTitle)).set('heightArr',fromJS(newHeight)))})
+    }else{
+      this.setState({questions: questions.update(index, v => v.set('questionNum',num))})
     }
   },
 
@@ -199,13 +232,19 @@ const CreateAnswerSheetPage = React.createClass({
       case 'optionType':
         value = e;
         break;
+      case 'answerWidth':
+        value = e;
+        break;
       case 'isChild':
         value = e.target.checked;
+        break;
+      case 'questionNum':
+        this.handleInitWidthAndHeight(index,e.target.value)
         break;
       default:
         value = e.target.value
     }
-    key === 'questionType' ? null : this.setState({questions: questions.update(index, v => v.set(key, value))})
+    key === 'questionType' || key === 'questionNum' ? null : this.setState({questions: questions.update(index, v => v.set(key, value))})
   },
 
   handleDeleteQuestion(index){
@@ -232,14 +271,163 @@ const CreateAnswerSheetPage = React.createClass({
       formData.append('question_type',item.get('questionType'));
       item.get('isChild')?formData.append('child_question_flag',index+1):null
       formData.append('question_title',item.get('questionTitle'));
-      formData.append('child_question_title',item.get('childQuestionTitle'));
+      if(item.get('questionType')==='jianda'){
+        formData.append('child_question_title',item.get('titleArr').join('|'));
+      }else{
+        formData.append('child_question_title',item.get('childQuestionTitle'));
+      }
       formData.append('question_num',item.get('questionNum'));
       formData.append('option_type',item.get('optionType'));
       formData.append('option_num',item.get('optionNum'));
-      formData.append('answer_height',item.get('answerHeight'));
-      formData.append('answer_width',item.get('answerWidth'));
+      if(item.get('questionType')==='tiankong'){
+        formData.append('answer_height', item.get('heightArr').join('|'));
+        formData.append('answer_width',item.get('widthArr').join('|'));
+      }else if(item.get('questionType')==='jianda'){
+        formData.append('answer_height', item.get('heightArr').toJS().join('|').replace(/,/g,'*'));
+        formData.append('answer_width',item.get('answerWidth'));
+      }else{
+        formData.append('answer_height', item.get('answerHeight'));
+        formData.append('answer_width',item.get('answerWidth'));
+      }
     })
     this.props.createAnswerSheet(formData);
+  },
+
+  // 弹出模态框
+  handleCustomize(index){
+    const question = this.state.questions.get(index)
+    const questionType = question.get('questionType')
+    if(questionType === 'tiankong'){
+      this.setState({showCustomizeBlankModal: true, currentQuestionIndex: index, currentWidthArr: question.get('widthArr'), currentHeightArr: question.get('heightArr')})
+    }else if(questionType === 'jianda'){
+      this.setState({showCustomizeCalcModal: true, currentQuestionIndex: index, currentTitleArr: question.get('titleArr'), currentRowColArr: question.get('heightArr')})
+    }
+  },
+
+  handleCancelCustomize(index){
+    const questions = this.state.questions;
+    const question = questions.get(index)
+    if(question.get('questionType')==='tiankong'){
+      const h = question.get('answerHeight')
+      const w = question.get('answerWidth')
+      const newWidth = Array.from({length: question.get('questionNum')},(v,i)=>w)
+      const newHeight = Array.from({length: question.get('questionNum')},(v,i)=>h)
+      this.setState({questions: questions.update(index, v => v.set('isCustomized',false).set('widthArr',fromJS(newWidth)).set('heightArr',fromJS(newHeight)))})
+    }else if(question.get('questionType')==='jianda'){
+
+    }
+  },
+
+  // 确认定制填空
+  handleCustomizeBlank(){
+    const {currentQuestionIndex,currentWidthArr,currentHeightArr,questions} = this.state
+    this.setState({showCustomizeBlankModal:false,  questions: questions.update(currentQuestionIndex, v => v.set('isCustomized',true).set('widthArr', currentWidthArr).set('heightArr',currentHeightArr))})
+  },
+
+  // 确认定制简答
+  handleCustomizeCalc(){
+    const {currentQuestionIndex,currentRowColArr,currentTitleArr,questions} = this.state
+    this.setState({showCustomizeCalcModal:false,  questions: questions.update(currentQuestionIndex, v => v.set('isCustomized',true).set('heightArr',currentRowColArr).set('titleArr',currentTitleArr))})
+  },
+
+  handleHideCustomizeBlankModal(){
+    const question = this.state.questions.get(this.state.currentQuestionIndex)
+    this.setState({showCustomizeBlankModal: false, currentWidthArr: question.get('widthArr'), currentHeightArr: question.get('heightArr')})
+  },
+
+  handleHideCustomizeCalcModal(){
+    const question = this.state.questions.get(this.state.currentQuestionIndex)
+    this.setState({showCustomizeCalcModal: false, currentHeightArr: question.get('heightArr'), currentTitleArr: question.get('titleArr')})
+  },
+
+  // 设置填空题的高度和区域个数
+  handleArray(index,type,e){
+    if(type==='widthArr'){
+      this.setState({currentWidthArr: this.state.currentWidthArr.set(index,e)})
+    }else{
+      this.setState({currentHeightArr: this.state.currentHeightArr.set(index,e.target.value)})
+    }
+  },
+
+  // 设置简答题的子标题
+  handleTitleArray(index,e){
+    this.setState({currentTitleArr: this.state.currentTitleArr.set(index,e.target.value)})
+  },
+
+  // 设置简答题的答题高度，几排几列
+  handleHeightArray(index,type,e){
+    this.setState({currentRowColArr: this.state.currentRowColArr.setIn([index,type],e.target.value)})
+  },
+
+  renderCustomizeBlankModal(){
+    const {showCustomizeBlankModal,currentWidthArr,currentHeightArr} = this.state;
+    const currentQuestion = this.state.questions.get(this.state.currentQuestionIndex)
+    return (
+      <Modal title="定制填空题答题区" visible={showCustomizeBlankModal}
+          onOk={this.handleCustomizeBlank} onCancel={this.handleHideCustomizeBlankModal}>
+          <div className={styles.verticalLayout}>
+            <div className={styles.horizontalLayout} style={{fontSize: 14,paddingLeft: 5,marginBottom: 24,borderBottom:"1px solid #d9d9d9"}}>
+              <span style={{marginRight: 44}}>子题目</span>
+              <span style={{marginRight: 62}}>答题区域大小(行):</span>
+              <span>答题区域个数:</span>
+            </div>
+            {
+              currentWidthArr.map((item,index)=>{
+                return (
+                  <div key={index} style={{marginBottom: 10}}>
+                    <span style={{marginRight: 56, marginLeft: 22,fontSize: 14}}>{index+1}</span>
+                    <Select value={item} onChange={this.handleArray.bind(null,index,'widthArr')} defaultValue="1/3" style={{ width: 148, marginRight: 24 }}>
+                      <Option value="1/4">1/4</Option>
+                      <Option value="1/3">1/3</Option>
+                      <Option value="1/2">1/2</Option>
+                      <Option value="1">1</Option>
+                      <Option value="2">2</Option>
+                      <Option value="3">3</Option>
+                      <Option value="4">4</Option>
+                    </Select>
+                    <Input type="number" value={currentHeightArr.get(index)} onChange={this.handleArray.bind(null,index,'heightArr')} min="1" max="50" placeholder="1-50" style={{width: 120}} />
+                  </div>
+                )
+              })
+            }
+          </div>
+      </Modal>
+    )
+  },
+
+  renderCustomizeCalcModal(){
+    const {showCustomizeCalcModal,currentRowColArr,currentTitleArr} = this.state;
+    const currentQuestion = this.state.questions.get(this.state.currentQuestionIndex)
+    return (
+      <Modal width={700} title="定制简答题答题区" visible={showCustomizeCalcModal}
+          onOk={this.handleCustomizeCalc} onCancel={this.handleHideCustomizeCalcModal}>
+          <div className={styles.verticalLayout}>
+            <div className={styles.horizontalLayout} style={{fontSize: 14,paddingLeft: 5,marginBottom: 24,borderBottom:"1px solid #d9d9d9"}}>
+              <span style={{marginRight: 30}}>子题目</span>
+              <span style={{marginRight: 215}}>子标题</span>
+              <span style={{marginRight: 30}}>答题区域大小(行):</span>
+              <span>设置成:</span>
+            </div>
+            {
+              currentRowColArr.map((item,index)=>{
+                return (
+                  <div key={index} style={{marginBottom: 10}}>
+                    <span style={{marginRight: 44, marginLeft: 22,fontSize: 14}}>{index+1}</span>
+                    <Input value={currentTitleArr.get(index)} onChange={this.handleTitleArray.bind(null,index)} placeholder="输入少于30个字" style={{width: 240,marginRight: 20}} />
+                    <Input value={item.get(0)} onChange={this.handleHeightArray.bind(null,index,0)} type="number" min='5' max='30' placeholder='5-30' style={{width: 118, marginRight: 20}} />
+                    <div style={{display:'inline'}}>
+                      <Input value={item.get(1)} onChange={this.handleHeightArray.bind(null,index,1)} type="number" min="1" max="3" placeholder="1-3" style={{width: 50}} />
+                      <span style={{marginLeft: 3,marginRight: 3}}>排×</span>
+                      <Input value={item.get(2)} onChange={this.handleHeightArray.bind(null,index,2)} type="number" min="1" max="3" placeholder="1-3" style={{width: 50}} />
+                      <span style={{marginLeft: 3}}>列</span>
+                    </div>
+                  </div>
+                )
+              })
+            }
+          </div>
+      </Modal>
+    )
   },
 
   renderChapter(item,index){
@@ -257,7 +445,7 @@ const CreateAnswerSheetPage = React.createClass({
             <Option value="duoxuan">多选题</Option>
             <Option value="panduan">判断题</Option>
             <Option value="tiankong">填空题</Option>
-            <Option value="jianda">简答题（计算题）</Option>
+            <Option value="jianda">简答题(计算题)</Option>
             <Option value="zuowen_cn">语文作文题</Option>
             <Option value="zuowen_en">英语作文题</Option>
             <Option value="zhangjie">章节</Option>
@@ -289,6 +477,7 @@ const CreateAnswerSheetPage = React.createClass({
   renderQuestion(item,index){
     const questionType = item.get('questionType')
     const isChild = item.get('isChild')
+    const isCustomized = item.get('isCustomized')
     return (
       <div className={classnames(styles.questionContainer,isChild?null:styles.hasBorderTop)} key={index}>
         <div className={styles.block}>
@@ -302,7 +491,7 @@ const CreateAnswerSheetPage = React.createClass({
             <Option value="duoxuan">多选题</Option>
             <Option value="panduan">判断题</Option>
             <Option value="tiankong">填空题</Option>
-            <Option value="jianda">简答题（计算题）</Option>
+            <Option value="jianda">简答题(计算题)</Option>
             <Option value="zuowen_cn">语文作文题</Option>
             <Option value="zuowen_en">英语作文题</Option>
             <Option value="zhangjie">章节</Option>
@@ -361,7 +550,7 @@ const CreateAnswerSheetPage = React.createClass({
               <div className={styles.horizontalLayout}>
                 <div className={styles.block}>
                   <span>答题区域大小(行)</span>
-                  <Select value={item.get('answerWidth')} defaultValue="1/3" style={{ width: 120 }} onChange={this.handleFieldChange.bind(null,index,'answerWidth')}>
+                  <Select value={item.get('answerWidth')} disabled={isCustomized} defaultValue="1/3" style={{ width: 120 }} onChange={this.handleFieldChange.bind(null,index,'answerWidth')}>
                     <Option value="1/4">1/4</Option>
                     <Option value="1/3">1/3</Option>
                     <Option value="1/2">1/2</Option>
@@ -373,7 +562,7 @@ const CreateAnswerSheetPage = React.createClass({
                 </div>
                 <div className={styles.block}>
                   <span>答题区域个数</span>
-                  <Input type="number" min="1" max="50" placeholder="1-50" style={{width: 80}} value={item.get('answerHeight')} onChange={this.handleFieldChange.bind(null,index,'answerHeight')} />
+                  <Input type="number" min="1" max="50" disabled={isCustomized} placeholder="1-50" style={{width: 80}} value={item.get('answerHeight')} onChange={this.handleFieldChange.bind(null,index,'answerHeight')} />
                 </div>
               </div>:null
             }
@@ -381,7 +570,7 @@ const CreateAnswerSheetPage = React.createClass({
               questionType === 'zuowen_en' || questionType === 'zuowen_cn' || questionType === 'jianda'?
               <div className={styles.block}>
                 <span>答题区域高度(行)</span>
-                <Input type="number" min={questionType==='jianda'?'5':'1'} max={questionType==='jianda'?'30':'150'} placeholder={questionType==='jianda'?'5-30':'1-150'} style={{width: 80}} value={item.get('answerHeight')} onChange={this.handleFieldChange.bind(null,index,'answerHeight')} />
+                <Input type="number" disabled={isCustomized} min={questionType==='jianda'?'5':'1'} max={questionType==='jianda'?'30':'150'} placeholder={questionType==='jianda'?'5-30':'1-150'} style={{width: 80}} value={item.get('answerHeight')} onChange={this.handleFieldChange.bind(null,index,'answerHeight')} />
               </div>:null
             }
             {
@@ -389,9 +578,9 @@ const CreateAnswerSheetPage = React.createClass({
               <div className={styles.block}>
                 <span>设置成</span>
                 <div className={styles.horizontalLayout}>
-                  <Input type="number" min="1" max="3" placeholder="1-3" style={{width: 60}} value={item.get('jiandaAnswerRow')} onChange={this.handleFieldChange.bind(null,index,'jiandaAnswerRow')} />
+                  <Input disabled={isCustomized} type="number" min="1" max="3" placeholder="1-3" style={{width: 50}} value={item.get('jiandaAnswerRow')} onChange={this.handleFieldChange.bind(null,index,'jiandaAnswerRow')} />
                   <span style={{marginLeft: 3,marginRight: 3}}>排×</span>
-                  <Input type="number" min="1" max="3" placeholder="1-3" style={{width: 60}} value={item.get('jiandaAnswerCol')} onChange={this.handleFieldChange.bind(null,index,'jiandaAnswerCol')} />
+                  <Input disabled={isCustomized} type="number" min="1" max="3" placeholder="1-3" style={{width: 50}} value={item.get('jiandaAnswerCol')} onChange={this.handleFieldChange.bind(null,index,'jiandaAnswerCol')} />
                   <span style={{marginLeft: 3}}>列</span>
                 </div>
               </div>:null
@@ -403,6 +592,16 @@ const CreateAnswerSheetPage = React.createClass({
                 <Button type="primary" className={styles.deleteButton} onClick={this.handleDeleteQuestion.bind(null,index)}><Icon type="close" /></Button>
               </div>
             </div>
+            {
+              questionType === 'tiankong' || questionType === 'jianda' ?
+              <div className={styles.block}>
+                <span style={{height: 18}}>{" "}</span>
+                <div>
+                  <Button type="primary" className={styles.customizeButton} onClick={this.handleCustomize.bind(null,index)}>定制</Button>
+                  <Button type="primary" disabled={!isCustomized} className={styles.cancelButton} onClick={this.handleCancelCustomize.bind(null,index)}>取消定制</Button>
+                </div>
+              </div>:null
+            }
           </div>
         </div>
       </div>
@@ -424,6 +623,8 @@ const CreateAnswerSheetPage = React.createClass({
         <div className={styles.body}>
           {questions.map((item,index) => item.get('questionType')==='zhangjie'?this.renderChapter(item,index):this.renderQuestion(item,index))}
         </div>
+        {this.renderCustomizeBlankModal()}
+        {this.renderCustomizeCalcModal()}
       </div>
     )
   }
