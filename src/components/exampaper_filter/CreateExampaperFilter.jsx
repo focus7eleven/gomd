@@ -54,6 +54,13 @@ const CreateExampaperFilter = React.createClass({
       termOption:'',
     }
   },
+  getData(){
+    return {
+      subjectId:this.state.subjectOption,
+      gradeId:this.state.gradeOption,
+      termId:this.state.termOption
+    }
+  },
 //改变年级
   handleGradeChange(value){
     this.setState({

@@ -11,6 +11,8 @@ import ShortAnswerQuestion from '../../components/table/exampaper/ShortAnswerQue
 import NestingQuestion from '../../components/table/exampaper/NestingQuestion'
 import QuestionTitle from '../../components/table/exampaper/QuestionTitle'
 
+import {setExamInfo} from '../../components/exampaper_filter/utils'
+
 import {deleteQuestion,changeQuestionPosition,getNewExamId,getExistExamInfo,updateQuestion} from '../../components/table/exampaper/exampaper-utils'
 const Search = Input.Search;
 
@@ -337,15 +339,35 @@ const CreateExampaper = React.createClass({
     }
 
   },
+  //修改试卷名称
+  handleUpdateExampaperName(e){
+    const {
+      subjectId,
+      gradeId,
+      termId,
+    } = this.refs.filters.getData()
+    setExamInfo({
+      examId:this.state.examPaperId,
+      name:e.target.value,
+      subjectId:subjectId,
+      term:termId,
+      gradeId:gradeId,
+      oneAnswer:0,
+      oneAnswerContent:'',
+    })
+    this.setState({
+      examPaperName:e.target.value
+    })
+  },
   render(){
     return (
       <div className={styles.container}>
         <div className={styles.header}>
-          <Search
-            placeholder="输入搜索条件"
+          <Input
+            placeholder="试卷名称"
             style={{ width: 200 }}
-            onSearch={value => console.log(value)}
-          /><CreateExampaperFilter examId={this.state.examPaperId}/>
+            onBlur={this.handleUpdateExampaperName}
+          /><CreateExampaperFilter ref='filters' name={this.state.examPaperName} examId={this.state.examPaperId}/>
         </div>
         <div className={styles.body}>
           <div className={styles.center}>
