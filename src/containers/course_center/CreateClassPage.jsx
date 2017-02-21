@@ -376,7 +376,6 @@ const CreateClassPage = React.createClass({
                   </Card>
                 </div>
               </Col>
-
             </Row>
             <Row type='flex' gutter={8}>
               <Col span={24}>

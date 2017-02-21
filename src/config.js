@@ -283,7 +283,6 @@ const config = _.extend({
 			uploadWord:`${baseURL}/wordquestion/uploadWord`,
 			addNest:`${baseURL}/wordquestion/addNest`,
 			addTitle:`${baseURL}/wordquestion/addTitle`,
-
 		}
 	}
 })
