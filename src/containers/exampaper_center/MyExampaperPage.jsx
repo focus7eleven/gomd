@@ -8,6 +8,7 @@ import {Input,Button,Select} from 'antd'
 import {List,fromJS} from 'immutable'
 import config from '../../config'
 import ExampaperFilter from './ExampaperFilter'
+import classnames from 'classnames'
 const Search = Input.Search
 const Option = Select.Option
 
@@ -25,56 +26,7 @@ const MyExampaperPage = React.createClass({
     }
   },
   componentDidMount(){
-    fetch(config.api.courseCenter.getDistinctSubject,{
-      method:'get',
-      headers:{
-        'from':'nodejs',
-        'token':sessionStorage.getItem('accessToken')
-      }
-    }).then(res => res.json()).then(res => {
-      this.setState({
-        subjectList:fromJS(res),
-        subjectOption:''
-      })
-      //获取年级
-      fetch(config.api.grade.getBySubject.get(res[0]['subject_id']),{
-        method:'get',
-        headers:{
-          'from':'nodejs',
-          'token':sessionStorage.getItem('accessToken')
-        }
-      }).then(res => res.json()).then(res => {
-        this.setState({
-          gradeList:fromJS(res),
-          gradeOption:''
-        })
-      })
-    })
-  },
-
-  handleChangeSubject(value){
-    this.setState({
-      subjectOption:value
-    })
-    fetch(config.api.grade.getBySubject.get(value),{
-      method:'get',
-      headers:{
-        'from':'nodejs',
-        'token':sessionStorage.getItem('accessToken')
-      }
-    }).then(res => res.json()).then(res => {
-      this.setState({
-        gradeList:fromJS(res),
-        gradeOption:res[0].gradeId
-      })
-      this.props.getTableData('selfexampapercenter','',1,value,res[0].gradeId)
-    })
-  },
-  handleChangeGrade(value){
-    this.setState({
-      gradeOptionf:value
-    })
-    this.props.getTableData('selfexampapercenter','',1,this.state.subjectOption,value)
+    console.log("asdfasdf:",this.props)
   },
   handleDeletePaper(examId){
     this.props.deletePaper(examId)
@@ -83,6 +35,7 @@ const MyExampaperPage = React.createClass({
     this.context.router.push(`/index/question-exampaper/editExampaper/${examId}`)
   },
   getTableData(){
+    console.log("---->:",this.props.menu.toJS())
     const tableHeader = [{
       title:'学科',
       dataIndex:'subject_name',
@@ -110,11 +63,14 @@ const MyExampaperPage = React.createClass({
       className:styles.tableColumn,
     },{
       title:'操作',
-      className:styles.tableColumn,
+      className:classnames(styles.tableColumn,styles.actionColumn),
       render:(text,record)=>{
-        return (<div>
+        return this.props.type=='draft'?(<div style={{width:'200px'}}>
           <Button onClick={this.handleDeletePaper.bind(this,text.id)} className={styles.deleteButton}>删除</Button>
           <Button type="primary" onClick={this.handleEditPaper.bind(this,text.id)} style={{marginLeft:'10px'}}>编辑</Button>
+          </div>):(<div style={{width:'200px'}}>
+          {/*<Button onClick={this.handleDeletePaper.bind(this,text.id)} className={styles.deleteButton}>删除</Button>*/}
+          <Button type="primary" onClick={this.handleEditPaper.bind(this,text.id)} style={{marginLeft:'10px'}}>查看</Button>
           </div>)
       }
     }]

@@ -11,13 +11,17 @@ notification.config({
 export const GET_TABLEDATA = actionNames('GET_TABLEDATA')
 export function getExampaper(type,search,currentPage,subjectId,gradeId){
   let realType = type;
+  let isDraft = 0
   if(type === 'selfexampapercenter'){
     realType = 'showExamList.json'
+  }else if(type==='draftpapercenter'){
+    realType = 'showExamList.json'
+    isDraft = 1
   }
   return {
     types:GET_TABLEDATA,
     callAPI:()=>{
-      return fetch(config.api.exampaper.getTableData(realType,search,currentPage,subjectId,gradeId),{
+      return fetch(config.api.exampaper.getTableData(realType,search,currentPage,subjectId,gradeId,isDraft),{
         method:'GET',
         headers:{
           'from':'nodejs',
@@ -48,7 +52,7 @@ export function deletePaper(examId){
         dispatch({
           types:GET_TABLEDATA,
           callAPI:()=>{
-            return fetch(config.api.exampaper.getTableData('showExamList.json','',1,'',''),{
+            return fetch(config.api.exampaper.getTableData('showExamList.json','',1,'','',1),{
               method:'GET',
               headers:{
                 'from':'nodejs',
@@ -65,11 +69,11 @@ export function deletePaper(examId){
 }
 
 export const GET_FILTERED_TABLEDATA = actionNames('GET_FILTERED_TABLEDATA')
-export function getFilteredTableData(type,search,currentPage,phaseCode="",subjectId="",termId=""){
+export function getFilteredTableData(type,search,currentPage,phaseCode="",subjectId="",termId="",draft=0){
   return {
     types:GET_FILTERED_TABLEDATA,
     callAPI:()=>{
-      return fetch(config.api.exampaper.getTableData(type,search,currentPage,subjectId,gradeId),{
+      return fetch(config.api.exampaper.getTableData(type,search,currentPage,subjectId,gradeId,draft),{
         method:'GET',
         headers:{
           'from':'nodejs',

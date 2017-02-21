@@ -40,7 +40,6 @@ const QuestionTitle = React.createClass({
     }
   },
   render(){
-    console.log("Asdfasdfasdf")
     return (
       <div className={styles.questionTitleContainer}>
         <div className={styles.line}></div>
