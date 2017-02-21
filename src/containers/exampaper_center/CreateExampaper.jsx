@@ -9,6 +9,7 @@ import MultipleChoiceQuestion from '../../components/table/exampaper/MultipleCho
 import NoteQuestion from '../../components/table/exampaper/NoteQuestion'
 import ShortAnswerQuestion from '../../components/table/exampaper/ShortAnswerQuestion'
 import NestingQuestion from '../../components/table/exampaper/NestingQuestion'
+import QuestionTitle from '../../components/table/exampaper/QuestionTitle'
 
 import {deleteQuestion,changeQuestionPosition,getNewExamId,getExistExamInfo,updateQuestion} from '../../components/table/exampaper/exampaper-utils'
 const Search = Input.Search;
@@ -388,8 +389,8 @@ const CreateExampaper = React.createClass({
                   //填空
                   return <ShortAnswerQuestion questionInfo={v} key={k} onDelete={this.handleDeleteQuestion} onUpdate={this.update} moveUp={this.moveUp} moveDown={this.moveDown}/>
                 }else if(v.get('kind')=='08'){
-                  //嵌套题
-                  return <div>标题</div>
+                  //title
+                  return <QuestionTitle questionInfo={v} key={k} onUpdate={this.update}/>
                 }else if(v.get('kind')=='09'){
                   //嵌套题
                   return <NestingQuestion questionInfo={v} key={k} onDelete={this.handleDeleteQuestion} onUpdate={this.update} moveUp={this.moveUp} moveDown={this.moveDown}/>
