@@ -1,6 +1,6 @@
 import React from 'react'
 import {Icon,Input,Button,Modal} from 'antd'
-import {getAnswerSheet} from '../../actions/answer_sheet/main'
+import {getAnswerSheet,downloadSheet} from '../../actions/answer_sheet/main'
 import {fromJS,Map,List} from 'immutable'
 import {connect} from 'react-redux'
 import {findMenuInTree} from '../../reducer/menu'
@@ -88,7 +88,7 @@ const AnswerSheetPage = React.createClass({
   },
 
   handleDownload(id){
-    console.log(id);
+    this.props.downloadSheet(id);
   },
 
   handleShowEditModal(value){
@@ -131,6 +131,7 @@ function mapStateToProps(state){
 function mapDispatchToProps(dispatch){
   return {
     getAnswerSheet: bindActionCreators(getAnswerSheet,dispatch),
+    downloadSheet: bindActionCreators(downloadSheet,dispatch),
   }
 }
 

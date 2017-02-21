@@ -39,3 +39,22 @@ export function createAnswerSheet(data){
     })
   }
 }
+
+export function downloadSheet(id){
+  return dispatch => {
+    return fetch(config.api.answersheet.download(id),{
+      method:'post',
+      headers:{
+        'from':'nodejs',
+        'token':sessionStorage.getItem('accessToken'),
+      },
+    }).then(res => res.blob()).then(res => {
+      let link=document.createElement('a');
+      link.href=window.URL.createObjectURL(res);
+      link.download="答题卡"+ id + ".pdf";
+      link.id='pdfFile'
+      link.click();
+      document.getElementById('pdfFile').remove();
+    })
+  }
+}
