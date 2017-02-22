@@ -78,7 +78,8 @@ const testData = fromJS([{
 const questionProtoType = fromJS({
   questionType: 'xuanze',
   isChild: false,
-  questionTitle: '',
+  questionTitle: '单选题',
+  questionIndex: 1,
   childQuestionTitle: '',
   questionNum: 1,
   optionType: 'en_zimu',
@@ -131,7 +132,8 @@ const CreateAnswerSheetPage = React.createClass({
       questions: fromJS([{
         questionType: 'xuanze',
         isChild: false,
-        questionTitle: '一、单选题',
+        questionTitle: '单选题',
+        questionIndex: 1,
         childQuestionTitle: '',
         questionNum: 1,
         optionType: 'en_zimu',
@@ -160,19 +162,41 @@ const CreateAnswerSheetPage = React.createClass({
     this.setState({continuousIndex: e.target.checked})
   },
 
-  handleAddQuestion(){
-    let questions = this.state.questions;
-    const newTitle = parseIndex(questions.size+1) + '、单选题'
-    questions = questions.push(questionProtoType.set('questionTitle',newTitle));
+  handleAddQuestion(index){
+    let {continuousIndex,questions} = this.state;
+    console.log(questions.get(index).toJS());
+    let newIndex = questions.get(index).get('questionIndex') + 1;
+    let i = index
+    const size = questions.size
+    if(continuousIndex){
+      while(i<size-1){
+        i++;
+        if(questions.get(i).get('questionType')==='zhangjie'){
+          continue;
+        }
+        questions = questions.update(i, v => v.set('questionIndex', v.get('questionIndex') + 1))
+      }
+    }else{
+      while(i<size-1){
+        i++;
+        if(questions.get(i).get('questionType')==='zhangjie'){
+          break;
+        }
+        questions = questions.update(i, v => v.set('questionIndex', v.get('questionIndex') + 1))
+      }
+    }
+
+    questions = questions.splice(index+1,0,questionProtoType.set('questionIndex',newIndex));
     this.setState({questions});
   },
 
   handleTypeChanged(index,value){
-    const newTitle = parseIndex(index+1) + '、' + getTypeName(value)
+    // const newTitle = parseIndex(index+1) + '、' + getTypeName(value)
+    const newTitle = getTypeName(value)
     const questions = this.state.questions.update(index, v => v.set('questionTitle',newTitle).set('questionNum',1).set('questionType',value).set('childQuestionTitle',''));
     switch (value) {
       case 'zhangjie':
-        this.setState({questions: questions.update(index, v => v.set('optionType','left'))})
+        this.setState({questions: questions.update(index, v => v.set('optionType','left').set('questionIndex',0))})
         break;
       case 'xuanze':
         this.setState({questions: questions.update(index, v => v.set('optionType','en_zimu'))})
@@ -433,7 +457,7 @@ const CreateAnswerSheetPage = React.createClass({
   renderChapter(item,index){
     const questionType = item.get('questionType')
     return (
-      <div className={classnames(styles.questionContainer,styles.specialBackground)} key={index}>
+      <div className={classnames(styles.questionContainer,styles.specialBackground,styles.hasBorderTop)} key={index}>
         <div className={styles.block}>
           <span style={{paddingLeft: 0}}>序号</span>
           <span style={{fontSize: 14, textAlign: 'center', paddingTop: 5}}>{index+1}</span>
@@ -466,7 +490,7 @@ const CreateAnswerSheetPage = React.createClass({
         <div className={styles.block}>
           <span style={{height: 18}}>{" "}</span>
           <div>
-            <Button type="primary" className={styles.editButton} onClick={this.handleAddQuestion}><Icon type="plus" /></Button>
+            <Button type="primary" className={styles.editButton} onClick={this.handleAddQuestion.bind(null,index)}><Icon type="plus" /></Button>
             <Button type="primary" className={styles.deleteButton} onClick={this.handleDeleteQuestion.bind(null,index)}><Icon type="close" /></Button>
           </div>
         </div>
@@ -504,12 +528,22 @@ const CreateAnswerSheetPage = React.createClass({
         <div className={styles.verticalLayout}>
           {
             isChild?null:
-            <div className={styles.block} style={{marginBottom: 10}}>
-              <span>标题</span>
-              <Input placeholder="输入少于30个字" style={{width: 470}} value={item.get('questionTitle')} onChange={this.handleFieldChange.bind(null,index,'questionTitle')} />
+            <div className={styles.horizontalLayout}>
+              <div className={styles.block} style={{marginRight: 0}}>
+                <span style={{height: 18}}>{" "}</span>
+                <span style={{marginTop: 5}}>{parseIndex(item.get('questionIndex'))+"、"}</span>
+              </div>
+              <div className={styles.block} style={{marginBottom: 10}}>
+                <span>标题</span>
+                <Input placeholder="输入少于30个字" style={{width: 470}} value={item.get('questionTitle')} onChange={this.handleFieldChange.bind(null,index,'questionTitle')} />
+              </div>
             </div>
           }
           <div className={styles.horizontalLayout}>
+            <div className={styles.block} style={{marginRight: 8}}>
+              <span style={{height: 18}}>{" "}</span>
+              <span style={{marginTop: 5}}>3.1</span>
+            </div>
             <div className={styles.block}>
               <span>子标题</span>
               <Input placeholder="输入少于30个字" style={{width: 240}} value={item.get('childQuestionTitle')} onChange={this.handleFieldChange.bind(null,index,'childQuestionTitle')} />
@@ -588,7 +622,7 @@ const CreateAnswerSheetPage = React.createClass({
             <div className={styles.block}>
               <span style={{height: 18}}>{" "}</span>
               <div>
-                <Button type="primary" className={styles.editButton} onClick={this.handleAddQuestion}><Icon type="plus" /></Button>
+                <Button type="primary" className={styles.editButton} onClick={this.handleAddQuestion.bind(null,index)}><Icon type="plus" /></Button>
                 <Button type="primary" className={styles.deleteButton} onClick={this.handleDeleteQuestion.bind(null,index)}><Icon type="close" /></Button>
               </div>
             </div>
