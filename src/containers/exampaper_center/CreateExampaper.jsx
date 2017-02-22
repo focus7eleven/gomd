@@ -310,11 +310,28 @@ const CreateExampaper = React.createClass({
       body:formData
     }).then(res => res.json()).then(res => {
       notification.success({message:'上传成功'})
+      this.setState({
+        exerciseList:fromJS(res)
+      })
     })
   },
   //导入答案
   handleImportAnswer(e){
-
+    let file = e.target.files[0]
+    let fileReader = new FileReader()
+    let formData = new FormData()
+    formData.append('examPaperId',this.state.examPaperId)
+    formData.append('oneAnswerFiles',file)
+    fetch(config.api.exampaper.uploadStandardAnswer,{
+      method:'post',
+      headers:{
+        'from':'nodejs',
+        'token':sessionStorage.getItem('accessToken')
+      },
+      body:formData
+    }).then(res => res.json()).then(res => {
+      notification.success({message:'上传成功'})
+    })
   },
   //添加嵌套题
   handleAddNestingQuestion(){
