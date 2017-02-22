@@ -95,10 +95,10 @@ const DetailPage = React.createClass({
             </Col>
           </Row>
           <Row type='flex' gutter={8} style={{marginBottom:'10px'}}>
-            <Col span={9}>
+            <Col span={10}>
               <Card title={<span><Icon type='book'/>章节课程</span>} bordered={true}>{`${this.props.courseCenter.get('courseDetail').get('courseName')}第${this.props.courseCenter.get('courseDetail').get('hourNo')}课时`}</Card>
             </Col>
-            <Col span={15}>
+            <Col span={14}>
               <Card title={<span><Icon type='edit'/>课程名称</span>} bordered={true}>{this.props.courseCenter.get('courseDetail').get('name')}</Card>
             </Col>
           </Row>
