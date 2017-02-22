@@ -305,9 +305,9 @@ const CreateClassPage = React.createClass({
                   </Select>
                 </div>
               </Col>
-              <Col span={4} offset={1}>
+              <Col span={3} offset={1}>
                 <div className={styles.filterItem}>
-                  版本：<Select placeholder='选择版本' size="large" value={this.state.versionOption} onChange={this.handleFilterChange.bind(this,'version')}>
+                  版本：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<Select placeholder='选择版本' size="large" value={this.state.versionOption} onChange={this.handleFilterChange.bind(this,'version')}>
                   {
                     this.state.versionList.map(v => (
                       <Option key={v.get('id')} value={v.get('id')} title={v.get('text')}>{v.get('text')}</Option>
@@ -329,7 +329,7 @@ const CreateClassPage = React.createClass({
               </Col>
               <Col span={4} offset={1}>
                 <div className={styles.filterItem}>
-                  学期：<Select placeholder='选择学期' size="large" value={this.state.termOption} onChange={this.handleFilterChange.bind(this,'term')}>
+                  学期：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<Select placeholder='选择学期' size="large" value={this.state.termOption} onChange={this.handleFilterChange.bind(this,'term')}>
                   {
                     this.state.termList.map(v => (
                       <Option key={v.get('id')} value={v.get('id')} title={v.get('text')}>{v.get('text')}</Option>
