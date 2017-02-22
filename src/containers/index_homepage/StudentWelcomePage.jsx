@@ -1,65 +1,63 @@
 import React from 'react'
 import {Carousel,Button} from 'antd'
 import styles from './TeacherWelcomePage.scss'
-import teacher1 from '../../public/images/teacher-index-background.png'
-import teacher2 from '../../public/images/teacher2-index-background.png'
-import teacher3 from '../../public/images/teacher3-index-background.png'
+import student1 from '../../public/images/student-index-background.png'
 
-import createHomework from '../../public/images/create-homework.png'
-import publishHomework from '../../public/images/publish-homework.png'
-import checkHomework from '../../public/images/check-homework.png'
-import checkResult from '../../public/images/check-result.png'
+import doHomework from '../../public/images/do-homework.png'
+import errorBook from '../../public/images/error-book.png'
+import mircoVideo from '../../public/images/micro-video.png'
+import course from '../../public/images/check-result.png'
 import downloadAPP from '../../public/images/download-app.png'
 
-const TeacherWelcomePage = React.createClass({
+const StudentWelcomePage = React.createClass({
   contextTypes: {
     router: React.PropTypes.object
   },
-  handleCreateHomework(){
-    this.context.router.push(`/index/homework/sethomework`)
+  handleCourse(){
+    this.context.router.push(`/index/course-center/schoolCourse`)
   },
-  handlePublishHomework(){
-    this.context.router.push(`/index/homework/homework`)
+  handleMicroVideo(){
+    this.context.router.push(`/index/microvideo-mgr/areavideo`)
   },
-  handleCheckHomework(){
+  handleDoHomework(){
     this.context.router.push('/index/homework/homework')
   },
-  handleCheckResult(){
+  handleError(){
     this.context.router.push('/index/homework/homework')
   },
   render(){
     return (
       <div className={styles.container}>
         <div>
-          <Carousel autoplay>
+          <Carousel>
             <div className={styles.carouselItem}>
               <img src={teacher1} />
             </div>
             <div className={styles.carouselItem}>
-              <img src={teacher2} />
+              <img src={teacher1} />
             </div>
             <div className={styles.carouselItem}>
-              <img src={teacher3} />
+              <img src={teacher1} />
             </div>
           </Carousel>
         </div>
         <div className={styles.hotkey}>
           <div className={styles.buttonGroup}>
             <div className={styles.item}>
-              <img src={createHomework} />
-              <Button className={styles.button} onClick={this.handleCreateHomework}>创建作业</Button>
+              <img src={course} />
+              <Button className={styles.button} onClick={this.handleCourse}>学课程</Button>
             </div>
             <div className={styles.item}>
               <img src={publishHomework} />
-              <Button className={styles.button} onClick={this.handlePublishHomework}>发布作业</Button>
+              <Button className={styles.button} onClick={this.handleMicroVideo}>看微课</Button>
             </div>
             <div className={styles.item}>
               <img src={checkHomework} />
-              <Button className={styles.button} onClick={this.handleCheckHomework}>批改作业</Button>
+              <Button className={styles.button} onClick={this.handleDoHomework}>做作业</Button>
             </div>
             <div className={styles.item}>
               <img src={checkResult} />
-              <Button className={styles.button} onClick={this.handleCheckResult}>查阅结果</Button>
+              <Button className={styles.button} onClick={this.handleError}>错题本</Button>
             </div>
           </div>
           <div className={styles.footer}>
@@ -77,4 +75,4 @@ const TeacherWelcomePage = React.createClass({
   }
 })
 
-export default TeacherWelcomePage
+export default StudentWelcomePage

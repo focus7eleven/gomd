@@ -24,15 +24,11 @@
       :local(.item){
         display:flex;
         flex-direction: column;
-        justify-content: center;
-        align-items: center;
         margin:20px 10px;
         :local(.button){
           background-color: #535454;
           border-color: #535454;
           color: white;
-          margin-top: 10px;
-          width: 85px;
         }
       }
     }
