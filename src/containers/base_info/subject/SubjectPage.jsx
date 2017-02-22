@@ -50,7 +50,7 @@ const SubjectPage = React.createClass({
       key: 'subject_name',
       className:styles.tableColumn,
     },{
-      title: '学科短称',
+      title: '学科简称',
       dataIndex: 'subject_short_name',
       key: 'subject_short_name',
       className:styles.tableColumn,
@@ -192,7 +192,7 @@ const SubjectPage = React.createClass({
               </FormItem>
             }
             <FormItem
-              label="学科短称"
+              label="学科简称"
               labelCol={{ span: 5 }}
               wrapperCol={{ span: 12 }}
               key='subjectShortName'
@@ -204,7 +204,7 @@ const SubjectPage = React.createClass({
                     var errors = [];
                     if(value.length > 5){
                       errors.push(
-                        new Error('学科短称应不超过5个字')
+                        new Error('学科简称应不超过5个字')
                       )
                     }
                     callback(errors);

@@ -65,6 +65,7 @@ import NoteQuestion from './components/table/exampaper/NoteQuestion'
 import AnswerSheetContainer from './containers/answer_sheet/AnswerSheetContainer'
 import CreateAnswerSheetPage from './containers/answer_sheet/CreateAnswerSheetPage'
 import AnswerSheetPage from './containers/answer_sheet/AnswerSheetPage'
+import WelcomPageContainer from './containers/index_homepage/WelcomePageContainer'
 
 const routes = (
 	<Router history={browserHistory}>
@@ -87,6 +88,8 @@ const routes = (
 			<Route path='index' component={LoginControlHOC(MainContainer)}>
 				{/* <IndexRedirect to='base-info/phase' component={PhasePage} /> */}
 				{/* <Route path='base-info' component={BaseInfoContainer}> */}
+				<IndexRedirect to='welcome'/>
+				<Route path='welcome' component={WelcomPageContainer}/>
 				<Route path=':second' component={BaseInfoContainer}>
 					{/* <IndexRedirect to='phase'/> */}
 

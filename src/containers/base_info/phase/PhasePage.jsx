@@ -86,16 +86,16 @@ const PhasePage = React.createClass({
       key: 'phase_name',
       className:styles.tableColumn,
     },{
-      title: '备注',
-      dataIndex: 'remark',
-      key: 'remark',
-      className:styles.tableColumn,
-    },{
       title: '所属学科',
       dataIndex: 'subjectStr',
       key: 'subjectStr',
       className:styles.tableColumn,
-    }])
+    },{
+      title: '备注',
+      dataIndex: 'remark',
+      key: 'remark',
+      className:styles.tableColumn,
+    },])
     if(authList.some(v => v.get('authUrl')=='/subject/list')){
       tableHeader = tableHeader.push({
         title: PermissionDic['list'],

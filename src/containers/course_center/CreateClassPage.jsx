@@ -294,95 +294,78 @@ const CreateClassPage = React.createClass({
         <div className={styles.body}>
           <Form>
             <Row type='flex' gutter={8}>
-              <Col span={5}>
+              <Col span={3}>
                 <div className={styles.filterItem}>
-                  <Card title={<span><Icon type='appstore'/>学科</span>} bordered={true}>
-                    <Select placeholder='选择学科' size="large" value={this.state.subjectOption} onChange={this.handleFilterChange.bind(this,'subject')}>
-                    {
-                      this.state.subjectList.map(v => (
-                        <Option key={v.get('subject_id')} value={v.get('subject_id')} title={v.get('subject_name')}>{v.get('subject_name')}</Option>
-                      ))
-                    }
-                    </Select>
-                  </Card>
+                  学科：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<Select placeholder='选择学科'size="large" value={this.state.subjectOption} onChange={this.handleFilterChange.bind(this,'subject')}>
+                  {
+                    this.state.subjectList.map(v => (
+                      <Option key={v.get('subject_id')} value={v.get('subject_id')} title={v.get('subject_name')}>{v.get('subject_name')}</Option>
+                    ))
+                  }
+                  </Select>
                 </div>
               </Col>
-              <Col span={5}>
+              <Col span={3} offset={1}>
                 <div className={styles.filterItem}>
-                  <Card title={<span><Icon type='appstore'/>版本</span>} bordered={true}>
-                    <Select placeholder='选择版本' size="large" value={this.state.versionOption} onChange={this.handleFilterChange.bind(this,'version')}>
-                    {
-                      this.state.versionList.map(v => (
-                        <Option key={v.get('id')} value={v.get('id')} title={v.get('text')}>{v.get('text')}</Option>
-                      ))
-                    }
-                    </Select>
-                  </Card>
+                  版本：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<Select placeholder='选择版本' size="large" value={this.state.versionOption} onChange={this.handleFilterChange.bind(this,'version')}>
+                  {
+                    this.state.versionList.map(v => (
+                      <Option key={v.get('id')} value={v.get('id')} title={v.get('text')}>{v.get('text')}</Option>
+                    ))
+                  }
+                  </Select>
                 </div>
               </Col>
-              <Col span={5}>
+              <Col span={4} offset={1}>
                 <div className={styles.filterItem}>
-                  <Card title={<span><Icon type='appstore'/>年级</span>} bordered={true}>
-                  <Select placeholder='选择年级' size="large" value={this.state.gradeOption} onChange={this.handleFilterChange.bind(this,'grade')}>
+                  年级：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<Select placeholder='选择年级' size="large" value={this.state.gradeOption} onChange={this.handleFilterChange.bind(this,'grade')}>
                   {
                     this.state.gradeList.map(v => (
                       <Option key={v.get('gradeId')} value={v.get('gradeId')} title={v.get('gradeName')}>{v.get('gradeName')}</Option>
                     ))
                   }
                   </Select>
-                  </Card>
                 </div>
               </Col>
-              <Col span={5}>
+              <Col span={4} offset={1}>
                 <div className={styles.filterItem}>
-                  <Card title={<span><Icon type='appstore'/>学期</span>} bordered={true}>
-                  <Select placeholder='选择学期' size="large" value={this.state.termOption} onChange={this.handleFilterChange.bind(this,'term')}>
+                  学期：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<Select placeholder='选择学期' size="large" value={this.state.termOption} onChange={this.handleFilterChange.bind(this,'term')}>
                   {
                     this.state.termList.map(v => (
                       <Option key={v.get('id')} value={v.get('id')} title={v.get('text')}>{v.get('text')}</Option>
                     ))
                   }
                   </Select>
-                  </Card>
                 </div>
               </Col>
-              <Col span={4}>
+              <Col span={5} offset={1}>
                 <div className={styles.filterItem}>
-
-                  <Card title={<span><Icon type='appstore'/>上课时间</span>} bordered={true}>
-                    <DatePicker value={moment(this.state.chapterTime,'YYYY/MM/DD')} onChange={(date,dateString)=>{this.setState({chapterTime:dateString})}}  size='large' style={{width:'100%'}} showTime format="YYYY-MM-DD HH:mm" />
-                  </Card>
+                上课时间：<DatePicker value={moment(this.state.chapterTime,'YYYY/MM/DD')} onChange={(date,dateString)=>{this.setState({chapterTime:dateString})}}  size='large' style={{width:'100%'}} showTime format="YYYY-MM-DD HH:mm" />
                 </div>
               </Col>
             </Row>
             <Row type='flex' gutter={8}>
-              <Col span={10}>
+              <Col span={8}>
                 <div className={styles.filterItem}>
-                  <Card title={<span><Icon type='appstore'/>章节课程</span>} bordered={true}>
-                    <Select placeholder='选择章节课程' size="large" value={this.state.charpterList.isEmpty()?'':this.state.charpterOption[0]} onChange={this.handleFilterChange.bind(this,'charpter')}>
-                    {
-                      this.state.charpterList.map(v => (
-                        <Option key={v.get('teaching_schedule_id')} value={v.get('teaching_schedule_id')} title={`${v.get('course')}第${v.get('hours')}课时`}>{`${v.get('course')}第${v.get('hours')}课时`}</Option>
-                      ))
-                    }
-                    </Select>
-                  </Card>
+                  章节课程：<Select placeholder='选择章节课程' size="large" value={this.state.charpterList.isEmpty()?'':this.state.charpterOption[0]} onChange={this.handleFilterChange.bind(this,'charpter')}>
+                  {
+                    this.state.charpterList.map(v => (
+                      <Option key={v.get('teaching_schedule_id')} value={v.get('teaching_schedule_id')} title={`${v.get('course')}第${v.get('hours')}课时`}>{`${v.get('course')}第${v.get('hours')}课时`}</Option>
+                    ))
+                  }
+                  </Select>
                 </div>
               </Col>
-              <Col span={14}>
+              <Col span={15} offset={1}>
                 <div className={styles.filterItem}>
-                  <Card title={<span><Icon type='appstore'/>课程名称</span>} bordered={true}>
-                    <Input value={this.state.courseName} onChange={(e)=>{this.setState({courseName:e.target.value})}} size='large' placeholder="输入小于30个字" />
-                  </Card>
+                课程名称：<Input value={this.state.courseName} onChange={(e)=>{this.setState({courseName:e.target.value})}} size='large' placeholder="输入小于30个字" />
                 </div>
               </Col>
             </Row>
             <Row type='flex' gutter={8}>
               <Col span={24}>
-                <div className={styles.filterItem}>
-                  <Card title={<span><Icon type='appstore'/>课程说明</span>} bordered={true}>
-                  <Input type='textarea' rows={1} value={this.state.courseDesc} onChange={(e)=>{this.setState({courseDesc:e.target.value})}} size='large' placeholder="请输入课程说明"/>
-                  </Card>
+                <div className={styles.filterItem} style={{alignItems:'flex-start'}}>
+                  课程说明：<Input type='textarea' rows={3} value={this.state.courseDesc} onChange={(e)=>{this.setState({courseDesc:e.target.value})}} size='large' placeholder="请输入课程说明"/>
                 </div>
               </Col>
             </Row>
