@@ -294,9 +294,9 @@ const CreateClassPage = React.createClass({
         <div className={styles.body}>
           <Form>
             <Row type='flex' gutter={8}>
-              <Col span={5}>
+              <Col span={3}>
                 <div className={styles.filterItem}>
-                  学科：<Select placeholder='选择学科' size="large" value={this.state.subjectOption} onChange={this.handleFilterChange.bind(this,'subject')}>
+                  学科：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<Select placeholder='选择学科'size="large" value={this.state.subjectOption} onChange={this.handleFilterChange.bind(this,'subject')}>
                   {
                     this.state.subjectList.map(v => (
                       <Option key={v.get('subject_id')} value={v.get('subject_id')} title={v.get('subject_name')}>{v.get('subject_name')}</Option>
@@ -305,7 +305,7 @@ const CreateClassPage = React.createClass({
                   </Select>
                 </div>
               </Col>
-              <Col span={5}>
+              <Col span={4} offset={1}>
                 <div className={styles.filterItem}>
                   版本：<Select placeholder='选择版本' size="large" value={this.state.versionOption} onChange={this.handleFilterChange.bind(this,'version')}>
                   {
@@ -316,9 +316,9 @@ const CreateClassPage = React.createClass({
                   </Select>
                 </div>
               </Col>
-              <Col span={5}>
+              <Col span={4} offset={1}>
                 <div className={styles.filterItem}>
-                  年级：<Select placeholder='选择年级' size="large" value={this.state.gradeOption} onChange={this.handleFilterChange.bind(this,'grade')}>
+                  年级：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<Select placeholder='选择年级' size="large" value={this.state.gradeOption} onChange={this.handleFilterChange.bind(this,'grade')}>
                   {
                     this.state.gradeList.map(v => (
                       <Option key={v.get('gradeId')} value={v.get('gradeId')} title={v.get('gradeName')}>{v.get('gradeName')}</Option>
@@ -327,7 +327,7 @@ const CreateClassPage = React.createClass({
                   </Select>
                 </div>
               </Col>
-              <Col span={5}>
+              <Col span={4} offset={1}>
                 <div className={styles.filterItem}>
                   学期：<Select placeholder='选择学期' size="large" value={this.state.termOption} onChange={this.handleFilterChange.bind(this,'term')}>
                   {
@@ -338,14 +338,14 @@ const CreateClassPage = React.createClass({
                   </Select>
                 </div>
               </Col>
-              <Col span={4}>
+              <Col span={5} offset={1}>
                 <div className={styles.filterItem}>
                 上课时间：<DatePicker value={moment(this.state.chapterTime,'YYYY/MM/DD')} onChange={(date,dateString)=>{this.setState({chapterTime:dateString})}}  size='large' style={{width:'100%'}} showTime format="YYYY-MM-DD HH:mm" />
                 </div>
               </Col>
             </Row>
             <Row type='flex' gutter={8}>
-              <Col span={10}>
+              <Col span={8}>
                 <div className={styles.filterItem}>
                   章节课程：<Select placeholder='选择章节课程' size="large" value={this.state.charpterList.isEmpty()?'':this.state.charpterOption[0]} onChange={this.handleFilterChange.bind(this,'charpter')}>
                   {
@@ -356,7 +356,7 @@ const CreateClassPage = React.createClass({
                   </Select>
                 </div>
               </Col>
-              <Col span={14}>
+              <Col span={15} offset={1}>
                 <div className={styles.filterItem}>
                 课程名称：<Input value={this.state.courseName} onChange={(e)=>{this.setState({courseName:e.target.value})}} size='large' placeholder="输入小于30个字" />
                 </div>
