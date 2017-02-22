@@ -45,8 +45,9 @@ const MainContainer = React.createClass({
           <NavigationMini></NavigationMini>
         </div>
         {
-          this.props.children ?
-            <div className={styles.workspace}>
+          this.props.children ?this.props.location.pathname=='/index/welcome'?(
+            this.props.children
+          ):(<div className={styles.workspace}>
               <div className={styles.mainPanel}>
                 { /* 顶部的学校信息 */}
                 <div className={styles.header}>
@@ -83,7 +84,7 @@ const MainContainer = React.createClass({
                   </div>
                 </div>
               </div>
-            </div>
+            </div>)
             :
             null
           }

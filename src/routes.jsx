@@ -55,6 +55,7 @@ import CourseTree from './components/tree/CourseTree'
 import UEditor from './components/ueditor/Ueditor'
 import MultipleChoiceQuestion from './components/table/exampaper/MultipleChoiceQuestion'
 import NoteQuestion from './components/table/exampaper/NoteQuestion'
+import WelcomPageContainer from './containers/index_homepage/WelcomePageContainer'
 const routes = (
 	<Router history={browserHistory}>
 		<Route path="/" component={AppContainer}>
@@ -76,6 +77,8 @@ const routes = (
 			<Route path='index' component={LoginControlHOC(MainContainer)}>
 				{/* <IndexRedirect to='base-info/phase' component={PhasePage} /> */}
 				{/* <Route path='base-info' component={BaseInfoContainer}> */}
+				<IndexRedirect to='welcome'/>
+				<Route path='welcome' component={WelcomPageContainer}/>
 				<Route path=':second' component={BaseInfoContainer}>
 					{/* <IndexRedirect to='phase'/> */}
 
