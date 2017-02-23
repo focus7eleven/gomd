@@ -95,20 +95,20 @@ const DetailPage = React.createClass({
                 <Card style={{height:'138px'}} title={<span><Icon type='appstore'/>学科（版本）</span>} bordered={true}>{this.props.courseCenter.get('courseDetail').get('subjectName')}<br/>{this.props.courseCenter.get('courseDetail').get('versionName')}</Card>
                 </Col>
                 <Col span={8}>
-                <Card style={{height:'138px'}} title={<span><Icon type='bars'/>年级（学期）</span>} bordered={true}>{this.props.courseCenter.get('courseDetail').get('gradeName')}<br/>{this.props.courseCenter.get('courseDetail').get('term')}</Card>
+                <Card style={{height:'138px'}} title={<span><Icon type='appstore'/>年级（学期）</span>} bordered={true}>{this.props.courseCenter.get('courseDetail').get('gradeName')}<br/>{this.props.courseCenter.get('courseDetail').get('term')}</Card>
                 </Col>
                 <Col span={8}>
-                <Card style={{height:'138px'}} title={<span><Icon type='calendar'/>上课时间</span>} bordered={true}>{this.props.courseCenter.get('courseDetail').get('createAtAtr')}</Card>
+                <Card style={{height:'138px'}} title={<span><Icon type='appstore'/>上课时间</span>} bordered={true}>{this.props.courseCenter.get('courseDetail').get('createAtAtr')}</Card>
                 </Col>
               </Row>
               <Row>
                 <Col span={24}>
-                  <Card title={<span><Icon type='book'/>章节课程</span>} bordered={true}>{`${this.props.courseCenter.get('courseDetail').get('courseName')}第${this.props.courseCenter.get('courseDetail').get('hourNo')}课时`}</Card>
+                  <Card title={<span><Icon type='appstore'/>章节课程</span>} bordered={true}>{`${this.props.courseCenter.get('courseDetail').get('courseName')}第${this.props.courseCenter.get('courseDetail').get('hourNo')}课时`}</Card>
                 </Col>
               </Row>
             </Col>
             <Col span={9}>
-            <Card style={{height:'100%'}} title={<span><Icon type='plus'/>课程说明</span>} bordered={true}>{this.props.courseCenter.get('courseDetail').get('description')}</Card>
+            <Card style={{height:'100%'}} title={<span><Icon type='appstore'/>课程说明</span>} bordered={true}>{this.props.courseCenter.get('courseDetail').get('description')}</Card>
             </Col>
           </Row>
           <Row type='flex'>
