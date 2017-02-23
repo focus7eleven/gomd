@@ -54,7 +54,7 @@ export function downloadSheet(id){
       link.download="答题卡"+ id + ".pdf";
       link.id='pdfFile'
       link.click();
-      document.getElementById('pdfFile').remove();
+      // document.getElementById('pdfFile').remove();
     })
   }
 }

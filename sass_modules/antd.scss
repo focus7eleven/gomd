@@ -44,7 +44,7 @@
 
   }
   :global(.ant-modal-body){
-    max-height: 500px;
+    max-height: 550px;
     overflow: auto;
   }
 }
@@ -201,4 +201,18 @@
 :global(.ant-menu-horizontal > .ant-menu-item:hover){
   color: $primary-color;
   border-bottom: 2px solid $primary-color;
+}
+
+:global(.ant-input-number:hover){
+  border-color: $primary-color;
+}
+
+:global(.ant-input-number:focus){
+  border-color: $primary-color;
+  box-shadow: none;
+}
+
+:global(.ant-input-number-focused){
+  border-color: $primary-color;
+  box-shadow: none;
 }
