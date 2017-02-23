@@ -91,10 +91,10 @@ const NestingQuestion = React.createClass({
             <Button onClick={this.handleAddBlank}>添加填空</Button>
           </Col>
           <Col span={6}>
-            <Select style={{width:'200px'}} onFocus={()=>{
-              // window.removeEventListener('click',this.handleWindowEvent)
+            <Select style={{width:'200px'}} defaultValue={this.props.questionInfo.get('kind')} onFocus={()=>{
+              window.removeEventListener('click',this.handleWindowEvent)
             }} onBlur={()=>{
-              // window.addEventListener('click',this.handleWindowEvent)
+              window.addEventListener('click',this.handleWindowEvent)
             }} onChange={this.props.onChangeQuestionType}>
             {
               QUESTION_TYPE.map(v => (
@@ -173,7 +173,7 @@ const NestingQuestion = React.createClass({
             <Button onClick={(e)=>{this.props.moveDown(this.props.questionInfo.get('id'))}}><Icon type="caret-down" /></Button>
         </div>
         {
-          this.state.showFooter?this.renderFooter():null
+          // this.state.showFooter?this.renderFooter():null
         }
       </div>
     )

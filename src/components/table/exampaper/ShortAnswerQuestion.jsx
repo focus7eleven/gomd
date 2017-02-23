@@ -101,11 +101,11 @@ const ShortAnswerQuestion = React.createClass({
       <div className={styles.footer} onClick={(e)=>{e.stopPropagation()}} >
         <Row>
           <Col span={6}>
-            <Select style={{width:'200px'}} onFocus={()=>{
-              // window.removeEventListener('click',this.handleWindowEvent)
+            <Select style={{width:'200px'}} defaultValue={this.props.questionInfo.get('kind')} onFocus={()=>{
+              window.removeEventListener('click',this.handleWindowEvent)
             }} onBlur={()=>{
-              // window.addEventListener('click',this.handleWindowEvent)
-            }} onChange={this.props.onChangeQuestionType}>
+              window.addEventListener('click',this.handleWindowEvent)
+            }} onChange={(value)=>this.props.onChangeQuestionType(this.props.questionInfo.get('id'),value)}>
             {
               QUESTION_TYPE.map(v => (
                 <Option value={v.id} title={v.text} key={v.id}>{v.text}</Option>
@@ -133,7 +133,7 @@ const ShortAnswerQuestion = React.createClass({
   },
   renderQuestion(){
     return (
-      <div className={styles.question} onClick={(e)=>{e.stopPropagation();this.setState({editingQuestion:!this.state.editingQuestion,showFooter:!this.state.showFooter})}}>
+      <div className={styles.question} onClick={(e)=>{e.stopPropagation();this.setState({editingQuestion:!this.state.editingQuestion,showFooter:!this.state.showFooter,showScoreSetting:false,})}}>
       {
         this.state.editingQuestion?<Ueditor initialContent={this.props.questionInfo.get('examination')||'请输入题目'} onDestory={this.handleUpdateQuestion.bind(this,'title')}/>:<span dangerouslySetInnerHTML={{__html:this.props.questionInfo.get('examination')||'请输入题目'}}></span>
       }
@@ -233,8 +233,8 @@ const ShortAnswerQuestion = React.createClass({
           }
         }} bordered dataSource={tableData.tableBody} columns={tableData.tableHeader} pagination={false}/>
         <div className={styles.moveButton}>
-          <div>
-          </div>
+          {this.props.questionInfo.get('questionNo')==1?null:<Button onClick={(e)=>{this.props.moveUp(this.props.questionInfo.get('id'))}}><Icon type="caret-up" /></Button>}
+          <Button onClick={(e)=>{this.props.moveDown(this.props.questionInfo.get('id'))}}><Icon type="caret-down" /></Button>
         </div>
         {
           this.state.showFooter?this.renderFooter():null
