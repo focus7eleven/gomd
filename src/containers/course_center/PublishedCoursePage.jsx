@@ -81,7 +81,7 @@ const PublishedCoursePage = React.createClass({
     return (
       <div className={styles.container}>
         <div className={styles.header}>
-          <CourseFilterComponent pageType="publishedPage"/>
+          <div></div><CourseFilterComponent pageType="publishedPage"/>
         </div>
         <div className={styles.body}>
           <TableComponent dataType="courseCenter" tableData={tableData} pageType="publishedPage" searchStr={this.state.searchStr}></TableComponent>

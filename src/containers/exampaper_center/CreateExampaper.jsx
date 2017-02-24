@@ -315,7 +315,7 @@ const CreateExampaper = React.createClass({
     }).then(res => res.json()).then(res => {
       notification.success({message:'上传成功'})
       this.setState({
-        exerciseList:fromJS(res),
+        exerciseList:this.state.exerciseList.concat(fromJS(res)),
         uploadingExampaper:false,
       })
     })
@@ -432,7 +432,7 @@ const CreateExampaper = React.createClass({
             </div>
             <div className={styles.paperContent}>
             {
-              this.state.uploadingExampaper?<div className={styles.loading}><Spin size='large'/></div>:this.state.exerciseList.map((v,k) => {
+              this.state.uploadingExampaper?<div className={styles.loading}><Spin size='large'/>努力加载中，请你耐心等待</div>:this.state.exerciseList.map((v,k) => {
                 if(v.get('kind')=='01'||v.get('kind')=='02'||v.get('kind')=='03'){
                   //单选
                   return <MultipleChoiceQuestion questionInfo={v} key={k} onDelete={this.handleDeleteQuestion} onUpdate={this.update} moveUp={this.moveUp} moveDown={this.moveDown} onChangeQuestionType={this.handleChangeQuestionType}/>
