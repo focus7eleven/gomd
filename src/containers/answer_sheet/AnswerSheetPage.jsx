@@ -1,6 +1,6 @@
 import React from 'react'
 import {Icon,Input,Button,Modal} from 'antd'
-import {getAnswerSheet,downloadSheet} from '../../actions/answer_sheet/main'
+import {editAnswerSheet,getAnswerSheet,downloadSheet} from '../../actions/answer_sheet/main'
 import {fromJS,Map,List} from 'immutable'
 import {connect} from 'react-redux'
 import {findMenuInTree} from '../../reducer/menu'
@@ -132,6 +132,7 @@ function mapDispatchToProps(dispatch){
   return {
     getAnswerSheet: bindActionCreators(getAnswerSheet,dispatch),
     downloadSheet: bindActionCreators(downloadSheet,dispatch),
+    editAnswerSheet: bindActionCreators(editAnswerSheet,dispatch),
   }
 }
 
