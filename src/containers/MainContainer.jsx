@@ -32,7 +32,7 @@ const MainContainer = React.createClass({
     let temp = nextProps.location.pathname.split('/').slice(-2)[0]
     if(temp == 'detail'){
       this.setState({
-        currentPath:fromJS(['课程中心','课程内容'])
+        currentPath:fromJS(['课程内容'])
       })
     }else{
       this.setState({
