@@ -63,7 +63,7 @@ export function editAnswerSheet(id,type,name=''){
   let formData = new FormData()
   formData.append('answersheet_id',id)
   formData.append('action',type)
-  if(type==='eidt'){
+  if(type==='edit'){
     formData.append('answersheet_name',name)
   }
   return dispatch => {

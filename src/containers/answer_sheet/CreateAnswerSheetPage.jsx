@@ -347,7 +347,11 @@ const CreateAnswerSheetPage = React.createClass({
 
   // 设置填空题的高度和区域个数
   handleArray(index,type,e){
-    this.setState({currentWidthArr: this.state.currentWidthArr.set(index,e)})
+    if(type==='widthArr'){
+      this.setState({currentWidthArr: this.state.currentWidthArr.set(index,e)})
+    }else{
+      this.setState({currentHeightArr: this.state.currentHeightArr.set(index,e)})
+    }
   },
 
   // 设置简答题的子标题
@@ -498,7 +502,7 @@ const CreateAnswerSheetPage = React.createClass({
             <Option value="zhangjie">章节</Option>
           </Select>
         </div>
-        <div className={styles.block}>
+        <div className={styles.block} style={{marginRight: 10}}>
           <span>子题目</span>
           <Checkbox disabled={this.handleCanBeAChild(index)} style={{marginTop: 3}} checked={item.get('isChild')} onChange={this.handleFieldChange.bind(null,index,'isChild')}></Checkbox>
         </div>
@@ -506,7 +510,7 @@ const CreateAnswerSheetPage = React.createClass({
           {
             isChild?null:
             <div className={styles.horizontalLayout}>
-              <div className={styles.block} style={{marginRight: 0}}>
+              <div className={styles.block} style={{marginRight: 0,minWidth: 48}}>
                 <span style={{height: 18}}>{" "}</span>
                 <span style={{marginTop: 5}}>{parseIndex(this.getQuestionIndex(index))+"、"}</span>
               </div>
@@ -517,7 +521,7 @@ const CreateAnswerSheetPage = React.createClass({
             </div>
           }
           <div className={styles.horizontalLayout}>
-            <div className={styles.block} style={{marginRight: 8,minWidth: 16}}>
+            <div className={styles.block} style={{marginRight: 8,minWidth: 40}}>
               <span style={{height: 18}}>{" "}</span>
               <span style={{marginTop: 5}}>{this.getChildIndex(index)}</span>
             </div>

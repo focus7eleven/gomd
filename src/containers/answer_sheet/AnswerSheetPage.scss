@@ -35,3 +35,14 @@
     @include deleteButton;
   }
 }
+
+:local(.editModal){
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  >span{
+    margin-right: 10px;
+    width: 80px;
+  }
+}
