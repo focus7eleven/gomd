@@ -10,7 +10,6 @@ import {findMenuInTree} from '../../../reducer/menu'
 
 const FormItem = Form.Item
 const Search = Input.Search
-const confirm = Modal.confirm
 
 const NormalGroupPage = React.createClass({
   _currentMenu:Map({

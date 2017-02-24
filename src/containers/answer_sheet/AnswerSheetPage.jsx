@@ -11,6 +11,7 @@ import TableComponent from '../../components/table/TableComponent'
 import _ from 'lodash'
 
 const Search = Input.Search
+const confirm = Modal.confirm
 
 const AnswerSheetPage = React.createClass({
   _currentMenu:Map({
@@ -96,7 +97,14 @@ const AnswerSheetPage = React.createClass({
   },
 
   handleShowDeleteModal(value){
-    console.log(value);
+    confirm({
+      title: '确定删除这条记录吗？',
+      content: '删除后不可恢复',
+      onOk() {
+        that.props.editAnswerSheet(value,"delete")
+      },
+      onCancel() {},
+    });
   },
 
   //搜索框输入的change事件

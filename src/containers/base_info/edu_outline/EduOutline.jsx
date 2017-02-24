@@ -178,7 +178,7 @@ const EduOutlinePage = React.createClass({
     const that = this
     const currentRow = this.props.workspace.get('data').get('result').get(key)
     confirm({
-      title: '你先删除这条记录吗？',
+      title: '确定删除这条记录吗？',
       content: '删除后不可恢复',
       onOk() {
         that.props.deleteTextbook({
