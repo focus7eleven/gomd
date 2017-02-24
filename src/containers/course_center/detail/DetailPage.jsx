@@ -42,6 +42,11 @@ const DetailPage = React.createClass({
   },
   render(){
     const tableHeader = [{
+      title:'序号',
+      dataIndex:'num',
+      key:'num',
+      className:styles.tableColumn,
+    },{
       title:'类型',
       dataIndex:'content_name',
       key:'content_name',
@@ -69,42 +74,41 @@ const DetailPage = React.createClass({
         return (<Button onClick={this.handleCheckDetail.bind(this,text)} type='primary'>详情</Button>)
       }
     }]
-    const tableBody = this.props.courseCenter.get('courseDetail').get('lessonContentPojoList').map(v => ({
+    const tableBody = this.props.courseCenter.get('courseDetail').get('lessonContentPojoList').map((v,k) => ({
       key:v.get('content_id'),
+      num:k+1,
       ...v.toJS()
     })).toJS()
     return (
       <div className={styles.container}>
         <div className={styles.body}>
-          <div className={styles.title}>课程内容</div>
+          <div className={styles.wrapper}>
+            <div className={styles.title}>课程名称：{this.props.courseCenter.get('courseDetail').get('name')}</div>
+            <div className={styles.footer}>
+              <Button type='primary' onClick={this.handleBack}>返回</Button>
+            </div>
+          </div>
           <Row type='flex' gutter={8} style={{marginBottom:'10px'}}>
-            <Col span={5}>
-              <Card title={<span><Icon type='appstore'/>学科</span>} bordered={true}>{this.props.courseCenter.get('courseDetail').get('subjectName')}</Card>
+            <Col span={15}>
+              <Row gutter={8} style={{marginBottom:'10px'}}>
+                <Col span={8}>
+                <Card style={{height:'138px'}} title={<span><Icon type='appstore'/>学科（版本）</span>} bordered={true}>{this.props.courseCenter.get('courseDetail').get('subjectName')}<br/>{this.props.courseCenter.get('courseDetail').get('versionName')}</Card>
+                </Col>
+                <Col span={8}>
+                <Card style={{height:'138px'}} title={<span><Icon type='appstore'/>年级（学期）</span>} bordered={true}>{this.props.courseCenter.get('courseDetail').get('gradeName')}<br/>{this.props.courseCenter.get('courseDetail').get('term')}</Card>
+                </Col>
+                <Col span={8}>
+                <Card style={{height:'138px'}} title={<span><Icon type='appstore'/>上课时间</span>} bordered={true}>{this.props.courseCenter.get('courseDetail').get('createAtAtr')}</Card>
+                </Col>
+              </Row>
+              <Row>
+                <Col span={24}>
+                  <Card title={<span><Icon type='appstore'/>章节课程</span>} bordered={true}>{`${this.props.courseCenter.get('courseDetail').get('courseName')}第${this.props.courseCenter.get('courseDetail').get('hourNo')}课时`}</Card>
+                </Col>
+              </Row>
             </Col>
-            <Col span={5}>
-              <Card title={<span><Icon type='tags'/>版本</span>} bordered={true}>{this.props.courseCenter.get('courseDetail').get('versionName')}</Card>
-            </Col>
-            <Col span={5}>
-              <Card title={<span><Icon type='bars'/>年级</span>} bordered={true}>{this.props.courseCenter.get('courseDetail').get('gradeName')}</Card>
-            </Col>
-            <Col span={5}>
-              <Card title={<span><Icon type='retweet'/>学期</span>} bordered={true}>{this.props.courseCenter.get('courseDetail').get('term')}</Card>
-            </Col>
-            <Col span={4}>
-              <Card title={<span><Icon type='calendar'/>上课时间</span>} bordered={true}>{this.props.courseCenter.get('courseDetail').get('createAtAtr')}</Card>
-            </Col>
-          </Row>
-          <Row type='flex' gutter={8} style={{marginBottom:'10px'}}>
-            <Col span={10}>
-              <Card title={<span><Icon type='book'/>章节课程</span>} bordered={true}>{`${this.props.courseCenter.get('courseDetail').get('courseName')}第${this.props.courseCenter.get('courseDetail').get('hourNo')}课时`}</Card>
-            </Col>
-            <Col span={14}>
-              <Card title={<span><Icon type='edit'/>课程名称</span>} bordered={true}>{this.props.courseCenter.get('courseDetail').get('name')}</Card>
-            </Col>
-          </Row>
-          <Row type='flex' gutter={8} style={{marginBottom:'10px'}}>
-            <Col span={24}>
-              <Card title={<span><Icon type='plus'/>课程说明</span>} bordered={true}></Card>
+            <Col span={9}>
+            <Card style={{height:'100%'}} title={<span><Icon type='appstore'/>课程说明</span>} bordered={true}>{this.props.courseCenter.get('courseDetail').get('description')}</Card>
             </Col>
           </Row>
           <Row type='flex'>
@@ -113,9 +117,7 @@ const DetailPage = React.createClass({
             </Col>
           </Row>
         </div>
-        <div className={styles.footer}>
-          <Button type='primary' onClick={this.handleBack}>返回</Button>
-        </div>
+
         {this.state.showVidoeoDetailModal?<VideoModal videoUrl={this.state.videoUrl} onCancel={()=>{this.setState({showVidoeoDetailModal:false})}}/>:null}
         {this.state.showHomeworkDetailModal?<HomeworkDetailModal homeworkId={this.state.homeworkId} onCancel={()=>{this.setState({showHomeworkDetailModal:false})}}/>:null}
       </div>

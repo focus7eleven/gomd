@@ -74,7 +74,7 @@ const ChangeUserDropDown = React.createClass({
 
   render(){
     const userInfo = this.props.user.get('userInfo')
-    const currentRoleId = this.props.user.get('userRoles').find((item)=>item.roleName === userInfo.userStyleName).role_type
+    const currentRoleId = this.props.user.get('userRoles').length>0?this.props.user.get('userRoles').find((item)=>item.roleName === userInfo.userStyleName).role_type:[]
     return (
       <div className={styles.changeUser} onClick={(e)=>{e.stopPropagation()}}>
         <div className={styles.avatar}><img src = {baseURL+"/"+userInfo.headUrl}/></div>

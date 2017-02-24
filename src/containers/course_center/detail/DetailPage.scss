@@ -4,10 +4,19 @@
   width: 100%;
   height: 100%;
   :local(.body){
-    :local(.title){
-      font-size:20px;
-      margin-bottom: 10px;
+    :local(.wrapper){
+      display:flex;
+      justify-content: space-between;
+      align-items: center;
+      :local(.title){
+        font-size:20px;
+        margin-bottom: 10px;
+        word-break: keep-all;
+        white-space: nowrap;
+      }
+
     }
+
   }
 
   :local(.tableColumn){
@@ -17,8 +26,7 @@
   :local(.footer){
     display: flex;
     width: 100%;
-    justify-content: center;
-    margin-top: 15px;
+    justify-content: flex-end;
     >button{
       width: 72px;
       height: 32px;

@@ -81,7 +81,7 @@ const MultipleChoiceQuestion = React.createClass({
           this.state.editingAnswerItem[record.key]?<Ueditor initialContent={text} onDestory={this.handleUpdateOption.bind(this,record.key)}/>:<span dangerouslySetInnerHTML={{__html: text||'请输入选项内容'}}></span>
         }
         {this.state.showScoreSetting?<div onClick={(e)=>{e.stopPropagation()}}><InputNumber min={0} defaultValue={0}
-          value={this.state.answerList.getIn([record.key,'score'])}
+          value={this.props.questionInfo.getIn(['optionPojoList',record.key,'score'])}
           onChange={this.handleChangeScore.bind(this,record.key)}/></div>:null}
         </div>
       )}
@@ -188,6 +188,7 @@ const MultipleChoiceQuestion = React.createClass({
       // editingQuestion:false,
       // editingAnswerItem:this.state.editingAnswerItem.map(v => false),
       showFooter:false,
+      showScoreSetting:false,
     })
   },
   //设定分值
@@ -254,11 +255,11 @@ const MultipleChoiceQuestion = React.createClass({
             </Col>:null
           }
           <Col span={6}>
-            <Select style={{width:'200px'}} onFocus={()=>{
-              // window.removeEventListener('click',this.handleWindowEvent)
+            <Select defaultValue={this.props.questionInfo.get('kind')} style={{width:'200px'}} onFocus={()=>{
+              window.removeEventListener('click',this.handleWindowEvent)
             }} onBlur={()=>{
-              // window.addEventListener('click',this.handleWindowEvent)
-            }} onChange={this.props.onChangeQuestionType}>
+              window.addEventListener('click',this.handleWindowEvent)
+            }} onChange={(value)=>this.props.onChangeQuestionType(this.props.questionInfo.get('id'),value)}>
             {
               QUESTION_TYPE.map(v => (
                 <Option value={v.id} title={v.text} key={v.id}>{v.text}</Option>
@@ -308,7 +309,7 @@ const MultipleChoiceQuestion = React.createClass({
         <Table onRowClick={(record,index)=>{this.setState({
           editingAnswerItem:this.state.editingAnswerItem.map((v,k) => k==record.key?!v:v)})}} bordered dataSource={tableData.tableBody} columns={tableData.tableHeader} pagination={false}/>
         <div className={styles.moveButton}>
-            <Button onClick={(e)=>{this.props.moveUp(this.props.questionInfo.get('id'))}}><Icon type="caret-up" /></Button>
+            {this.props.questionInfo.get('questionNo')==1?null:<Button onClick={(e)=>{this.props.moveUp(this.props.questionInfo.get('id'))}}><Icon type="caret-up" /></Button>}
             <Button onClick={(e)=>{this.props.moveDown(this.props.questionInfo.get('id'))}}><Icon type="caret-down" /></Button>
         </div>
         {

@@ -8,7 +8,7 @@ import {bindActionCreators} from 'redux'
 import schoolLogo from 'images/school.png'
 import teacherLogo from 'images/teacher.png'
 import studentLogo from 'images/student.png'
-import {List} from 'immutable'
+import {List,fromJS} from 'immutable'
 import {findPath} from '../reducer/menu'
 const MainContainer = React.createClass({
   getInitialState(){
@@ -29,9 +29,16 @@ const MainContainer = React.createClass({
   componentWillReceiveProps(nextProps){
     let menuUrl = nextProps.location.pathname.split('/').slice(-1)[0]
     let path = !nextProps.menu.get('data').isEmpty()?findPath(nextProps.menu.get('data'),menuUrl):List()
-    this.setState({
-      currentPath:path.map(v => v.get('resourceName'))
-    })
+    let temp = nextProps.location.pathname.split('/').slice(-2)[0]
+    if(temp == 'detail'){
+      this.setState({
+        currentPath:fromJS(['课程中心','课程内容'])
+      })
+    }else{
+      this.setState({
+        currentPath:path.map(v => v.get('resourceName'))
+      })
+    }
   },
   render(){
     const {schoolInfo} = this.props;

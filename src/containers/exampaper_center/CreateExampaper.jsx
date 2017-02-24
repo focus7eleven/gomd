@@ -1,7 +1,7 @@
 import React from 'react'
 import styles from './CreateExampaper.scss'
 import ExamElement from '../../components/tag/ExamElement'
-import {Row,Col,Checkbox,Button,Icon,Input,notification} from 'antd'
+import {Row,Col,Checkbox,Button,Icon,Input,notification,Spin} from 'antd'
 import {List,fromJS} from 'immutable'
 import config from '../../config'
 import CreateExampaperFilter from '../../components/exampaper_filter/CreateExampaperFilter'
@@ -35,6 +35,8 @@ const CreateExampaper = React.createClass({
       nestingQuestion:'',//当前正在编辑的嵌套题
 
       withAnswer:false,
+      uploadingExampaper:false,//正在上传试卷
+      uploadingAnswer:false,//正在上传答案
 
     }
   },
@@ -199,6 +201,7 @@ const CreateExampaper = React.createClass({
 
   //改变题目类型
   handleChangeQuestionType(questionId,type){
+    console.log("asdfasd",questionId,type)
     let index = this.state.exerciseList.findKey(v => v.get('id')==questionId)
     updateQuestion({
       qid:questionId,
@@ -210,8 +213,10 @@ const CreateExampaper = React.createClass({
       drawZone:'',
       score:1,
     }).then(res => {
+      console.log("adfasdfasdf",res)
+      res.resultData.optionPojoList = []
       this.setState({
-        exerciseList:this.state.exerciseList.set(index,fromJS(res))
+        exerciseList:this.state.exerciseList.set(index,fromJS(res.resultData))
       })
     })
   },
@@ -257,7 +262,7 @@ const CreateExampaper = React.createClass({
       moveUpQuestionId:question.get('id'),
     })
     this.setState({
-      exerciseList:this.state.exerciseList.set(questionIndex,preQuestion).set(questionIndex-1,question)
+      exerciseList:this.state.exerciseList.set(questionIndex,preQuestion.set('questionNo',question.get('questionNo'))).set(questionIndex-1,question.set('questionNo',preQuestion.get('questionNo')))
     })
 
   },
@@ -271,7 +276,7 @@ const CreateExampaper = React.createClass({
       moveUpQuestionId:nextQuestion.get('id'),
     })
     this.setState({
-      exerciseList:this.state.exerciseList.set(questionIndex,nextQuestion).set(questionIndex+1,question)
+      exerciseList:this.state.exerciseList.set(questionIndex,nextQuestion.set('questionNo',question.get('questionNo'))).set(questionIndex+1,question.set('questionNo',nextQuestion.get('questionNo')))
     })
 
   },
@@ -296,6 +301,9 @@ const CreateExampaper = React.createClass({
   },
   //导入书卷
   handleImportExampaper(e){
+    this.setState({
+      uploadingExampaper:true
+    })
     let file = e.target.files[0]
     let fileReader = new FileReader()
     let formData = new FormData()
@@ -311,12 +319,16 @@ const CreateExampaper = React.createClass({
     }).then(res => res.json()).then(res => {
       notification.success({message:'上传成功'})
       this.setState({
-        exerciseList:fromJS(res)
+        exerciseList:fromJS(res),
+        uploadingExampaper:false,
       })
     })
   },
   //导入答案
   handleImportAnswer(e){
+    this.setState({
+      uploadingAnswer:true,
+    })
     let file = e.target.files[0]
     let fileReader = new FileReader()
     let formData = new FormData()
@@ -331,6 +343,9 @@ const CreateExampaper = React.createClass({
       body:formData
     }).then(res => res.json()).then(res => {
       notification.success({message:'上传成功'})
+      this.setState({
+        uploadingAnswer:false,
+      })
     })
   },
   //添加嵌套题
@@ -403,7 +418,7 @@ const CreateExampaper = React.createClass({
                 </Col>
                 <Col span={8} style={{display:'flex',justifyContent:'flex-end',paddingRight:'10px',alignItems:'center'}}>
                   <Checkbox checked={this.state.widthAnswer} onChange={()=>{this.setState({widthAnswer:!this.state.widthAnswer})}}>对填空题和简答题统一上传标准答案</Checkbox>
-                  <Button type='primary' disabled={!this.state.widthAnswer} onClick={()=>{this.refs.answerUploader.click()}}><Icon type='plus' />上传答案</Button>
+                  <Button type='primary' disabled={!this.state.widthAnswer} onClick={()=>{this.refs.answerUploader.click()}}>{<span><Icon type='plus' />上传答案</span>}</Button>
                 </Col>
               </Row>
               <Row type='flex' align='middle' justify='space-between' style={{marginTop:'10px'}}>
@@ -414,29 +429,29 @@ const CreateExampaper = React.createClass({
                   <ExamElement text='章节' onClick={this.handleAddTitle}/>
                 </Col>
                 <Col span={5} style={{display:'flex',justifyContent:'flex-end'}}>
-                  <Button type='primary' style={{marginRight:'10px'}} onClick={()=>{this.refs.exampaperUploader.click()}}><Icon type='download'/>导入</Button>
+                  <Button type='primary' style={{marginRight:'10px'}} onClick={()=>{this.refs.exampaperUploader.click()}}>{(<span><Icon type='download'/>导入</span>)}</Button>
                   <Button type='primary' style={{marginRight:'10px'}} onClick={this.handlePublishExampaper}><Icon type='plus'/>发布</Button>
                 </Col>
               </Row>
             </div>
             <div className={styles.paperContent}>
             {
-              this.state.exerciseList.map((v,k) => {
+              this.state.uploadingExampaper?<div className={styles.loading}><Spin size='large'/></div>:this.state.exerciseList.map((v,k) => {
                 if(v.get('kind')=='01'||v.get('kind')=='02'||v.get('kind')=='03'){
                   //单选
-                  return <MultipleChoiceQuestion questionInfo={v} key={k} onDelete={this.handleDeleteQuestion} onUpdate={this.update} moveUp={this.moveUp} moveDown={this.moveDown}/>
+                  return <MultipleChoiceQuestion questionInfo={v} key={k} onDelete={this.handleDeleteQuestion} onUpdate={this.update} moveUp={this.moveUp} moveDown={this.moveDown} onChangeQuestionType={this.handleChangeQuestionType}/>
                 }else if(v.get('kind')=='04'){
                   //填空
-                  return <NoteQuestion questionInfo={v} key={k} onDelete={this.handleDeleteQuestion} onUpdate={this.update} moveUp={this.moveUp} moveDown={this.moveDown}/>
+                  return <NoteQuestion questionInfo={v} key={k} onDelete={this.handleDeleteQuestion} onUpdate={this.update} moveUp={this.moveUp} moveDown={this.moveDown} onChangeQuestionType={this.handleChangeQuestionType}/>
                 }else if(v.get('kind')=='05'||v.get('kind')=='06'||v.get('kind')=='07'){
                   //填空
-                  return <ShortAnswerQuestion questionInfo={v} key={k} onDelete={this.handleDeleteQuestion} onUpdate={this.update} moveUp={this.moveUp} moveDown={this.moveDown}/>
+                  return <ShortAnswerQuestion questionInfo={v} key={k} onDelete={this.handleDeleteQuestion} onUpdate={this.update} moveUp={this.moveUp} moveDown={this.moveDown} onChangeQuestionType={this.handleChangeQuestionType}/>
                 }else if(v.get('kind')=='08'){
                   //title
-                  return <QuestionTitle questionInfo={v} key={k} onUpdate={this.update} onDelete={this.handleDeleteQuestion}/>
+                  return <QuestionTitle questionInfo={v} key={k} onUpdate={this.update} onDelete={this.handleDeleteQuestion} onChangeQuestionType={this.handleChangeQuestionType}/>
                 }else if(v.get('kind')=='09'){
                   //嵌套题
-                  return <NestingQuestion questionInfo={v} key={k} onDelete={this.handleDeleteQuestion} onUpdate={this.update} moveUp={this.moveUp} moveDown={this.moveDown}/>
+                  return <NestingQuestion questionInfo={v} key={k} onDelete={this.handleDeleteQuestion} onUpdate={this.update} moveUp={this.moveUp} moveDown={this.moveDown} onChangeQuestionType={this.handleChangeQuestionType}/>
                 }else{
                   return null
                 }

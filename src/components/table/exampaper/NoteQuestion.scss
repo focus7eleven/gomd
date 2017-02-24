@@ -7,7 +7,7 @@
     display: flex;
     :local(.questionNo){
       display:flex;
-      justify-content: center;
+      justify-content: space-between;
       align-items: center;
       font-size: 14px;
       padding:33px 40px;
@@ -18,7 +18,7 @@
     :local(.questionContent){
       flex-grow: 2;
       display: flex;
-      justify-content: space-around;
+      justify-content: space-between;;
       align-items: center;
       color:rgba(0, 0, 0, 0.65);
       font-weight: bold;

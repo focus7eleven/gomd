@@ -58,7 +58,8 @@ const NoteQuestion = React.createClass({
     e.stopPropagation()
     this.setState({
       editingQuestion:!this.state.editingQuestion,
-      showFooter:!this.state.showFooter
+      showFooter:!this.state.showFooter,
+      showScoreSetting:false,
     })
   },
   //给题目添加一个空格
@@ -123,11 +124,11 @@ const NoteQuestion = React.createClass({
             <Button onClick={this.handleAddBlank}>添加填空</Button>
           </Col>
           <Col span={6}>
-            <Select style={{width:'200px'}} onFocus={()=>{
-              // window.removeEventListener('click',this.handleWindowEvent)
+            <Select defaultValue={this.props.questionInfo.get('kind')} style={{width:'200px'}} onFocus={()=>{
+              window.removeEventListener('click',this.handleWindowEvent)
             }} onBlur={()=>{
-              // window.addEventListener('click',this.handleWindowEvent)
-            }} onChange={this.props.onChangeQuestionType}>
+              window.addEventListener('click',this.handleWindowEvent)
+            }} onChange={(value)=>this.props.onChangeQuestionType(this.props.questionInfo.get('id'),value)}>
             {
               QUESTION_TYPE.map(v => (
                 <Option value={v.id} title={v.text} key={v.id}>{v.text}</Option>
