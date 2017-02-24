@@ -269,6 +269,8 @@ const config = _.extend({
 			create: `${baseURL}/answersheet/add`,
 			download: (id) => `${baseURL}/answersheet/answersheetview?answersheet_id=${id}`,
 			edit: `${baseURL}/answersheet/edit`,
+			getAnswerSheet: (id) => `${baseURL}/answersheet/getAnswersheetDetail?answersheetId=${id}`,
+			getAnswerSheetQuestion: (id) => `${baseURL}/answersheet/getAnswersheetQuestionDetail?answersheetId=${id}`,
 		},
 		wordquestion:{
 			addChoose:`${baseURL}/wordquestion/addChoose`,

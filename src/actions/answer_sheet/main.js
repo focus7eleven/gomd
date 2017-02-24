@@ -84,3 +84,37 @@ export function editAnswerSheet(id,type,name=''){
     })
   }
 }
+
+// 获取答题卡详情
+export const GET_SHEET_DETAIL = actionNames('GET_SHEET_DETAIL')
+export function getSheetDetail(id){
+  return {
+    types:GET_SHEET_DETAIL,
+    callAPI:()=>{
+      return fetch(config.api.answersheet.getAnswersheetDetail(id),{
+        method:'GET',
+        headers:{
+          'from':'nodejs',
+          'token':sessionStorage.getItem('accessToken'),
+        }
+      }).then(res => res.json())
+    }
+  }
+}
+
+// 获取答题卡问题详情
+export const GET_SHEET_QUESTION = actionNames('GET_SHEET_QUESTION')
+export function getSheetQuestion(id){
+  return {
+    types:GET_SHEET_QUESTION,
+    callAPI:()=>{
+      return fetch(config.api.answersheet.getAnswerSheetQuestion(id),{
+        method:'GET',
+        headers:{
+          'from':'nodejs',
+          'token':sessionStorage.getItem('accessToken'),
+        }
+      }).then(res => res.json())
+    }
+  }
+}
