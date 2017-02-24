@@ -31,7 +31,7 @@ export function findPathInTree(tree,path=List(),target){
     }else{
       if(node.get('children')&&!node.get('children').isEmpty()){
         let subPath = findPathInTree(node.get('children'),path,target)
-        path = subPath.isEmpty()?path:path.push(key).push('children').concat(subPath)
+        path = subPath.size==path.size?path:path.push(key).push('children').concat(subPath)
       }
     }
   })

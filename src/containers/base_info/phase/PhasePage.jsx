@@ -190,7 +190,7 @@ const PhasePage = React.createClass({
       this.props.addPhase({
         phaseCode:getFieldValue('phaseId'),
         phaseName:getFieldValue('phaseName'),
-        remark:getFieldValue('remark')
+        remark:getFieldValue('remark')||"",
       })
       this.setState({
         showAddPhaseModal:false
@@ -240,6 +240,7 @@ const PhasePage = React.createClass({
       }
     }).then(res => res.json()).then(res => {
       this._phaseSubjectList = res
+      this._currentRow = currentRow
       this.setState({
         showAddSubjectModal:true,
         phaseSubjectList:res
@@ -260,7 +261,7 @@ const PhasePage = React.createClass({
   handleAddSubject(){
     const {getFieldValue} = this.props.form
     this.props.addPhaseSubject({
-      phaseCode:getFieldValue('phase_code'),
+      phaseCode:this._currentRow.get('phase_code'),
       subjectIds:this.state.phaseSubjectList,
     })
   },
