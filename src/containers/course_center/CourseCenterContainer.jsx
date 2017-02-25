@@ -19,7 +19,7 @@ const CourseCenterContainer = React.createClass({
   },
 
   render(){
-    return this.props.courseCenter.get('loading') || this.props.menu.get('data').isEmpty()?<div className={styles.loading}><Spin size="large" /></div>:this.props.children
+    return !this.props.courseCenter.get('data').get('result') || this.props.courseCenter.get('loading') || this.props.menu.get('data').isEmpty()?<div className={styles.loading}><Spin size="large" /></div>:this.props.children
   }
 })
 
