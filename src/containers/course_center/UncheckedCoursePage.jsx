@@ -98,7 +98,7 @@ const UncheckedCoursePage = React.createClass({
   },
 
   handleCheckDetail(text){
-    this.context.router.push(`/index/courseCenter/detail/${text}`)
+    this.context.router.push(`/index/courseCenter/uncheckCourse/detail/${text}`)
   },
 
   render(){

@@ -74,7 +74,7 @@ const PublishedCoursePage = React.createClass({
   //查看课程详情
   handleCheckDetail(currentRow){
     let lessonId = currentRow['lesson_id']
-    this.context.router.push(`/index/courseCenter/detail/${lessonId}`)
+    this.context.router.push(`/index/courseCenter/publishedCourse/detail/${lessonId}`)
   },
   render(){
     const tableData = this.getTableData()

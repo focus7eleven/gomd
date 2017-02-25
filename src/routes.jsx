@@ -135,7 +135,7 @@ const routes = (
 					<Route path='publicCourse' component={PublicCoursePage}></Route>
 					<Route path='newCourse' component={CreateClassPage}></Route>
 					<Route path='publishedCourse' component={PublishedCoursePage}></Route>
-					<Route path='detail/(:lessonId)' component={DetailContainer}>
+					<Route path='(:type)/detail/(:lessonId)' component={DetailContainer}>
 						<IndexRoute component={DetailPage}/>
 					</Route>
 					<Route path='courseInfo' component={TeacherCoursePage} />

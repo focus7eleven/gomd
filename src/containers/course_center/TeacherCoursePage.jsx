@@ -89,7 +89,7 @@ const TeacherCoursePage = React.createClass({
   },
 
   handleCheckDetail(text){
-    this.context.router.push(`/index/courseCenter/detail/${text}`)
+    this.context.router.push(`/index/courseCenter/courseInfo/detail/${text}`)
   },
 
   render(){
