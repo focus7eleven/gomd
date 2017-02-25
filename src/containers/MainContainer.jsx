@@ -30,6 +30,7 @@ const MainContainer = React.createClass({
     let menuUrl = nextProps.location.pathname.split('/').slice(-1)[0]
     let path = !nextProps.menu.get('data').isEmpty()?findPath(nextProps.menu.get('data'),menuUrl):List()
     let temp = nextProps.location.pathname.split('/').slice(-2)[0]
+    console.log("---->:",this.props.location)
     if(temp == 'detail'){
       this.setState({
         currentPath:fromJS(['课程内容'])

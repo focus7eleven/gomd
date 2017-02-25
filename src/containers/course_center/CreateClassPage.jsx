@@ -101,8 +101,9 @@ const CreateClassPage = React.createClass({
           subjectList,
           versionList,
         } = result
-        return fetch(config.api.lesson.lastChapterTime(this.state.charpterOption[0]||charpterList.get(0).get('teaching_schedule_id'),
-        this.state.charpterOption[1]||charpterList.get(0).get('hours')),{
+        console.log("Asdfasdf:",charpterList.toJS(),gradeList.toJS(),subjectList.toJS(),versionList.toJS())
+        return fetch(config.api.lesson.lastChapterTime(this.state.charpterOption[0]||charpterList.isEmpty()?'':charpterList.get(0).get('teaching_schedule_id'),
+        this.state.charpterOption[1]||charpterList.isEmpty()?'':charpterList.get(0).get('hours')),{
           method:'get',
           headers:{
             'from':'nodejs',
@@ -286,6 +287,7 @@ const CreateClassPage = React.createClass({
   },
   render(){
     const {getFieldDecorator} = this.props.form
+    // console.log("asdfsdf--->:",this.state.chapterTime)
     return (
       <div className={styles.container}>
         <div className={styles.header}>
