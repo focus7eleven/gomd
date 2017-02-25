@@ -51,6 +51,7 @@ import HomeworkUnchecked from './containers/homework_center/HomeworkUnchecked'
 import ExampaperContainer from './containers/exampaper_center/ExampaperContainer'
 import MyExampaperPage from './containers/exampaper_center/MyExampaperPage'
 import CreateExampaper from './containers/exampaper_center/CreateExampaper'
+import DisplayExampaper from './containers/exampaper_center/DisplayExampaper'
 import HomeworkLibPage from './containers/homework_center/HomeworkLibPage'
 import HomeworkDetailPage from './containers/homework_center/HomeworkDetailPage'
 import HomeworkPublished from './containers/homework_center/HomeworkPublished'
@@ -166,6 +167,7 @@ const routes = (
 					<Route path='selfexampapercenter' component={MyExampaperPage}></Route>
 					<Route path='newexampaper' component={CreateExampaper}></Route>
 					<Route path='editExampaper/(:examId)' component={()=><CreateExampaper type='edit'/>}></Route>
+					<Route path='displayExampaper/(:examId)' component={DisplayExampaper}></Route>
 					<Route path='draftpapercenter' component={(props)=><MyExampaperPage type='draft' {...props}/>}></Route>
 				</Route>
 

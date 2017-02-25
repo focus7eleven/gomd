@@ -82,8 +82,8 @@ const DepartmentPage = React.createClass({
       }
     },{
       title: '科室成员',
-      dataIndex: 'leaderCount',
-      key: 'leaderCount',
+      dataIndex: 'memberCount',
+      key: 'memberCount',
       className:styles.tableColumn,
       render:(text,record)=>{
         return (<a onClick={this.handleShowAddMemberModal.bind(this,record.key)}><Icon type='edit' />成员人数:{text}</a>)
@@ -322,6 +322,9 @@ const DepartmentPage = React.createClass({
       addList:this.state.alreadySelectMembers.join(',')
       // removeList:JSON.stringfy()
     })
+    this.setState({
+      showAddMemberModal:false
+    })
   },
   renderAddMemberModal(){
     const tableData = this.state.allMembers.map((v,k)=>({
@@ -381,7 +384,7 @@ const DepartmentPage = React.createClass({
             wrapperCol={{ span: 12 }}
             key='areaId'>
             {getFieldDecorator('areaId', {
-              initialValue:this._childArea.get(0).get('areaId'),
+              initialValue:this._childArea.isEmpty()?'':this._childArea.get(0).get('areaId'),
               rules: [{ required: true, message: '选择学段' }],
             })(
               <Select placeholder='选择教育局' style={{ width: 244 }} onChange={this.handleSelectPhase}>

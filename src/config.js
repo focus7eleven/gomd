@@ -262,6 +262,7 @@ const config = _.extend({
 			editExamInfo:`${baseURL}/exampaper/editExamInfo`,
 			showExamQuestions:(examId)=>`${baseURL}/exampaper/showExamQuestions?examId=${examId}`,
 			uploadStandardAnswer:`${baseURL}/exampaper/uploadStandardAnswer`,
+			viewExamPaperData:(examId)=>`${baseURL}/exampaper/viewExamPaperData?examPaperId=${examId}`,
 		},
 		answersheet:{
 			getAll:`${baseURL}/answersheet/getAll`,

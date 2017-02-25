@@ -162,3 +162,14 @@ export function getExistExamInfo(examId){
     }
   }).then(res => res.json())
 }
+
+//查看试卷
+export function getExampaperInfo(examId){
+  return fetch(config.api.exampaper.viewExamPaperData(examId),{
+    method:'get',
+    headers:{
+      'from':'nodejs',
+      'token':sessionStorage.getItem('accessToken')
+    }
+  }).then(res => res.json())
+}

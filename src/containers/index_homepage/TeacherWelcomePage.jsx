@@ -4,6 +4,9 @@ import styles from './TeacherWelcomePage.scss'
 import teacher1 from '../../public/images/teacher-index-background.png'
 import teacher2 from '../../public/images/teacher2-index-background.png'
 import teacher3 from '../../public/images/teacher3-index-background.png'
+import teacher4 from '../../public/images/teacher4-index-background.png'
+import teacher5 from '../../public/images/teacher5-index-background.png'
+import teacher6 from '../../public/images/teacher6-index-background.png'
 
 import createHomework from '../../public/images/create-homework.png'
 import publishHomework from '../../public/images/publish-homework.png'
@@ -51,6 +54,15 @@ const TeacherWelcomePage = React.createClass({
             </div>
             <div className={styles.carouselItem}>
               <img src={teacher3} />
+            </div>
+            <div className={styles.carouselItem}>
+              <img src={teacher4} />
+            </div>
+            <div className={styles.carouselItem}>
+              <img src={teacher5} />
+            </div>
+            <div className={styles.carouselItem}>
+              <img src={teacher6} />
             </div>
           </Slider>
         </div>

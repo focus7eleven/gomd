@@ -62,7 +62,6 @@ const RoleSettingPage = React.createClass({
   // },
   componentDidMount(){
   },
-
   getTableData(){
     let tableHeader = List()
     let tableBody = List()
@@ -340,7 +339,6 @@ const RoleSettingPage = React.createClass({
   handleCheckPermission(checkedKeys,e){
 
     const allChildren = findAllChildren(this._permissionList,List([e.node.props.eventKey]),List([this._permissionList.find(v =>v.get('id')==e.node.props.eventKey)]))
-    console.log("popo:",allChildren.toJS(),e.checked)
     if(e.checked){
       this.setState({
         checkedList:this.state.checkedList.concat(allChildren.map(v => {return fromJS({'resource_id':v.get('id'),code:v.get('code')})}))

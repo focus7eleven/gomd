@@ -37,7 +37,7 @@ const SchoolPage = React.createClass({
   },
   componentWillMount(){
     if(!this.props.menu.get('data').isEmpty()){
-      this._currentMenu = findMenuInTree(this.props.menu.get('data'),'grade')
+      this._currentMenu = findMenuInTree(this.props.menu.get('data'),'school')
     }
   },
   // componentWillReceiveProps(nextProps){
@@ -269,7 +269,7 @@ const SchoolPage = React.createClass({
             )}
             </FormItem>
             {
-              type=='edit'?null:<FormItem
+              <FormItem
               label='管理员用户名'
               labelCol={{ span: 5 }}
               wrapperCol={{ span: 12 }}
@@ -282,7 +282,7 @@ const SchoolPage = React.createClass({
               </FormItem>
             }
             {
-              type=='edit'?null:<FormItem
+              <FormItem
               label='管理员密码'
               labelCol={{ span: 5 }}
               wrapperCol={{ span: 12 }}
@@ -381,12 +381,12 @@ const SchoolPage = React.createClass({
 
   render(){
     const tableData = this.getTableData()
-
+    console.log("-->:asdfasdf",this._currentMenu.toJS())
     const {workspace} = this.props
     return (
       <div className={styles.container}>
         <div className={styles.header}>
-          {this._currentMenu.get('authList').some(v => v.get('authUrl')=='/grade/add')?<Button type="primary" style={{backgroundColor:'#FD9B09',borderColor:'#FD9B09'}} onClick={()=>{this.setState({showAddSchoolModal:true})}}>新建</Button>:<div> </div>}
+          {this._currentMenu.get('authList').some(v => v.get('authUrl')=='/school/add')?<Button type="primary" style={{backgroundColor:'#FD9B09',borderColor:'#FD9B09'}} onClick={()=>{this.setState({showAddSchoolModal:true})}}>新建</Button>:<div> </div>}
           <div className={styles.headerOperation}>
             <Select
               className={styles.operation}

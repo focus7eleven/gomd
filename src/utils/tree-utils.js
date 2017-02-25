@@ -24,14 +24,13 @@ export function findInTree(tree,target){
 }
 
 export function findPathInTree(tree,path=List(),target){
-
   tree.forEach((node,key) => {
     if(node.get('id')==target){
       path = path.push(key)
     }else{
       if(node.get('children')&&!node.get('children').isEmpty()){
         let subPath = findPathInTree(node.get('children'),path,target)
-        path = subPath.isEmpty()?path:path.push(key).push('children').concat(subPath)
+        path = subPath.size==path.size?path:path.push(key).push('children').concat(subPath)
       }
     }
   })

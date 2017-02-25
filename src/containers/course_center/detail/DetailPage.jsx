@@ -92,10 +92,10 @@ const DetailPage = React.createClass({
             <Col span={15}>
               <Row gutter={8} style={{marginBottom:'10px'}}>
                 <Col span={8}>
-                <Card style={{height:'138px'}} title={<span><Icon type='appstore'/>学科（版本）</span>} bordered={true}>{this.props.courseCenter.get('courseDetail').get('subjectName')}<br/>{this.props.courseCenter.get('courseDetail').get('versionName')}</Card>
+                <Card style={{height:'138px'}} title={<span><Icon type='appstore'/>学科（版本）</span>} bordered={true}>{`${this.props.courseCenter.get('courseDetail').get('subjectName')}(${this.props.courseCenter.get('courseDetail').get('versionName')})`}</Card>
                 </Col>
                 <Col span={8}>
-                <Card style={{height:'138px'}} title={<span><Icon type='appstore'/>年级（学期）</span>} bordered={true}>{this.props.courseCenter.get('courseDetail').get('gradeName')}<br/>{this.props.courseCenter.get('courseDetail').get('term')}</Card>
+                <Card style={{height:'138px'}} title={<span><Icon type='appstore'/>年级（学期）</span>} bordered={true}>{`${this.props.courseCenter.get('courseDetail').get('gradeName')}(${this.props.courseCenter.get('courseDetail').get('term')})`}</Card>
                 </Col>
                 <Col span={8}>
                 <Card style={{height:'138px'}} title={<span><Icon type='appstore'/>上课时间</span>} bordered={true}>{this.props.courseCenter.get('courseDetail').get('createAtAtr')}</Card>

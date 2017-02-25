@@ -294,7 +294,7 @@ const CreateClassPage = React.createClass({
         <div className={styles.body}>
           <Form>
             <Row type='flex' gutter={8}>
-              <Col span={3} offset={1}>
+              <Col span={3} >
                 <div className={styles.filterItem}>
                   学科：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<Select placeholder='选择学科'size="large" value={this.state.subjectOption} onChange={this.handleFilterChange.bind(this,'subject')}>
                   {
@@ -305,7 +305,7 @@ const CreateClassPage = React.createClass({
                   </Select>
                 </div>
               </Col>
-              <Col span={3} offset={1}>
+              <Col span={3} offset={3}>
                 <div className={styles.filterItem}>
                   版本：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<Select placeholder='选择版本' size="large" value={this.state.versionOption} onChange={this.handleFilterChange.bind(this,'version')}>
                   {
@@ -338,14 +338,14 @@ const CreateClassPage = React.createClass({
                   </Select>
                 </div>
               </Col>
-              <Col span={5} offset={1}>
+              <Col span={6} offset={1}>
                 <div className={styles.filterItem}>
                 上课时间：<DatePicker value={moment(this.state.chapterTime,'YYYY/MM/DD')} onChange={(date,dateString)=>{this.setState({chapterTime:dateString})}}  size='large' style={{width:'100%'}} showTime format="YYYY-MM-DD HH:mm" />
                 </div>
               </Col>
             </Row>
             <Row type='flex' gutter={8}>
-              <Col span={7} offset={1}>
+              <Col span={9} >
                 <div className={styles.filterItem}>
                   章节课程：<Select placeholder='选择章节课程' size="large" value={this.state.charpterList.isEmpty()?'':this.state.charpterOption[0]} onChange={this.handleFilterChange.bind(this,'charpter')}>
                   {
@@ -356,14 +356,14 @@ const CreateClassPage = React.createClass({
                   </Select>
                 </div>
               </Col>
-              <Col span={13} offset={1}>
+              <Col span={14} offset={1}>
                 <div className={styles.filterItem}>
                 课程名称：<Input value={this.state.courseName} onChange={(e)=>{this.setState({courseName:e.target.value})}} size='large' placeholder="输入小于30个字" />
                 </div>
               </Col>
             </Row>
             <Row type='flex' gutter={8}>
-              <Col span={21} offset={1}>
+              <Col span={24}>
                 <div className={styles.filterItem} style={{alignItems:'flex-start'}}>
                   课程说明：<Input type='textarea' rows={3} value={this.state.courseDesc} onChange={(e)=>{this.setState({courseDesc:e.target.value})}} size='large' placeholder="请输入课程说明"/>
                 </div>
