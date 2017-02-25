@@ -43,7 +43,6 @@ const CreateExampaper = React.createClass({
     }
   },
   componentDidMount(){
-    console.log("this.props.type:",this.context.router.params.examId)
     if(this.props.type=='create'){
       getNewExamId('','').then(res => {
         this.setState({

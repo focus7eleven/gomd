@@ -1,0 +1,25 @@
+@import '~theme.scss';
+
+:local(.container){
+  position: relative;
+  margin-top: 40px;
+  :local(.question){
+    width: 100%;
+    display: flex;
+    justify-content: space-between;;
+    align-items: center;
+  }
+  :local(.tag){
+    color:#1CB87F;
+    position: absolute;
+    top:-25px;
+    left: 0px;
+    border-left: 1px solid $border-grey;
+    border-top: 1px solid $border-grey;
+    border-right: 1px solid $border-grey;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    padding: 5px 10px;
+
+  }
+}

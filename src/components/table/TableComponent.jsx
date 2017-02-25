@@ -43,11 +43,12 @@ const TableComponent = React.createClass({
                 showQuickJumper:true,
                 onChange:(page)=>{
                   if(dataType=='baseInfo'){
-                    getWorkspaceData(pageType,page,this.props.workspace.get('data').get('pageShow'),searchStr)
+                    console.log("bbbbbb:",this.props.baseInfo.toJS())
+                    getWorkspaceData(pageType,page,this.props.baseInfo.get('data').get('pageShow'),searchStr)
                   }else if(dataType=='courseCenter'){
                     getTableData(pageType,'',page)
                   }else if(dataType=='exampaper'){
-                    getExampaper(pageType,'',page)
+                    getExampaper(pageType,'',page,this.props.exampaper.get('otherMsg').get('subjectId'),this.props.exampaper.get('otherMsg').get('gradeId'))
                   }
                 },
                 onShowSizeChange:(current,size)=>{

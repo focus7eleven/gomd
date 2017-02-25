@@ -69,6 +69,8 @@ export function editDepartment(data,type){
             }).then(res => res.json()).then(res => {notification.success(data.action=='delete'?{message:'删除成功'}:{message:'编辑成功'});return res})
           }
         })
+      }else{
+        notification.error({message:res.result})
       }
     })
   }

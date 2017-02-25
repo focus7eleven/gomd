@@ -17,6 +17,7 @@
   :local(.hotkey){
     display: flex;
     flex-direction: column;
+    margin-top: 10px;
     :local(.buttonGroup){
       display:flex;
       justify-content: center;
@@ -27,6 +28,10 @@
         justify-content: center;
         align-items: center;
         margin:20px 10px;
+        >img{
+          width: 120px;
+          height: 120px;
+        }
         :local(.button){
           background-color: #535454;
           border-color: #535454;

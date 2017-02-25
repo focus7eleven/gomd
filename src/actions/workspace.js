@@ -161,7 +161,9 @@ export function addPhaseSubject(data){
   return dispatch => {
     let formData = new FormData()
     formData.append('phaseCode',data.phaseCode)
-    formData.append('subjectIds',JSON.stringify(data.subjectIds))
+    data.subjectIds.forEach(v => {
+      formData.append('subjectIds[]',v)
+    })
     return fetch(config.api.phase.subjectList.update,{
       method:'post',
       headers:{

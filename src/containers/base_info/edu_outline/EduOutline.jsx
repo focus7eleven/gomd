@@ -493,7 +493,7 @@ const EduOutlinePage = React.createClass({
               ))
             }
             </Select>
-            <Search style={{width: '240px'}} placeholder="请输入查询条件" value={this.state.searchStr} onChange={(e)=>{this.setState({searchStr:e.target.value})}} onSearch={this.handleSearchTableData} />
+            {/*<Search style={{width: '240px'}} placeholder="请输入查询条件" value={this.state.searchStr} onChange={(e)=>{this.setState({searchStr:e.target.value})}} onSearch={this.handleSearchTableData} />*/}
           </div>
         </div>
         <div className={styles.body}>

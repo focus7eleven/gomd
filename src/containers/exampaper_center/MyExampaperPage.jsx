@@ -34,6 +34,9 @@ const MyExampaperPage = React.createClass({
   handleEditPaper(examId){
     this.context.router.push(`/index/question-exampaper/editExampaper/${examId}`)
   },
+  handleWatchPaper(examId){
+    this.context.router.push(`/index/question-exampaper/displayExampaper/${examId}`)
+  },
   getTableData(){
     console.log("---->:",this.props.menu.toJS())
     const tableHeader = [{
@@ -70,7 +73,7 @@ const MyExampaperPage = React.createClass({
           <Button type="primary" onClick={this.handleEditPaper.bind(this,text.id)} style={{marginLeft:'10px'}}>编辑</Button>
           </div>):(<div style={{width:'200px'}}>
           {/*<Button onClick={this.handleDeletePaper.bind(this,text.id)} className={styles.deleteButton}>删除</Button>*/}
-          <Button type="primary" onClick={this.handleEditPaper.bind(this,text.id)} style={{marginLeft:'10px'}}>查看</Button>
+          <Button type="primary" onClick={this.handleWatchPaper.bind(this,text.id)} style={{marginLeft:'10px'}}>查看</Button>
           </div>)
       }
     }]
