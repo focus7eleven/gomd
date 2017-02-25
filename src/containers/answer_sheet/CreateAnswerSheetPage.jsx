@@ -516,7 +516,7 @@ const CreateAnswerSheetPage = React.createClass({
               </div>
               <div className={styles.block} style={{marginBottom: 10}}>
                 <span>标题</span>
-                <Input placeholder="输入少于30个字" style={{width: 470}} value={item.get('questionTitle')} onChange={this.handleFieldChange.bind(null,index,'questionTitle')} />
+                <Input placeholder="输入少于30个字" style={{width: 477}} value={item.get('questionTitle')} onChange={this.handleFieldChange.bind(null,index,'questionTitle')} />
               </div>
             </div>
           }
