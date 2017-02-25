@@ -4,6 +4,8 @@ import {
   GET_SUBJECT_OPTIONS,
   GET_VERSION_OPTIONS,
   GET_FILTERED_TABLEDATA,
+  LIKE_VIDEO,
+  COLLECT_VIDEO,
 } from '../actions/micro_course/main'
 import {fromJS} from 'immutable'
 import _ from 'lodash'
@@ -17,6 +19,7 @@ const initialState = fromJS({
 })
 
 export default (state = initialState,action)=>{
+  let videoId, result, type
   switch (action.type) {
     case GET_TABLEDATA[0]:
       return state.set('loading',true)
@@ -30,6 +33,14 @@ export default (state = initialState,action)=>{
       return state.set('subjectOptions',action.data)
     case GET_VERSION_OPTIONS[1]:
       return state.set('versionOptions',action.data)
+    case LIKE_VIDEO:
+      ({videoId,result,type} = action.payload);
+      const newLikeType = type === 'like' ? true : false;
+      return state.updateIn(['data','result'],v => v.update(v.findIndex(v => v.get('id') == videoId), v => v.set('likeCount', Number.parseInt(result)).set('liked', newLikeType)))
+    case COLLECT_VIDEO:
+      ({videoId,result,type} = action.payload);
+      const newCollectType = type === 'collect' ? true : false;
+      return state.updateIn(['data','result'],v => v.update(v.findIndex(v => v.get('id') == videoId), v => v.set('collectionCount', Number.parseInt(result)).set('collected', newCollectType)))
     default:
       return state
   }

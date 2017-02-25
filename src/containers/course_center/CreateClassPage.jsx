@@ -363,7 +363,6 @@ const CreateClassPage = React.createClass({
                 课程名称：<Input value={this.state.courseName} onChange={(e)=>{this.setState({courseName:e.target.value})}} size='large' placeholder="输入小于30个字" />
                 </div>
               </Col>
-
             </Row>
             <Row type='flex' gutter={8}>
               <Col span={24}>

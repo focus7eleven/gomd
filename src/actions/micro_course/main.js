@@ -2,10 +2,6 @@ import {actionNames} from '../../utils/action-utils'
 import {fromJS} from 'immutable'
 import config from '../../config.js'
 import {notification} from 'antd'
-notification.config({
-  top: window.screen.availHeight-200,
-  duration: 3,
-});
 
 //获取表格数据
 export const GET_TABLEDATA = actionNames('GET_TABLEDATA')
@@ -19,6 +15,8 @@ export function getTableData(type,search,currentPage){
     realType = 'getTeacher'
   }else if(type=='mycollection'){
     realType = 'collection'
+  }else if(type=='uncheckedvideo'){
+    realType = 'unchecked'
   }
   return {
     types:GET_TABLEDATA,
@@ -35,11 +33,11 @@ export function getTableData(type,search,currentPage){
 }
 
 export const GET_FILTERED_TABLEDATA = actionNames('GET_FILTERED_TABLEDATA')
-export function getFilteredTableData(type,search,currentPage,phaseCode="",subjectId="",termId=""){
+export function getFilteredTableData(type,currentPage,subjectId,gradeId,textbookId,search,term,version){
   return {
     types:GET_FILTERED_TABLEDATA,
     callAPI:()=>{
-      return fetch(config.api.courseCenter.getTableData(type,search,currentPage,phaseCode,subjectId,termId),{
+      return fetch(config.api.microvideo.get(type,currentPage,subjectId,gradeId,textbookId,search,term,version),{
         method:'GET',
         headers:{
           'from':'nodejs',
@@ -111,6 +109,82 @@ export function addVideo(data,type){
         dispatch(getTableData(type,'',1)).then(res => {notification.success({message:'添加成功'});return res})
       }else{
         notification.error({message:'添加失败',description: res.result});
+        return "error";
+      }
+    })
+  }
+}
+
+export function checkVideo(data){
+  return dispatch => {
+    return fetch(config.api.microvideo.checkVideo,{
+      method:'post',
+      headers:{
+        'from':'nodejs',
+        'token':sessionStorage.getItem('accessToken'),
+      },
+      body: data
+    }).then(res => res.json()).then(res => {
+      if(res.title == 'Success'){
+        dispatch(getTableData('unchecked','',1)).then(res => {notification.success({message:'审核成功'});return res})
+      }else{
+        notification.error({message:'审核失败',description: res.result});
+        return "error";
+      }
+    })
+  }
+}
+
+export const LIKE_VIDEO = "LIKE_VIDEO"
+export function likeVideo(data,type){
+  return dispatch => {
+    return fetch(config.api.microvideo.likeVideo(type),{
+      method:'post',
+      headers:{
+        'from':'nodejs',
+        'token':sessionStorage.getItem('accessToken'),
+      },
+      body: data
+    }).then(res => res.json()).then(res => {
+      if(res.title == 'Success'){
+        dispatch({
+    			type: LIKE_VIDEO,
+    			payload: {
+            videoId: data.get('videoId'),
+    				result: res.result,
+            type: type,
+    			},
+    		})
+      }else{
+        notification.error({message:'操作失败',description: res.result});
+        return "error";
+      }
+    })
+  }
+}
+
+export const COLLECT_VIDEO = "COLLECT_VIDEO"
+export function collectVideo(data,type){
+  return dispatch => {
+    return fetch(config.api.microvideo.collectVideo(type),{
+      method:'post',
+      headers:{
+        'from':'nodejs',
+        'token':sessionStorage.getItem('accessToken'),
+      },
+      body: data
+    }).then(res => res.json()).then(res => {
+      if(res.title == 'Success'){
+        dispatch({
+    			type: COLLECT_VIDEO,
+    			payload: {
+            videoId: data.get('videoId'),
+    				result: res.result,
+            type: type,
+    			},
+    		})
+      }else{
+        notification.error({message:'操作失败',description: res.result});
         return "error";
       }
     })

@@ -38,25 +38,36 @@ import DetailContainer from './containers/course_center/detail/DetailContainer'
 import DetailPage from './containers/course_center/detail/DetailPage'
 import TeacherCoursePage from './containers/course_center/TeacherCoursePage'
 import SchoolCoursePage from './containers/course_center/SchoolCoursePage'
+import UncheckedCoursePage from './containers/course_center/UncheckedCoursePage'
 import MicroCourseContainer from './containers/micro_course/MicroCourseContainer'
 import PublicVideoPage from './containers/micro_course/PublicVideoPage'
 import SchoolVideoPage from './containers/micro_course/SchoolVideoPage'
 import TeacherVideoPage from './containers/micro_course/TeacherVideoPage'
 import CollectionVideoPage from './containers/micro_course/CollectionVideoPage'
+import UncheckVideoPage from './containers/micro_course/UncheckVideoPage'
 import HomeworkContainer from './containers/homework_center/HomeworkContainer'
 import CreateHomeworkPage from './containers/homework_center/CreateHomework'
+import HomeworkUnchecked from './containers/homework_center/HomeworkUnchecked'
 import ExampaperContainer from './containers/exampaper_center/ExampaperContainer'
 import MyExampaperPage from './containers/exampaper_center/MyExampaperPage'
 import CreateExampaper from './containers/exampaper_center/CreateExampaper'
 import DisplayExampaper from './containers/exampaper_center/DisplayExampaper'
 import HomeworkLibPage from './containers/homework_center/HomeworkLibPage'
+import HomeworkDetailPage from './containers/homework_center/HomeworkDetailPage'
+import HomeworkPublished from './containers/homework_center/HomeworkPublished'
+import UncheckedHomeworkPage from './containers/homework_center/UncheckedHomeworkPage'
 
 import VideoComponent from './components/video/VideoComponent'
 import CourseTree from './components/tree/CourseTree'
 import UEditor from './components/ueditor/Ueditor'
 import MultipleChoiceQuestion from './components/table/exampaper/MultipleChoiceQuestion'
 import NoteQuestion from './components/table/exampaper/NoteQuestion'
+
+import AnswerSheetContainer from './containers/answer_sheet/AnswerSheetContainer'
+import CreateAnswerSheetPage from './containers/answer_sheet/CreateAnswerSheetPage'
+import AnswerSheetPage from './containers/answer_sheet/AnswerSheetPage'
 import WelcomPageContainer from './containers/index_homepage/WelcomePageContainer'
+
 const routes = (
 	<Router history={browserHistory}>
 		<Route path="/" component={AppContainer}>
@@ -129,6 +140,7 @@ const routes = (
 					</Route>
 					<Route path='courseInfo' component={TeacherCoursePage} />
 					<Route path='schoolCourse' component={SchoolCoursePage} />
+					<Route path='uncheckCourse' component={UncheckedCoursePage} />
 				</Route>
 
 				{/* 微课中心 */}
@@ -137,13 +149,17 @@ const routes = (
 					<Route path='publicvideo' component={SchoolVideoPage}></Route>
 					<Route path='teachervideo' component={TeacherVideoPage}></Route>
 					<Route path='mycollection' component={CollectionVideoPage}></Route>
-					<Route path='uncheckedvideo' component={CollectionVideoPage}></Route>
+					<Route path='uncheckedvideo' component={UncheckVideoPage}></Route>
 				</Route>
 
 				{/* 作业中心 */}
 				<Route path="homework_lib/:type" component={HomeworkLibPage}/>
+				<Route path="homework_detail/:homeworkId" component={HomeworkDetailPage}/>
+				<Route path="unchecked_homework/:type" component={UncheckedHomeworkPage}/>
 				<Route path=':second' component={HomeworkContainer}>
 					<Route path='sethomework' component={CreateHomeworkPage}></Route>
+                    <Route path='homework' component={HomeworkPublished}></Route>
+					<Route path='homework_unchecked' component={HomeworkUnchecked}></Route>
 				</Route>
 
 				{/* 题库机组卷 */}
@@ -153,6 +169,12 @@ const routes = (
 					<Route path='editExampaper/(:examId)' component={()=><CreateExampaper type='edit'/>}></Route>
 					<Route path='displayExampaper/(:examId)' component={DisplayExampaper}></Route>
 					<Route path='draftpapercenter' component={(props)=><MyExampaperPage type='draft' {...props}/>}></Route>
+				</Route>
+
+				{/* 答题卡 */}
+				<Route path=':second' component={AnswerSheetContainer}>
+					<Route path='addAnswersheet' component={CreateAnswerSheetPage}></Route>
+					<Route path='answersheet' component={AnswerSheetPage}></Route>
 				</Route>
 
 			</Route>

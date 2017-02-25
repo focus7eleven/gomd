@@ -5,6 +5,14 @@ import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
 import logo from 'images/logo.png'
 import {login} from '../actions/user'
+import pic1 from '../public/images/login-background.png'
+import pic2 from '../public/images/teacher-background.png'
+import pic3 from '../public/images/student-background.png'
+import pic4 from '../public/images/department-background.png'
+import Slider from 'react-slick'
+import 'slick-carousel/slick/slick-theme.css';
+import 'slick-carousel/slick/slick.css';
+
 const FormItem = Form.Item;
 
 const LoginContainer = React.createClass({
@@ -35,9 +43,23 @@ const LoginContainer = React.createClass({
 
   render(){
     const { getFieldDecorator } = this.props.form;
+    const settings = {
+      dots: true,
+      arrows: false,
+      slidesToShow: 1,
+      slidesToScroll: 1,
+      autoplay: true,
+      autoplaySpeed: 20000,
+    };
     return (
       <div className={styles.container}>
         <div className={styles.loginBody}>
+          <Slider {...settings}>
+           <div className={styles.pic1}></div>
+           <div className={styles.pic2}></div>
+           <div className={styles.pic3}></div>
+           <div className={styles.pic4}></div>
+          </Slider>
           <div className={styles.panel}>
             <div className={styles.logoArea}>
               <img src={logo}/>
@@ -72,10 +94,10 @@ const LoginContainer = React.createClass({
               </Form>
             </div>
           </div>
-        </div>
-        <div className={styles.footer}>
-          <p>Copyright ©️2017 Nanjing Looedu Information Technology Co.,LTD. All rights reserved. 备案号：宁ICP备13003602号-2 服务热线：025-8681 4885</p>
-        </div>
+          </div>
+          <div className={styles.footer}>
+            <p>Copyright ©️2017 Nanjing Looedu Information Technology Co.,LTD. All rights reserved. 备案号：宁ICP备13003602号-2 服务热线：025-8681 4885</p>
+          </div>
       </div>
     )
 

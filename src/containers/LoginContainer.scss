@@ -7,15 +7,58 @@
   :local(.loginBody){
     height: calc( 100% - 60px );
     width: 100%;
-    background: url(images/login-background.png) no-repeat center center fixed;
-    background-size: cover;
-    padding-left: 55%;
-    padding-top: 80px;
+    // background: url(images/login-background.png) no-repeat center center fixed;
+    // background-size: cover;
+    // padding-left: 55%;
+    // padding-top: 80px;
     overflow-y: scroll;
+    position: relative;
+
+    >div:first-child{
+      height: 100%;
+      >div:first-child{
+        height: 100%;
+        >div:first-child{
+          height: 100%;
+        }
+      }
+    }
+
+    :global(.slick-dots){
+      bottom: 10px;
+    }
+
+    :local(.pic1){
+      background: url(images/login-background.png) no-repeat center center;
+      background-size: cover;
+      height: 100%;
+      width: 100%;
+    }
+    :local(.pic2){
+      background: url(images/teacher-background.png) no-repeat center center;
+      background-size: cover;
+      height: 100%;
+      width: 100%;
+    }
+    :local(.pic3){
+      background: url(images/student-background.png) no-repeat center center;
+      background-size: cover;
+      height: 100%;
+      width: 100%;
+    }
+    :local(.pic4){
+      background: url(images/department-background.png) no-repeat center center;
+      background-size: cover;
+      height: 100%;
+      width: 100%;
+    }
 
     :local(.panel){
-      width: 385px;
+      width: 345px;
       height: 390px;
+      position: absolute;
+      top: 12%;
+      left: 60%;
       :local(.logoArea){
         width: 100%;
         height: 80px;

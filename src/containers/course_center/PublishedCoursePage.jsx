@@ -29,17 +29,17 @@ const PublishedCoursePage = React.createClass({
       key:'name',
       className:styles.tableColumn,
     },{
-      title:'微课数量',
+      title:'微课',
       dataIndex:'content_num',
       key:'content_num',
       className:styles.tableColumn,
     },{
-      title:'预习作业数量',
+      title:'预习作业',
       dataIndex:'prepare_homework',
       key:'prepare_homework',
       className:styles.tableColumn,
     },{
-      title:'课后作业数量',
+      title:'课后作业',
       dataIndex:'after_class_homework',
       key:'after_class_homework',
       className:styles.tableColumn,
@@ -64,7 +64,7 @@ const PublishedCoursePage = React.createClass({
     const tableData = this.props.courseCenter.get('data').isEmpty()?List():this.props.courseCenter.get('data').get('result').map((v,k) => ({
       ...v.toJS(),
       key:k,
-      num:k
+      num:k+1
     }))
     return {
       tableBody:tableData.toJS(),
@@ -81,7 +81,8 @@ const PublishedCoursePage = React.createClass({
     return (
       <div className={styles.container}>
         <div className={styles.header}>
-          <div></div><CourseFilterComponent pageType="publishedPage"/>
+          <div></div>
+          <CourseFilterComponent pageType="publishedPage"/>
         </div>
         <div className={styles.body}>
           <TableComponent dataType="courseCenter" tableData={tableData} pageType="publishedPage" searchStr={this.state.searchStr}></TableComponent>

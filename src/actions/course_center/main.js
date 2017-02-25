@@ -2,10 +2,6 @@ import {actionNames} from '../../utils/action-utils'
 import {fromJS} from 'immutable'
 import config from '../../config.js'
 import {notification} from 'antd'
-notification.config({
-  top: window.screen.availHeight-200,
-  duration: 3,
-});
 
 //获取表格数据
 export const GET_TABLEDATA = actionNames('GET_TABLEDATA')
@@ -19,6 +15,8 @@ export function getTableData(type,search,currentPage){
     realType = 'teacherPage'
   }else if(type=='schoolCourse'){
     realType = 'schoolPage'
+  }else if(type=='uncheckCourse'){
+    realType = 'uncheckPage'
   }
   return {
     types:GET_TABLEDATA,
@@ -66,6 +64,30 @@ export function getDetailData(lessonId){
           'token':sessionStorage.getItem('accessToken'),
         }
       }).then(res => res.json())
+    }
+  }
+}
+
+export const CHECK_COURSE = actionNames('CHECK_COURSE')
+export function checkCourse(lessonId,result){
+  return {
+    types: CHECK_COURSE,
+    callAPI:()=>{
+      return fetch(config.api.courseCenter.checkCourse(lessonId,result),{
+        method:'GET',
+        headers:{
+          'from':'nodejs',
+          'token':sessionStorage.getItem('accessToken'),
+        }
+      }).then(res => res.json()).then(res => {
+        if(res.title==='Success'){
+          notification.success({message:'审核成功'});
+          return 'success'
+        }else {
+          notification.error({message: '审核失败',description: res.result});
+          return 'error'
+        }
+      })
     }
   }
 }

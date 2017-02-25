@@ -177,7 +177,7 @@ const PatriarchPage = React.createClass({
     formData.append('userId',userId)
     formData.append('action',"delete")
     confirm({
-      title: '你先删除这条记录吗？',
+      title: '确定删除这条记录吗？',
       content: '删除后不可恢复',
       onOk() {
         that.props.editStaff(formData,"patriarch")

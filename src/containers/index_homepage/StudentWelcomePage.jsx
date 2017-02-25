@@ -9,6 +9,10 @@ import mircoVideo from '../../public/images/micro-video.png'
 import course from '../../public/images/check-result.png'
 import downloadAPP from '../../public/images/download-app.png'
 
+import Slider from 'react-slick'
+import 'slick-carousel/slick/slick-theme.css';
+import 'slick-carousel/slick/slick.css';
+
 const StudentWelcomePage = React.createClass({
   contextTypes: {
     router: React.PropTypes.object
@@ -26,10 +30,17 @@ const StudentWelcomePage = React.createClass({
     this.context.router.push('/index/homework/homework')
   },
   render(){
+    const settings = {
+      dots: true,
+      arrows: false,
+      slidesToShow: 1,
+      slidesToScroll: 1,
+      autoplay: true,
+    }
     return (
       <div className={styles.container}>
         <div>
-          <Carousel>
+          <Slider {...settings}>
             <div className={styles.carouselItem}>
               <img src={teacher1} />
             </div>
@@ -39,7 +50,7 @@ const StudentWelcomePage = React.createClass({
             <div className={styles.carouselItem}>
               <img src={teacher1} />
             </div>
-          </Carousel>
+          </Slider>
         </div>
         <div className={styles.hotkey}>
           <div className={styles.buttonGroup}>

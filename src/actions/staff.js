@@ -80,7 +80,7 @@ export function downloadExcel(type){
       }
       link.id='xlsxFile'
       link.click();
-      document.getElementById('xlsxFile').remove();
+      // document.getElementById('xlsxFile').remove();
     })
   }
 }

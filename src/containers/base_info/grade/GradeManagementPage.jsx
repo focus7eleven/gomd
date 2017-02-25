@@ -10,7 +10,6 @@ import {findMenuInTree} from '../../../reducer/menu'
 
 const FormItem = Form.Item
 const Search = Input.Search
-const confirm = Modal.confirm
 const Option = Select.Option;
 
 const GradeManagementPage = React.createClass({

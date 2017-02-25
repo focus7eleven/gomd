@@ -136,7 +136,7 @@ const PhasePage = React.createClass({
     const that = this
     const currentRow = this.props.workspace.get('data').get('result').get(key)
     Modal.confirm({
-    title: '你要删除该记录吗',
+    title: '确定删除这条记录吗',
     content: '删除不可恢复',
     onOk() {
       that.props.deletePhase({

@@ -1,6 +1,7 @@
 import _ from 'underscore'
 
 export const baseURL = "http://139.224.194.45:8080"
+// const baseURL = "http://127.0.0.1:8080"
 
 // App config the for development and deployment environment.
 const isProduction = process.env.NODE_ENV === "production"
@@ -206,7 +207,8 @@ const config = _.extend({
 			getDistinctSubject: `${baseURL}/class/distinctsubject`,
 			getCourseVersion: `${baseURL}/select?selectstyle=JKS`,
 			getUserGrade: `${baseURL}/grade/getUserGrade`,
-			detail:(lessonId)=>`${baseURL}/lesson/get/detail_new?lesson_id=${lessonId}`
+			detail:(lessonId) => `${baseURL}/lesson/get/detail_new?lesson_id=${lessonId}`,
+			checkCourse: (lessonId,result) => `${baseURL}/lesson/check?lessonId=${lessonId}&pass=${result}`,
 		},
 		teachingPlan:{
 			course:{
@@ -219,10 +221,13 @@ const config = _.extend({
 			publish:`${baseURL}/lesson/publish`,
 		},
 		microvideo:{
-			get:(type,currentPage,pageShow,subjectId,gradeId,textbookId,search)=>`${baseURL}/microvideo/${type}?currentPage=${currentPage}&pageShow=${pageShow}&subjectId=${subjectId}&gradeId=${gradeId}&textbookMenuId=${textbookId}&search=${search}`,
+			get:(type,currentPage,subjectId,gradeId,textbookId,search,term,version)=>`${baseURL}/microvideo/${type}?currentPage=${currentPage}&subjectId=${subjectId}&gradeId=${gradeId}&textbookMenuId=${textbookId}&search=${search}&term=${term}&version=${version}`,
 			getVideoDetailById:(videoId)=>`${baseURL}/microvideo/getVideoDetailById?videoId=${videoId}`,
 			getTableData: (type,search,currentPage) => `${baseURL}/microvideo/${type}?search=${search}&currentPage=${currentPage}`,
 			addVideo: `${baseURL}/microvideo/add`,
+			checkVideo: `${baseURL}/microvideo/check`,
+			likeVideo: (type) => `${baseURL}/microvideo/${type}`,
+			collectVideo: (type) => `${baseURL}/microvideo/${type}`,
 		},
 		homework:{
 			course:{
@@ -230,13 +235,23 @@ const config = _.extend({
 				searchHomework:(subjectId,startTime,endTime,knowledgeId='',type='1')=>`${baseURL}/homework/course/existHomework?subjectId=${subjectId}&startTime=${startTime}&endTime=${endTime}&knowledgeId=${knowledgeId}&type=${type}`,
 			},
 			getHomeworkDetail:(homeworkId)=>`${baseURL}/homework/getHomeworkDetail?homeworkId=${homeworkId}`,
+      getHomeworkDetail2:(homeworkId)=>`${baseURL}/homework/getHomeworkDetail2?homeworkId=${homeworkId}`,
 			getHomeworkClass: (homeworkId) => `${baseURL}/homework/getClasses?homeworkId=${homeworkId}`,
       //公共作业
       areaHomeworkPageUrl:`${baseURL}/homework/area/homeworkLibPage`,
       //学校作业
       schoolHomeworkPageUrl:`${baseURL}/homework/school/homeworkLibPage`,
       //教师个人作业
-      selfHomeworkPageUrl:`${baseURL}/homework/self/homeworkLibPage`
+      selfHomeworkPageUrl:`${baseURL}/homework/self/homeworkLibPage`,
+      //已发布作业
+      publishedHomeworkPageUrl:`${baseURL}/homework/page`,
+			//教师获取未审核的作业
+      teaUnCheckHomeworkPageUrl:`${baseURL}/homework/getTeaUncheckedHomework`,
+      teaDeleteHomeworkUrl:`${baseURL}/homework/delete`,
+		  //待审核作业
+		  homeworkUncheckedUrl:`${baseURL}/homework/getUncheckedHomework`,
+		  checkHomeworkUrl:`${baseURL}/homework/checkHomework`,
+
 		},
 		exampaper:{
 			showExamSelectList:(subjectId,gradeId,term)=>`${baseURL}/exampaper/showExamSelectList?subjectId=${subjectId}&gradeId=${gradeId}&term=${term}`,
@@ -251,6 +266,12 @@ const config = _.extend({
 		},
 		answersheet:{
 			getAll:`${baseURL}/answersheet/getAll`,
+			getTableData: (type, search, currentPage) => `${baseURL}/${type}/page?search=${search}&currentPage=${currentPage}`,
+			create: `${baseURL}/answersheet/add`,
+			download: (id) => `${baseURL}/answersheet/answersheetview?answersheet_id=${id}`,
+			edit: `${baseURL}/answersheet/edit`,
+			getAnswerSheet: (id) => `${baseURL}/answersheet/getAnswersheetDetail?answersheetId=${id}`,
+			getAnswerSheetQuestion: (id) => `${baseURL}/answersheet/getAnswersheetQuestionDetail?answersheetId=${id}`,
 		},
 		wordquestion:{
 			addChoose:`${baseURL}/wordquestion/addChoose`,
@@ -267,7 +288,6 @@ const config = _.extend({
 			uploadWord:`${baseURL}/wordquestion/uploadWord`,
 			addNest:`${baseURL}/wordquestion/addNest`,
 			addTitle:`${baseURL}/wordquestion/addTitle`,
-
 		}
 	}
 })

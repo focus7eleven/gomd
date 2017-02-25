@@ -9,6 +9,7 @@ import {List,fromJS} from 'immutable'
 import config from '../../config'
 import ExampaperFilter from './ExampaperFilter'
 import classnames from 'classnames'
+
 const Search = Input.Search
 const Option = Select.Option
 
@@ -75,7 +76,7 @@ const MyExampaperPage = React.createClass({
           {/*<Button onClick={this.handleDeletePaper.bind(this,text.id)} className={styles.deleteButton}>删除</Button>*/}
           <Button type="primary" onClick={this.handleWatchPaper.bind(this,text.id)} style={{marginLeft:'10px'}}>查看</Button>
           </div>)
-      }
+        }
     }]
     const tableBody = this.props.exampaper.get('data').isEmpty()?List():this.props.exampaper.get('data').get('result').map((v,k)=>({
       key:k,
@@ -104,7 +105,7 @@ const MyExampaperPage = React.createClass({
 function mapStateToProps(state){
   return{
     menu:state.get('menu'),
-    exampaper:state.get('exampaper')
+    exampaper:state.get('examPaper')
   }
 }
 

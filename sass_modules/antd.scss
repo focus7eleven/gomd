@@ -44,8 +44,8 @@
 
   }
   :global(.ant-modal-body){
-    max-height: 500px;
-    overflow: scroll;
+    max-height: 550px;
+    overflow: auto;
   }
 }
 
@@ -86,8 +86,8 @@
 }
 
 :global(.ant-btn-primary) {
-	background-color: #2AAD6C;
-	border-color: #2AAD6C;
+	background-color: $primary-color;
+	border-color: $primary-color;
 
 	&:hover, &:focus {
 		background-color: #FC9E0A;
@@ -140,10 +140,6 @@
 
 :global(.ant-input-search-wrapper){
   width: 230px;
-}
-
-:global(.ant-notification){
-  margin-bottom: 150px !important;
 }
 
 :global(.ant-pagination-options-quick-jumper){
@@ -205,4 +201,18 @@
 :global(.ant-menu-horizontal > .ant-menu-item:hover){
   color: $primary-color;
   border-bottom: 2px solid $primary-color;
+}
+
+:global(.ant-input-number:hover){
+  border-color: $primary-color;
+}
+
+:global(.ant-input-number:focus){
+  border-color: $primary-color;
+  box-shadow: none;
+}
+
+:global(.ant-input-number-focused){
+  border-color: $primary-color;
+  box-shadow: none;
 }

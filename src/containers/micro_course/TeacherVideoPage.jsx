@@ -1,5 +1,5 @@
 import React from 'react'
-import CourseFilterComponent from '../../components/course_filter/CourseFilterComponent'
+import VideoFilterComponent from '../../components/microvideo_filter/VideoFilterComponent'
 import styles from './TeacherVideoPage.scss'
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
@@ -47,7 +47,6 @@ const TeacherVideoPage = React.createClass({
   },
 
   handleClickMenu(e) {
-    console.log('click ', e);
     this.setState({
       currentTab: e.key,
     });
@@ -95,8 +94,6 @@ const TeacherVideoPage = React.createClass({
   },
 
   handleFetchTextbook(subjectId,gradeId,versionId,termValue){
-    // const {subjectId,gradeId,versionId,termValue} = this.state;
-    console.log(subjectId,gradeId,versionId,termValue);
     this.setState({canSelectTextbook:false})
     fetch(config.api.textbook.getTextBookByCondition(subjectId,gradeId,versionId,termValue),{
       method:'GET',
@@ -139,9 +136,9 @@ const TeacherVideoPage = React.createClass({
 
 
   renderModal(){
-    const gradeOptions = this.props.courseCenter.get('gradeOptions')
-    const subjectOptions = this.props.courseCenter.get('subjectOptions')
-    const versionOptions = this.props.courseCenter.get('versionOptions')
+    const gradeOptions = this.props.microCourse.get('gradeOptions')
+    const subjectOptions = this.props.microCourse.get('subjectOptions')
+    const versionOptions = this.props.microCourse.get('versionOptions')
     const {getFieldDecorator} = this.props.form;
     const {showAddVideoModal,textbook,canSelectTextbook} = this.state;
     const formItemLayout = {labelCol:{span:5},wrapperCol:{span:12}};
@@ -345,7 +342,7 @@ const TeacherVideoPage = React.createClass({
             }
           </div>
           <div className={styles.right}>
-            <CourseFilterComponent pageType="publicPage"/>
+            <VideoFilterComponent pageType="area"></VideoFilterComponent>
             <Search style={{width: '260px'}} placeholder="请输入微课名称" value={this.state.searchStr} onChange={(e)=>{this.setState({searchStr:e.target.value})}} onSearch={this.handleSearchVideo}/>
           </div>
         </div>
@@ -381,8 +378,14 @@ const TeacherVideoPage = React.createClass({
                     description.subject = item.get('subjectName');
                     description.chapter = item.get('textBookMenuName');
                     description.playNums = item.get('playCount');
+                    description.like = item.get('liked');
+                    description.collect = item.get('collected');
+                    description.likeNums = item.get('likeCount');
                     description.collectNums = item.get('collectionCount');
                     description.school = item.get('schoolName');
+                    description.term = item.get('textbookMenuTerm');
+                    description.textBookMenuName = item.get('textBookMenuName');
+                    description.info = item.get('description');
                     description.teacher = 'teacher';
                     return <div key={index}>
                       <VideoComponent description={description} videoUrl={item.get('url')} coverUrl={item.get('coverUrl')} id={item.get('id')}></VideoComponent>
@@ -409,7 +412,6 @@ function mapStateToProps(state){
   return{
     menu:state.get('menu'),
     microCourse:state.get('microCourse'),
-    courseCenter: state.get('courseCenter'),
   }
 }
 

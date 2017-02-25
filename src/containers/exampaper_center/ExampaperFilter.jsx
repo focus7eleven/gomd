@@ -47,10 +47,10 @@ const ExampaperFilter = React.createClass({
 
 function mapStateToProps(state){
   return {
-    grade:state.getIn(['exampaper','gradeOptions']),
-    subjects:state.getIn(['exampaper','subjectOptions']),
-    gradeOption:state.getIn(['exampaper','otherMsg','gradeId']),
-    subjectOption:state.getIn(['exampaper','otherMsg','subjectId']),
+    grade:state.getIn(['examPaper','gradeOptions']),
+    subjects:state.getIn(['examPaper','subjectOptions']),
+    gradeOption:state.getIn(['examPaper','otherMsg','gradeId']),
+    subjectOption:state.getIn(['examPaper','otherMsg','subjectId']),
   }
 }
 function mapDispatchToProps(dispatch){

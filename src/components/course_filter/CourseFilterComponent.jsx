@@ -9,6 +9,10 @@ import config from '../../config'
 const Option = Select.Option;
 
 const CourseFilterComponent = React.createClass({
+  contextTypes: {
+    router: React.PropTypes.object
+  },
+
   propTypes: {
     pageType: React.PropTypes.string.isRequired,
   },
@@ -53,6 +57,8 @@ const CourseFilterComponent = React.createClass({
 
   render(){
     const {version,subjects,grade} = this.state
+    const userInfo = this.props.userInfo
+    const page = this.context.router.routes[3].path
 
     return (
       <div className={styles.container}>
@@ -64,11 +70,14 @@ const CourseFilterComponent = React.createClass({
             })
           }
         </Select>
-        <Select defaultValue="" style={{ marginLeft:20,width: 150 }} onChange={this.handleTermChange}>
-          <Option value="">所有学期</Option>
-          <Option value="上学期">上学期</Option>
-          <Option value="下学期">下学期</Option>
-        </Select>
+        {
+          (userInfo.userStyleName==='学校资源审核员'&&page==='uncheckCourse')?null:
+          <Select defaultValue="" style={{ marginLeft:20,width: 150 }} onChange={this.handleTermChange}>
+            <Option value="">所有学期</Option>
+            <Option value="上学期">上学期</Option>
+            <Option value="下学期">下学期</Option>
+          </Select>
+        }
         <Select defaultValue="" style={{ marginLeft:20,width: 150 }} onChange={this.handleSubjectChange}>
           <Option value="">所有学科</Option>
           {
@@ -77,14 +86,18 @@ const CourseFilterComponent = React.createClass({
             })
           }
         </Select>
-        <Select defaultValue="" style={{ marginLeft:20,width: 150 }} onChange={this.handleVersionChange}>
-          <Option value="">所有版本</Option>
-          {
-            version.map((item,index)=>{
-              return <Option value={item.id} key={index}>{item.text}</Option>
-            })
-          }
-        </Select>
+        {
+          // (userInfo.userStyleName==='学校资源审核员')?null:
+          (userInfo.userStyleName==='学校资源审核员'&&page==='uncheckCourse')?null:
+          <Select defaultValue="" style={{ marginLeft:20,width: 150 }} onChange={this.handleVersionChange}>
+            <Option value="">所有版本</Option>
+            {
+              version.map((item,index)=>{
+                return <Option value={item.id} key={index}>{item.text}</Option>
+              })
+            }
+          </Select>
+        }
       </div>
     )
   }
@@ -93,6 +106,7 @@ const CourseFilterComponent = React.createClass({
 function mapStateToProps(state){
   return{
     courseCenter: state.get('courseCenter'),
+    userInfo: state.get('user').get('userInfo'),
   }
 }
 

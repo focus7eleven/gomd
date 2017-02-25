@@ -27,23 +27,21 @@
   :local(.body){
     height: calc( 100% - 40px );
     width: 100%;
-    :local(.wrapper){
-      position:relative;
-      :local(.tableDarkRow){
-        @include tableDarkRow;
-      }
-      :local(.tableLightRow){
-        @include tableLightRow;
-      }
-      :local(.tableColumn){
-        @include tableColumn;
-      }
-      :local(.editColumn){
-        @include editColumn;
-      }
-      :local(.tableMsg){
-        @include tableMsg;
-      }
+
+    :local(.tableDarkRow){
+      @include tableDarkRow;
+    }
+    :local(.tableLightRow){
+      @include tableLightRow;
+    }
+    :local(.tableColumn){
+      @include tableColumn;
+    }
+    :local(.editColumn){
+      @include editColumn;
+    }
+    :local(.tableMsg){
+      @include tableMsg;
     }
   }
 

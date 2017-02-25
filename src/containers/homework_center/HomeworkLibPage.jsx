@@ -12,9 +12,13 @@ import config from '../../config';
 import permissionDic from '../../utils/permissionDic';
 import {ROLE_TEACHER} from '../../constant';
 import {getGradeOptions,getSubjectOptions,getVersionOptions} from '../../actions/homework_action/main'
+import {AssignHomeworkModal} from './AssignHomeworkModal';
 //import {findMenuInTree} from '../../reducer/menu';
 
 const HomeworkLibPage = React.createClass({
+  contextTypes: {
+    router: React.PropTypes.object
+  },
   getInitialState(){
     return {
       type: "",
@@ -23,7 +27,9 @@ const HomeworkLibPage = React.createClass({
       gradeOptionList:[],
       termOptionList:[{key:"上学期",value:"上学期"},{key:"下学期",value:"下学期"}],
       subjectOptionList:[],
-      versionOptionList:[]
+      versionOptionList:[],
+
+      assignHomeworkModalVisible:false
     }
   },
   getDefaultProps() {
@@ -76,6 +82,7 @@ const HomeworkLibPage = React.createClass({
       <div> {/* 过滤+表格+分页 */}
         <CustomTable columns={columns} showIndex={true} pageUrl={this.state.pageUrl}
                      filters={filters}></CustomTable>
+        <AssignHomeworkModal ref="assignHomeworkModal"></AssignHomeworkModal>
       </div>
     );
   },
@@ -84,7 +91,7 @@ const HomeworkLibPage = React.createClass({
       {
         title: '作业名称', dataIndex: 'homework_name', key: 'homework_name',
         render: (text, record) => {
-          return <a onClick={() => console.log(record.homework_name)}>{text}</a>
+          return <a onClick={() => {this.context.router.push(`/index/homework_detail/`+record.homework_id)}}>{text}</a>
         }
       },
       {title: '创建时间', dataIndex: 'create_dt', key: 'create_dt'},
@@ -94,7 +101,7 @@ const HomeworkLibPage = React.createClass({
       {title: '学期', dataIndex: 'term', key: 'term'},
       {title: '版本', dataIndex: 'textbook_version', key: 'textbook_version'}
     ]);
-    if (this.props.userInfo && this.props.userInfo.get('userStyle') == ROLE_TEACHER) {
+    if (this.props.userInfo && this.props.userInfo.userStyle == ROLE_TEACHER) {
       //是老师时，显示布置作业按钮
       tableHeader = tableHeader.concat(
         [{
@@ -104,7 +111,7 @@ const HomeworkLibPage = React.createClass({
           render: (text, record) => {
             return (
               <div>
-                <Button type="primary">布置作业</Button>
+                <Button type="primary" onClick={()=>this.assignHomework(record.homework_id)}>布置作业</Button>
               </div>
             )
           }
@@ -128,6 +135,10 @@ const HomeworkLibPage = React.createClass({
         break;
     }
     return url;
+  },
+  /* 布置作业 */
+  assignHomework(homeworkId) {
+    this.refs.assignHomeworkModal.showModal(homeworkId);
   }
 });
 

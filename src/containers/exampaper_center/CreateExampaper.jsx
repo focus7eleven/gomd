@@ -10,9 +10,7 @@ import NoteQuestion from '../../components/table/exampaper/NoteQuestion'
 import ShortAnswerQuestion from '../../components/table/exampaper/ShortAnswerQuestion'
 import NestingQuestion from '../../components/table/exampaper/NestingQuestion'
 import QuestionTitle from '../../components/table/exampaper/QuestionTitle'
-
 import {setExamInfo} from '../../components/exampaper_filter/utils'
-
 import {deleteQuestion,changeQuestionPosition,getNewExamId,getExistExamInfo,updateQuestion} from '../../components/table/exampaper/exampaper-utils'
 const Search = Input.Search;
 
@@ -222,6 +220,12 @@ const CreateExampaper = React.createClass({
     })
   },
 
+  handleDeleteQuestion(questionId){
+    deleteQuestion({questionId})
+    this.setState({
+      exerciseList:this.state.exerciseList.filter(v => v.get('id')!=questionId)
+    })
+  },
 
 //更新题目
   update(questionId,changedAttribute,changedContent){

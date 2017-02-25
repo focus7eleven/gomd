@@ -35,7 +35,8 @@ export const findPath = (tree,targetURL) => {
 export default (state=initMenu,action) => {
   switch (action.type) {
     case GET_MENU:
-      return state.set('data',fromJS(action.payload.slice(0,7)))
+      // return state.set('data',fromJS(action.payload.slice(0,7)))
+      return state.set('data',fromJS(action.payload.slice(0,8)))
     default:
       return state
   }

@@ -1,0 +1,84 @@
+@import "~mixins.scss";
+@import "~theme.scss";
+
+:local(.container){
+  width: 100%;
+  height: 100%;
+
+  :local(.header){
+    @include headerWithoutFilter;
+    :local(.sheetHead){
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: center;
+      >span{
+        font-size: 14px;
+      }
+
+      >input{
+        width: 410px;
+        margin-left: 10px;
+        margin-right: 20px;
+      }
+    }
+  }
+
+  :local(.body){
+    @include body;
+
+    :local(.specialBackground){
+      background-color: #FEF8EE;
+    }
+
+    :local(.hasBorderTop){
+      border-top: 1px solid #D9D9D9;
+    }
+
+    :local(.questionContainer){
+      width: 100%;
+      min-height: 72px;
+      padding: 10px 15px;
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+
+      :local(.block){
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        margin-right: 19px;
+        >span:first-child{
+          margin-bottom: 5px;
+        }
+      }
+
+      :local(.verticalLayout){
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+      }
+      :local(.horizontalLayout){
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+      }
+    }
+  }
+}
+
+:global(.ant-select-disabled .ant-select-selection){
+  background-color: #f3f3f3;
+  color: #444444;
+  border-color: none;
+}
+
+:global(.ant-input[disabled]){
+  background-color: #f3f3f3;
+  color: #444444;
+}
+
+:global(.ant-input-number-input[disabled]){
+  background-color: #f3f3f3;
+  color: #444444;
+}
