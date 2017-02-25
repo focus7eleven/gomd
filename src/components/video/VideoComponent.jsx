@@ -3,13 +3,17 @@ import styles from './VideoComponent.scss'
 import {Icon,Modal,Button,Tag} from 'antd'
 import {baseURL} from '../../config'
 import subjectColor from '../../utils/subjectColor'
-import {getTableData,checkVideo,likeVideo,collectVideo} from '../../actions/micro_course/main'
+import {checkVideo,likeVideo,collectVideo,setDetail} from '../../actions/micro_course/main'
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
 
 const mockURL = 'https://cdn.selz.com/plyr/1.5/View_From_A_Blue_Moon_Trailer-HD.mp4'
 
 const VideoComponent = React.createClass({
+  contextTypes: {
+    router: React.PropTypes.object
+  },
+
   propTypes:{
     description:PropTypes.shape({
       name:PropTypes.string,
@@ -81,8 +85,10 @@ const VideoComponent = React.createClass({
   },
 
   handleShowModal(){
-    this.setState({showVideoDetail: true});
-},
+    // this.setState({showVideoDetail: true});
+    this.props.setDetail({description: this.props.description,videoUrl: this.props.videoUrl,id: this.props.id})
+    this.context.router.push(`/index/resource_center/video_detail`)
+  },
 
   handleCloseModal(){
     this.setState({showVideoDetail: false});
@@ -172,7 +178,7 @@ const VideoComponent = React.createClass({
             }
           </div>
         </div>
-        {this.renderModal()}
+        {/* {this.renderModal()} */}
       </div>
     )
   }
@@ -184,10 +190,10 @@ function mapStateToProps(state){
 
 function mapDispatchToProps(dispatch){
   return {
-    getTableData: bindActionCreators(getTableData,dispatch),
     checkVideo: bindActionCreators(checkVideo,dispatch),
     likeVideo: bindActionCreators(likeVideo,dispatch),
     collectVideo: bindActionCreators(collectVideo,dispatch),
+    setDetail: bindActionCreators(setDetail,dispatch),
   }
 }
 

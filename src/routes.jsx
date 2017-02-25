@@ -45,6 +45,7 @@ import SchoolVideoPage from './containers/micro_course/SchoolVideoPage'
 import TeacherVideoPage from './containers/micro_course/TeacherVideoPage'
 import CollectionVideoPage from './containers/micro_course/CollectionVideoPage'
 import UncheckVideoPage from './containers/micro_course/UncheckVideoPage'
+import VideoDetailPage from './containers/micro_course/detail/VideoDetailPage'
 import HomeworkContainer from './containers/homework_center/HomeworkContainer'
 import CreateHomeworkPage from './containers/homework_center/CreateHomework'
 import HomeworkUnchecked from './containers/homework_center/HomeworkUnchecked'
@@ -150,6 +151,7 @@ const routes = (
 					<Route path='teachervideo' component={TeacherVideoPage}></Route>
 					<Route path='mycollection' component={CollectionVideoPage}></Route>
 					<Route path='uncheckedvideo' component={UncheckVideoPage}></Route>
+					<Route path='video_detail' component={VideoDetailPage}></Route>
 				</Route>
 
 				{/* 作业中心 */}

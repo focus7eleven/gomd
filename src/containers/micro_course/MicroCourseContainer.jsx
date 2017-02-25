@@ -17,7 +17,11 @@ const MicroCourseContainer = React.createClass({
   },
 
   render(){
-    return !this.props.microCourse.get('data').get('result') || this.props.microCourse.get('loading') || this.props.menu.get('data').isEmpty()?<div className={styles.loading}><Spin size="large" /></div>:this.props.children
+    if(this.props.location.pathname.split('/').slice(-1)[0] === 'video_detail'){
+      return this.props.children
+    }else{
+      return !this.props.microCourse.get('data').get('result') || this.props.microCourse.get('loading') || this.props.menu.get('data').isEmpty()?<div className={styles.loading}><Spin size="large" /></div>:this.props.children
+    }
   }
 })
 

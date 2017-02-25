@@ -190,3 +190,15 @@ export function collectVideo(data,type){
     })
   }
 }
+
+export const SET_DETAIL = "SET_DETAIL"
+export function setDetail(data){
+  return dispatch => {
+    dispatch({
+      type: SET_DETAIL,
+      payload: {
+        data
+      }
+    })
+  }
+}

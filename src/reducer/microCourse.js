@@ -6,6 +6,7 @@ import {
   GET_FILTERED_TABLEDATA,
   LIKE_VIDEO,
   COLLECT_VIDEO,
+  SET_DETAIL,
 } from '../actions/micro_course/main'
 import {fromJS} from 'immutable'
 import _ from 'lodash'
@@ -16,6 +17,7 @@ const initialState = fromJS({
   gradeOptions: [],
   subjectOptions: [],
   versionOptions: [],
+  videoDetail: {},
 })
 
 export default (state = initialState,action)=>{
@@ -41,6 +43,9 @@ export default (state = initialState,action)=>{
       ({videoId,result,type} = action.payload);
       const newCollectType = type === 'collect' ? true : false;
       return state.updateIn(['data','result'],v => v.update(v.findIndex(v => v.get('id') == videoId), v => v.set('collectionCount', Number.parseInt(result)).set('collected', newCollectType)))
+    case SET_DETAIL:
+      const videoDetail = action.payload.data
+      return state.set('videoDetail', videoDetail)
     default:
       return state
   }
