@@ -7,6 +7,17 @@ const VideoDetailPage = React.createClass({
   },
 
   getInitialState(){
-
+    return {}
   },
+
+  render(){
+    return (
+      <div className={styles.container}>
+        <div className={styles.header}></div>
+
+      </div>
+    )
+  }
 })
+
+export default VideoDetailPage
