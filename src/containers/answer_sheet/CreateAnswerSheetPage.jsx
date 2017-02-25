@@ -149,8 +149,14 @@ const CreateAnswerSheetPage = React.createClass({
     let questions = this.state.questions;
     if(value==='zhangjie'&&questions.get(index+1)&&questions.get(index+1).get('isChild')){
       Modal.warning({
-        title: '本题目包含子题目',
-        content: '如欲改成章节，请首先取消本题目所属的子题目。',
+        title: '操作失败',
+        content: '本题目包含子题目，如确需改成章节，请首先取消本题目所属的子题目。',
+      });
+      return
+    }else if(value==='zhangjie'&&questions.get(index).get(isChild)){
+      Modal.warning({
+        title: '操作失败',
+        content: '本题目的属性为上一题的子题目，不予许将本题目变更为章节。如确需变更，请首先取消“子题目”属性',
       });
       return
     }
@@ -239,15 +245,15 @@ const CreateAnswerSheetPage = React.createClass({
     const questions = this.state.questions
     if(questions.size === 1){
       Modal.warning({
-        title: '答题卡不能为空',
-        content: '答题卡至少应包含一道题',
+        title: '操作失败',
+        content: '答题卡不能为空，答题卡至少应该包含一道题目。',
       });
       return
     }
     if(questions.get(index+1)&&!questions.get(index).get('isChild')&&questions.get(index+1).get('isChild')){
       Modal.warning({
-        title: '本题目包含子题目',
-        content: '如欲删除本题目，请首先取消本题目所属的子题目。',
+        title: '操作失败',
+        content: '本题目包含子题目，如确需删除本题目，请首先取消所属的子题目。',
       });
       return
     }

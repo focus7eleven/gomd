@@ -5,7 +5,7 @@ import styles from './DetailPage.scss'
 import {Row,Col,Card,Icon,Button,Table,Tag} from 'antd'
 import VideoModal from '../../../components/modal/VideoModal'
 import HomeworkDetailModal from '../../../components/modal/HomeworkDetailModal'
-import config from '../../../config'
+import config,{baseURL} from '../../../config'
 import moment from 'moment'
 
 const DetailPage = React.createClass({
@@ -27,7 +27,7 @@ const DetailPage = React.createClass({
           'token':sessionStorage.getItem('accessToken'),
         }
       }).then(res => res.json()).then(res => {
-        const baseURL = 'http://139.224.194.45:8080'
+        // const baseURL = 'http://139.224.194.45:8080'
         this.setState({
           showVidoeoDetailModal:true,
           videoUrl:`${baseURL}/${res.url}`

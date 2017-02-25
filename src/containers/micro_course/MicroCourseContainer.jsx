@@ -17,7 +17,7 @@ const MicroCourseContainer = React.createClass({
   },
 
   render(){
-    return this.props.microCourse.get('loading') || this.props.menu.get('data').isEmpty()?<div className={styles.loading}><Spin size="large" /></div>:this.props.children
+    return !this.props.microCourse.get('data').get('result') || this.props.microCourse.get('loading') || this.props.menu.get('data').isEmpty()?<div className={styles.loading}><Spin size="large" /></div>:this.props.children
   }
 })
 
