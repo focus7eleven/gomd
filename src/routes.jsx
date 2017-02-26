@@ -166,7 +166,10 @@ const routes = (
 
 				{/* 题库机组卷 */}
 				<Route path=':second' component={ExampaperContainer}>
-					<Route path='selfexampapercenter' component={MyExampaperPage}></Route>
+					<Route path='selfexampapercenter' >
+						<IndexRoute component={MyExampaperPage}/>
+						<Route path='displayExampaper/(:examId)' component={DisplayExampaper}></Route>
+					</Route>
 					<Route path='newexampaper' component={CreateExampaper}></Route>
 					<Route path='editExampaper/(:examId)' component={()=><CreateExampaper type='edit'/>}></Route>
 					<Route path='displayExampaper/(:examId)' component={DisplayExampaper}></Route>

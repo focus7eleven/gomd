@@ -321,8 +321,8 @@ const RoleSettingPage = React.createClass({
     formData.append('roleId',this._currentRow.get('roleId'))
     const checkedList = this.refs.permissionTree.getCheckedData()
     checkedList.forEach(v => {
-      formData.append('resourceIds',v.get('id'))
-      formData.append('code',v.get('code'))
+      formData.append('resourceIds[]',v.get('id'))
+      formData.append('code[]',v.get('code'))
     })
     fetch(config.api.permission.set.update,{
       method:'post',

@@ -101,7 +101,6 @@ const CreateClassPage = React.createClass({
           subjectList,
           versionList,
         } = result
-        console.log("Asdfasdf:",charpterList.toJS(),gradeList.toJS(),subjectList.toJS(),versionList.toJS())
         return fetch(config.api.lesson.lastChapterTime(this.state.charpterOption[0]||charpterList.isEmpty()?'':charpterList.get(0).get('teaching_schedule_id'),
         this.state.charpterOption[1]||charpterList.isEmpty()?'':charpterList.get(0).get('hours')),{
           method:'get',
@@ -287,7 +286,6 @@ const CreateClassPage = React.createClass({
   },
   render(){
     const {getFieldDecorator} = this.props.form
-    // console.log("asdfsdf--->:",this.state.chapterTime)
     return (
       <div className={styles.container}>
         <div className={styles.header}>
@@ -296,7 +294,7 @@ const CreateClassPage = React.createClass({
         <div className={styles.body}>
           <Form>
             <Row type='flex' gutter={8}>
-              <Col span={3} >
+              <Col span={4} >
                 <div className={styles.filterItem}>
                   学科：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<Select placeholder='选择学科'size="large" value={this.state.subjectOption} onChange={this.handleFilterChange.bind(this,'subject')}>
                   {
@@ -307,7 +305,7 @@ const CreateClassPage = React.createClass({
                   </Select>
                 </div>
               </Col>
-              <Col span={3} offset={3}>
+              <Col span={4} offset={1}>
                 <div className={styles.filterItem}>
                   版本：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<Select placeholder='选择版本' size="large" value={this.state.versionOption} onChange={this.handleFilterChange.bind(this,'version')}>
                   {

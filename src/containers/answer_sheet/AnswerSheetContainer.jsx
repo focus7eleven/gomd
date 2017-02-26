@@ -19,7 +19,7 @@ const AnswerSheetContainer = React.createClass({
   },
 
   render(){
-    return !this.props.answerSheet.get('data').get('result') || this.props.answerSheet.get('loading') || this.props.menu.get('data').isEmpty()?<div className={styles.loading}><Spin size="large" /></div>:this.props.children
+    return !this.props.answerSheet.get('data').get('result') || this.props.answerSheet.get('loading') || this.props.menu.get('data').isEmpty()?<div className={styles.loading}><Spin size="large" /><div>努力加载中，请耐心等待！</div></div>:this.props.children
   }
 })
 
