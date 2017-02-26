@@ -74,11 +74,11 @@ const DepartmentPage = React.createClass({
       className:styles.tableColumn,
     },{
       title: '负责人',
-      dataIndex: 'phaseName',
-      key: 'phaseName',
+      dataIndex: 'leaderName',
+      key: 'leaderName',
       className:styles.tableColumn,
       render:(text,record)=>{
-        return (<a onClick={this.handleShowAddOfficerModal.bind(this,record.key)}><Icon type='edit' /></a>)
+        return (<a onClick={this.handleShowAddOfficerModal.bind(this,record.key)}><Icon type='edit' />{text}</a>)
       }
     },{
       title: '科室成员',
@@ -220,7 +220,7 @@ const DepartmentPage = React.createClass({
   handleShowAddOfficer(){
     this.props.addOffice({
       departmentId:this._currentRow.get('departmentId'),
-      leaderId:this.state.officerList[this.state.selectedOffice[0]].id,
+      leaderId:this.state.officerList[this.state.selectedOffice[0]].userId,
       action:'edit'
     })
   },
@@ -328,7 +328,7 @@ const DepartmentPage = React.createClass({
   },
   renderAddMemberModal(){
     const tableData = this.state.allMembers.map((v,k)=>({
-      key:v.id,
+      key:v.userId,
       ...v
     }))
     const tableColumn = [{
