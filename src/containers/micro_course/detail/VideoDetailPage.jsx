@@ -26,16 +26,16 @@ const VideoDetailPage = React.createClass({
   },
 
   handleLike(){
-    const type = this.props.description.like ? "nolike" : "like"
+    const type = this.props.videoDetail.liked ? "nolike" : "like"
     let formData = new FormData()
-    formData.append('videoId',this.props.id);
+    formData.append('videoId',this.props.videoDetail.id);
     this.props.likeVideo(formData,type)
   },
 
   handleCollect(){
-    const type = this.props.description.collect ? "nocollect" : "collect"
+    const type = this.props.videoDetail.collected ? "nocollect" : "collect"
     let formData = new FormData()
-    formData.append('videoId',this.props.id);
+    formData.append('videoId',this.props.videoDetail.id);
     this.props.collectVideo(formData,type)
   },
 
@@ -45,7 +45,13 @@ const VideoDetailPage = React.createClass({
     return (
         <div className={styles.container}>
           <div className={styles.header}>
-            <div className={styles.title}>微课名称：{videoDetail.name}</div>
+            <div className={styles.title}>
+              微课名称：{videoDetail.name}
+              <div>
+                <span className={styles.like} onClick={this.handleLike}><Icon style={videoDetail.liked?{color:'#F04134'}:null} type="like" />{videoDetail.likeCount}</span>
+                <span className={styles.collect} onClick={this.handleCollect}><Icon style={videoDetail.collected?{color:'#F04134'}:null} type="heart" />{videoDetail.collected?"取消收藏":"收藏"}</span>
+              </div>
+            </div>
             <Button type='primary' onClick={this.handleBack}>返回</Button>
           </div>
           <div className={styles.body}>
@@ -55,9 +61,27 @@ const VideoDetailPage = React.createClass({
               </video>
             </div>
             <div className={styles.videoInfo}>
-              <Card style={{height:138}} title={<span><Icon type='appstore'/>学科</span>} bordered={true}>
-                {videoDetail.subjectName}
-              </Card>
+              <div className={styles.horiLayout}>
+                <Card className={styles.card} title={<span><Icon type='appstore'/>学科</span>} bordered={true}>
+                  {videoDetail.subjectName}
+                </Card>
+                <Card className={styles.card} title={<span><Icon type='appstore'/>年级</span>} bordered={true}>
+                  {videoDetail.gradeName}
+                </Card>
+                <Card className={styles.card} title={<span><Icon type='appstore'/>学期</span>} bordered={true}>
+                  {videoDetail.textbookMenuTerm}
+                </Card>
+              </div>
+              <div className={styles.horiLayout}>
+                <Card className={styles.card} title={<span><Icon type='appstore'/>知识点</span>} bordered={true}>
+                  {videoDetail.textBookMenuName}
+                </Card>
+              </div>
+              <div className={styles.horiLayout}>
+                <Card className={styles.card} title={<span><Icon type='appstore'/>内容简介</span>} bordered={true}>
+                  {videoDetail.description}
+                </Card>
+              </div>
             </div>
           </div>
         </div>

@@ -14,7 +14,7 @@ import _ from 'lodash'
 
 const initialState = fromJS({
   data: [],
-  loading: true,
+  loading: false,
   gradeOptions: [],
   subjectOptions: [],
   versionOptions: [],

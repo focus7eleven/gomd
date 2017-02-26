@@ -28,11 +28,7 @@ const MainContainer = React.createClass({
   },
   componentWillReceiveProps(nextProps){
     let menuUrl = nextProps.location.pathname.split('/').slice(-1)[0]
-    console.log("menuUrl: ",menuUrl);
-    console.log("nextProps: ",nextProps.menu.get('data').toJS());
-    console.log("find path: ", findPath(nextProps.menu.get('data'),menuUrl).toJS());
     let path = !nextProps.menu.get('data').isEmpty()?findPath(nextProps.menu.get('data'),menuUrl):List()
-    console.log("path:",path.toJS());
     let temp = nextProps.location.pathname.split('/').slice(-2)[0]
     if(temp == 'detail'){
       let menuUrl2 = nextProps.location.pathname.split('/').slice(-3)[0]
@@ -40,6 +36,12 @@ const MainContainer = React.createClass({
       const tail = temp === 'detail' ? '课程内容' : '微课详情'
       this.setState({
         currentPath:path2.map(v => v.get('resourceName')).concat([tail])
+      })
+    }else if(temp=='displayExampaper'){
+      let menuUrl2 = nextProps.location.pathname.split('/').slice(-3)[0]
+      let path2 = !nextProps.menu.get('data').isEmpty()?findPath(nextProps.menu.get('data'),menuUrl2):List()
+      this.setState({
+        currentPath:path2.map(v => v.get('resourceName')).concat(['试卷内容'])
       })
     }else{
       this.setState({

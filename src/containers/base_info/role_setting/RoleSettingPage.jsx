@@ -10,6 +10,7 @@ import styles from './RoleSettingPage.scss'
 import _ from 'lodash'
 import config from '../../../config'
 import {getTreeFromList,findInTree,findPathInTree} from '../../../utils/tree-utils'
+import ZTreeComponent from '../../../components/ztree/ZTreeComponent'
 
 const FormItem = Form.Item
 const Search = Input.Search
@@ -318,9 +319,10 @@ const RoleSettingPage = React.createClass({
   handleSavePermission(){
     let formData = new FormData()
     formData.append('roleId',this._currentRow.get('roleId'))
-    this.state.checkedList.forEach(v => {
-      formData.append('resourceIds',v.get('resource_id'))
-      formData.append('code',v.get('code'))
+    const checkedList = this.refs.permissionTree.getCheckedData()
+    checkedList.forEach(v => {
+      formData.append('resourceIds[]',v.get('id'))
+      formData.append('code[]',v.get('code'))
     })
     fetch(config.api.permission.set.update,{
       method:'post',
@@ -352,18 +354,6 @@ const RoleSettingPage = React.createClass({
     }
   },
   renderShowPermissionModal(){
-    const renderTree = (tree) => tree.map(node => {
-      if(node.get('children')){
-        return (<TreeNode title={node.get('name')} key={node.get('id')} isLeaf={false} checked>
-        {
-          renderTree(node.get('children'))
-        }
-        </TreeNode>)
-      }else{
-        return <TreeNode title={node.get('name')} key={node.get('id')} isLeaf={false} checked></TreeNode>
-      }
-
-    }).toJS()
     return (
       <Modal title='权限' visible={true} onOK={this.handleSavePermission} onCancel={()=>{this.setState({showPermissionModal:false})}}
       footer={[
@@ -372,12 +362,7 @@ const RoleSettingPage = React.createClass({
       ]}
       >
         <div className={styles.permissionTree}>
-          <Tree loadData={this.onloadData} checkable checkedKeys={this.state.checkedList.map(v => v.get('resource_id')).toJS()}
-          onCheck={this.handleCheckPermission}>
-          {
-            renderTree(this.state.permissionTree)
-          }
-          </Tree>
+          <ZTreeComponent ref="permissionTree" checkedData={this.state.checkedList} treeData={this._permissionList}/>
         </div>
       </Modal>
     )

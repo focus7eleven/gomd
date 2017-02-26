@@ -4,6 +4,7 @@ node_modules/
 dist/*
 !dist/index.html
 !dist/ueditor
+!dist/ztree
 .idea/
 npm-debug.log
 .svn/

@@ -11,6 +11,27 @@
 
     :local(.title){
       font-size: 20px;
+      display: flex;
+      flex-direction: row;
+
+      :local(.like){
+        padding: 0 15px;
+        border-right: 1px solid $border-grey;
+        font-size: 16px;
+        cursor: pointer;
+        >i{
+          margin-right: 5px;
+        }
+      }
+
+      :local(.collect){
+        padding: 0 15px;
+        font-size: 16px;
+        cursor: pointer;
+        >i{
+          margin-right: 5px;
+        }
+      }
     }
 
     :local(.headerOperation){
@@ -33,6 +54,26 @@
 
       :local(.video){
         width: 70%;
+      }
+    }
+
+    :local(.videoInfo){
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      margin-top: 15px;
+
+      :local(.horiLayout){
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        margin-bottom: 5px;
+
+        :local(.card){
+          height: 110px;
+          flex-grow: 11;
+          margin-right: 5px;
+        }
       }
     }
   }

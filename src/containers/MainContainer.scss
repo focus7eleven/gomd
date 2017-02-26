@@ -16,15 +16,15 @@
   :local(.workspace){
     height: calc( 100% - #{$navigation-height} );
     width: 100%;
-    overflow: scroll;
+    overflow: auto;
     background-image: url(images/backgroud.png);
     background-size: 100%;
     display: flex;
     justify-content: center;
 
     :local(.mainPanel){
-      /* width: 80%; */
-      width: 1195px;
+      width: 85%;
+      max-width: 1207px;
       height: 100%;
       padding-top: 10px;
       padding-bottom: 20px;
