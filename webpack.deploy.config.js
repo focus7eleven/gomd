@@ -73,7 +73,7 @@ module.exports = {
 		},{
 		 test: /(\.swf$|\.xap$)/,
 		 loader: 'file-loader'
-	 }],	 
+	 }],
 	},
 	postcss: function() {
 		return [

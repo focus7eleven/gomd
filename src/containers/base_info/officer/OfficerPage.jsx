@@ -212,7 +212,7 @@ const OfficerPage = React.createClass({
         'id':this._currentRow.get('id'),
         'sex':this._currentRow.get('sex'),
         'phone':this._currentRow.get('phone'),
-        'birth':moment(this._currentRow.get('birth')),
+        'birth':this._currentRow.get('birth')?moment(this._currentRow.get('birth')):'',
         'email':this._currentRow.get('email'),
         'homeAddr':this._currentRow.get('homeAddr'),
       })
