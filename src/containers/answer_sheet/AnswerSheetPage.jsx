@@ -10,11 +10,14 @@ import styles from './AnswerSheetPage.scss'
 import TableComponent from '../../components/table/TableComponent'
 import _ from 'lodash'
 import Sheet from '../../components/answer_sheet/Sheet.jsx'
+import config from '../../config'
 
 const Search = Input.Search
 const confirm = Modal.confirm
 
 const AnswerSheetPage = React.createClass({
+  downloadLink: {},
+
   _currentMenu:Map({
     authList:List()
   }),
@@ -26,6 +29,7 @@ const AnswerSheetPage = React.createClass({
       sheetName: '',
       sheetId: 0,
       questions: fromJS([]),
+      file: null,
     }
   },
 
@@ -66,7 +70,11 @@ const AnswerSheetPage = React.createClass({
       className:styles.tableColumn,
       render: (text,record) => {
         return (
-          <Icon type="search" style={{cursor: 'pointer'}} onClick={this.handleDownload.bind(null,text)}/>
+          <div>
+            <Icon type="search" style={{cursor: 'pointer'}} onClick={this.handleDownload.bind(null,text)}/>
+            <a ref={(a)=>this.downloadLink[text] = a} href={this.state.file} download={"答题卡"+text+".pdf"} style={{display:'none'}}></a>
+          </div>
+
         )
       }
     },{
@@ -109,7 +117,19 @@ const AnswerSheetPage = React.createClass({
   },
 
   handleDownload(id){
-    this.props.downloadSheet(id);
+    // this.props.downloadSheet(id);
+    fetch(config.api.answersheet.download(id),{
+      method:'post',
+      headers:{
+        'from':'nodejs',
+        'token':sessionStorage.getItem('accessToken'),
+      },
+    }).then(res => res.blob()).then(res => {
+      const url = window.URL.createObjectURL(res)
+      this.setState({file: url}, ()=>{
+        this.downloadLink[id].click();
+      })
+    })
   },
 
   handleCheckDetail(record){
@@ -168,7 +188,6 @@ const AnswerSheetPage = React.createClass({
 
   handleConvertParams(questions){
     let result = fromJS([])
-    console.log("before: ",questions);
     questions.map((item,index)=>{
       let afterConvert = {}
       afterConvert['isChild'] = item.child_question_flag
@@ -186,14 +205,11 @@ const AnswerSheetPage = React.createClass({
       afterConvert['answerHeight'] = height[0]
       result = result.push(fromJS(afterConvert))
     })
-    console.log("after: ",result.toJS());
     return result
   },
 
   renderSheetDetailModal(){
     const {questions,sheetName,detailModalVisibility} = this.state
-    // const immutableQuestions = this.handleConvertParams(questions)
-    console.log(questions.toJS());
     return (
       <Modal width={1000} title="答题卡详情" visible={detailModalVisibility} footer={[
         <Button key="close" size="large" type="primary" onClick={this.handleCloseDetailModal}>关闭</Button>,

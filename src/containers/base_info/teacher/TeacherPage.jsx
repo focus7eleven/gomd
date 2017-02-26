@@ -38,6 +38,7 @@ const TeacherPage = React.createClass({
       // 查看教师班级
       classModalVisibility: false,
       teacherClassList: [],
+      fileUrl: "",
     }
   },
 
@@ -311,7 +312,19 @@ const TeacherPage = React.createClass({
   },
 
   handleDownloadExcel(){
-    this.props.downloadExcel("teacher");
+    // this.props.downloadExcel("teacher");
+    fetch(config.api.staff.downloadExcel("teacher"),{
+      method:'post',
+      headers:{
+        'from':'nodejs',
+        'token':sessionStorage.getItem('accessToken'),
+      },
+    }).then(res => res.blob()).then(res => {
+      const url = window.URL.createObjectURL(res);
+      this.setState({fileUrl: url}, () => {
+        this.refs.teacherExcel.click()
+      })
+    })
   },
 
   renderImportModal(){
@@ -320,7 +333,10 @@ const TeacherPage = React.createClass({
       <Modal title="批量导入" visible={importModalVisibility} onOk={this.handleImportRecord} onCancel={this.handleImportModalDisplay.bind(this,false)}>
         <div>
           <h3>导入步骤:</h3>
-          <p>1. 点击<a onClick={this.handleDownloadExcel}>下载模板</a></p>
+          <p>1. 点击
+            <a onClick={this.handleDownloadExcel}>下载模板</a>
+            <a ref="teacherExcel" href={this.state.fileUrl} download="教师批量导入模板.xlsx" style={{display:'none'}}></a>
+          </p>
           <p>2. 按模板要求完善导入人员的信息</p>
           <p>3. 选择该文件进行导入</p>
           <input type="file" onChange={this.handleImportFileChange} />
