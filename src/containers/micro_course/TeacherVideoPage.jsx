@@ -388,7 +388,7 @@ const TeacherVideoPage = React.createClass({
                     description.info = item.get('description');
                     description.teacher = 'teacher';
                     return <div key={index}>
-                      <VideoComponent description={description} videoUrl={item.get('url')} coverUrl={item.get('coverUrl')} id={item.get('id')}></VideoComponent>
+                      <VideoComponent pageType="teachervideo" description={description} videoUrl={item.get('url')} coverUrl={item.get('coverUrl')} id={item.get('id')}></VideoComponent>
                     </div>
                   })
                 }

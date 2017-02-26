@@ -85,7 +85,7 @@ const UncheckVideoPage = React.createClass({
                     description.info = item.get('description');
                     description.teacher = 'teacher';
                     return <div key={index}>
-                      <VideoComponent videoType="check" description={description} videoUrl={item.get('url')} coverUrl={item.get('coverUrl')} id={item.get('id')}></VideoComponent>
+                      <VideoComponent pageType="uncheckedvideo" videoType="check" description={description} videoUrl={item.get('url')} coverUrl={item.get('coverUrl')} id={item.get('id')}></VideoComponent>
                     </div>
                   })
                 }

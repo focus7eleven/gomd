@@ -1,9 +1,10 @@
 import React from 'react'
 import styles from './VideoDetailPage.scss'
-import {Button} from 'antd'
+import {Card,Icon,Button} from 'antd'
 import {likeVideo,collectVideo} from '../../../actions/micro_course/main'
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
+import {baseURL} from '../../../config'
 
 const VideoDetailPage = React.createClass({
   getInitialState(){
@@ -11,7 +12,7 @@ const VideoDetailPage = React.createClass({
   },
 
   handleBack(){
-
+    this.props.router.goBack()
   },
 
   handlePlay(){
@@ -44,14 +45,19 @@ const VideoDetailPage = React.createClass({
     return (
         <div className={styles.container}>
           <div className={styles.header}>
-            <div>微课名称：{videoDetail.description.name}</div>
+            <div className={styles.title}>微课名称：{videoDetail.name}</div>
             <Button type='primary' onClick={this.handleBack}>返回</Button>
           </div>
           <div className={styles.body}>
-            <div onClick={this.handlePlay}>
-              {/* <video ref="player" poster={baseURL+'/'+this.props.coverUrl} className={styles.microVideo} id={this.props.id} controls>
-                <source src={baseURL+'/'+this.props.videoUrl} type="video/mp4"/>
-              </video> */}
+            <div onClick={this.handlePlay} className={styles.videoContainer}>
+              <video ref="player" poster={baseURL+'/'+videoDetail.coverUrl} className={styles.video} id={videoDetail.id} controls>
+                <source src={baseURL+'/'+videoDetail.url} type="video/mp4"/>
+              </video>
+            </div>
+            <div className={styles.videoInfo}>
+              <Card style={{height:138}} title={<span><Icon type='appstore'/>学科</span>} bordered={true}>
+                {videoDetail.subjectName}
+              </Card>
             </div>
           </div>
         </div>

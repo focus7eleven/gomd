@@ -7,6 +7,7 @@ import {
   LIKE_VIDEO,
   COLLECT_VIDEO,
   SET_DETAIL,
+  GET_VIDEO_DETAIL,
 } from '../actions/micro_course/main'
 import {fromJS} from 'immutable'
 import _ from 'lodash'
@@ -17,7 +18,8 @@ const initialState = fromJS({
   gradeOptions: [],
   subjectOptions: [],
   versionOptions: [],
-  videoDetail: {},
+  loadingDetail: false,
+  videoDetail: [],
 })
 
 export default (state = initialState,action)=>{
@@ -35,6 +37,10 @@ export default (state = initialState,action)=>{
       return state.set('subjectOptions',action.data)
     case GET_VERSION_OPTIONS[1]:
       return state.set('versionOptions',action.data)
+    case GET_VIDEO_DETAIL[0]:
+      return state.set('loadingDetail', true)
+    case GET_VIDEO_DETAIL[1]:
+      return state.set('videoDetail',action.data).set('loadingDetail', false)
     case LIKE_VIDEO:
       ({videoId,result,type} = action.payload);
       const newLikeType = type === 'like' ? true : false;

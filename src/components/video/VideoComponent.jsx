@@ -15,6 +15,7 @@ const VideoComponent = React.createClass({
   },
 
   propTypes:{
+    pageType: PropTypes.string.isRequired,
     description:PropTypes.shape({
       name:PropTypes.string,
       grade:PropTypes.string,
@@ -86,8 +87,8 @@ const VideoComponent = React.createClass({
 
   handleShowModal(){
     // this.setState({showVideoDetail: true});
-    this.props.setDetail({description: this.props.description,videoUrl: this.props.videoUrl,id: this.props.id})
-    this.context.router.push(`/index/resource_center/video_detail`)
+    // this.props.setDetail({description: this.props.description,videoUrl: this.props.videoUrl,coverUrl: this.props.coverUrl,id: this.props.id})
+    this.context.router.push(`/index/resource_center/${this.props.pageType}/video_detail/${this.props.id}`)
   },
 
   handleCloseModal(){

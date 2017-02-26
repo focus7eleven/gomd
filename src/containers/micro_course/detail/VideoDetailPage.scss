@@ -6,6 +6,12 @@
 
   :local(.header){
     @include headerWithoutFilter;
+    border-bottom: 1px solid #d9d9d9;
+    padding-bottom: 8px;
+
+    :local(.title){
+      font-size: 20px;
+    }
 
     :local(.headerOperation){
       height: 100%;
@@ -18,5 +24,16 @@
 
   :local(.body){
     @include body;
+
+    :local(.videoContainer){
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: row;
+
+      :local(.video){
+        width: 70%;
+      }
+    }
   }
 }

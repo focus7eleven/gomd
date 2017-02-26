@@ -48,6 +48,22 @@ export function getFilteredTableData(type,currentPage,subjectId,gradeId,textbook
   }
 }
 
+export const GET_VIDEO_DETAIL = actionNames('GET_VIDEO_DETAIL')
+export function getVideoDetail(id){
+  return {
+    types:GET_VIDEO_DETAIL,
+    callAPI:()=>{
+      return fetch(config.api.microvideo.getVideoDetailById(id),{
+        method:'GET',
+        headers:{
+          'from':'nodejs',
+          'token':sessionStorage.getItem('accessToken'),
+        }
+      }).then(res => res.json())
+    },
+  }
+}
+
 // 获取筛选器选项
 export const GET_GRADE_OPTIONS = actionNames('GET_GRADE_OPTIONS')
 export const GET_SUBJECT_OPTIONS = actionNames('GET_SUBJECT_OPTIONS')
