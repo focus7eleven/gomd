@@ -17,6 +17,12 @@ const initialState = fromJS({
   gradeOptions: [],
   subjectOptions: [],
   versionOptions: [],
+  otherMsg:fromJS({
+    gradeOption: "",
+    subjectOption: "",
+    termOption: "",
+    // versionOption: "",
+  }),
 })
 
 export default (state = initialState,action)=>{
@@ -24,9 +30,9 @@ export default (state = initialState,action)=>{
     case GET_TABLEDATA[0]:
       return state.set('loading',true)
     case GET_TABLEDATA[1]:
-      return state.set('data',fromJS(action.data)).set('loading',false)
+      return state.set('data',fromJS(action.data.mainData)).set('loading',false).set('otherMsg',fromJS(action.data.otherMsg))
     case GET_FILTERED_TABLEDATA[1]:
-      return state.set('data',fromJS(action.data))
+      return state.set('data',fromJS(action.data.mainData)).set('loading',false).set('otherMsg',fromJS(action.data.otherMsg))
     case GET_DETAILDATA[0]:
       return state.set('loadingDetail',true)
     case GET_DETAILDATA[1]:

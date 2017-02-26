@@ -271,8 +271,9 @@ const CreateAnswerSheetPage = React.createClass({
 
   handleSaveAnswerSheet(){
     let formData = new FormData();
-    const {sheetName,questions} = this.state;
+    const {sheetName,questions,continuousIndex} = this.state;
     formData.append('answersheet_name',sheetName)
+    formData.append('num_chapter_continue',continuousIndex);
     questions.map((item,index)=>{
       formData.append('question_id',0);
       formData.append('question_sort',index+1);

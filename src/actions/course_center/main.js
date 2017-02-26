@@ -27,7 +27,7 @@ export function getTableData(type,search,currentPage){
           'from':'nodejs',
           'token':sessionStorage.getItem('accessToken'),
         }
-      }).then(res => res.json())
+      }).then(res => res.json()).then(res => ({mainData:res,otherMsg:{gradeOption:'',subjectOption:'',termOption:''}}))
     },
     shouldCallAPI:()=>{
       return type!='newCourse' && isNaN(type)
@@ -46,7 +46,7 @@ export function getFilteredTableData(type,search,currentPage,phaseCode="",subjec
           'from':'nodejs',
           'token':sessionStorage.getItem('accessToken'),
         }
-      }).then(res => res.json())
+      }).then(res => res.json()).then(res => ({mainData:res,otherMsg:{gradeOption:phaseCode,subjectOption:subjectId,termOption:termId}}))
     },
   }
 }

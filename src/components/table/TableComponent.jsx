@@ -1,7 +1,7 @@
 import React from 'react'
 import {Icon,Table,Button} from 'antd'
 import {getWorkspaceData} from '../../actions/workspace'
-import {getTableData} from '../../actions/course_center/main'
+import {getFilteredTableData} from '../../actions/course_center/main'
 import {getExampaper} from '../../actions/exampaper_action/main'
 import {getAnswerSheet} from '../../actions/answer_sheet/main'
 import {connect} from 'react-redux'
@@ -18,7 +18,7 @@ const TableComponent = React.createClass({
   },
 
   render(){
-    const {tableData,pageType,searchStr,getWorkspaceData,getTableData,dataType,getExampaper,getAnswerSheet} = this.props;
+    const {tableData,pageType,searchStr,getWorkspaceData,getCourseCenter,dataType,getExampaper,getAnswerSheet} = this.props;
     let workspace
     if(dataType=='baseInfo'){
       workspace = this.props.baseInfo
@@ -46,10 +46,9 @@ const TableComponent = React.createClass({
                 showQuickJumper:true,
                 onChange:(page)=>{
                   if(dataType=='baseInfo'){
-                    console.log("bbbbbb:",this.props.baseInfo.toJS())
                     getWorkspaceData(pageType,page,this.props.baseInfo.get('data').get('pageShow'),searchStr)
                   }else if(dataType=='courseCenter'){
-                    getTableData(pageType,'',page)
+                    getCourseCenter(pageType,'',page,this.props.courseCenter.get('otherMsg').get('gradeOption'),this.props.courseCenter.get('otherMsg').get('subjectOption'),this.props.courseCenter.get('otherMsg').get('termOption'))
                   }else if(dataType=='exampaper'){
                     getExampaper(pageType,'',page,this.props.exampaper.get('otherMsg').get('subjectId'),this.props.exampaper.get('otherMsg').get('gradeId'))
                   }else if(dataType=='answerSheet'){
@@ -90,7 +89,7 @@ function mapStateToProps(state){
 function mapDispatchToProps(dispatch){
   return {
     getWorkspaceData:bindActionCreators(getWorkspaceData,dispatch),
-    getTableData:bindActionCreators(getTableData,dispatch),
+    getCourseCenter:bindActionCreators(getFilteredTableData,dispatch),
     getExampaper:bindActionCreators(getExampaper,dispatch),
     getAnswerSheet:bindActionCreators(getAnswerSheet,dispatch),
   }
