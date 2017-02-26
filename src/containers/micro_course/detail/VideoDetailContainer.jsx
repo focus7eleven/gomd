@@ -17,7 +17,7 @@ const VideoDetailContainer = React.createClass({
   },
 
   render(){
-    return this.props.microCourse.get('loadingDetail') || this.props.menu.get('data').isEmpty()?<div className={styles.loading}><Spin size="large" /></div>:this.props.children
+    return this.props.microCourse.get('loadingDetail') || this.props.menu.get('data').isEmpty()?<div className={styles.loading}><Spin size="large" /><div>努力加载中，请耐心等待！</div></div>:this.props.children
   }
 })
 

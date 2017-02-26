@@ -153,7 +153,7 @@ const CreateAnswerSheetPage = React.createClass({
         content: '本题目包含子题目，如确需改成章节，请首先取消本题目所属的子题目。',
       });
       return
-    }else if(value==='zhangjie'&&questions.get(index).get(isChild)){
+    }else if(value==='zhangjie'&&questions.get(index).get('isChild')){
       Modal.warning({
         title: '操作失败',
         content: '本题目的属性为上一题的子题目，不予许将本题目变更为章节。如确需变更，请首先取消“子题目”属性',
@@ -652,9 +652,7 @@ const CreateAnswerSheetPage = React.createClass({
 })
 
 function mapStateToProps(state){
-  return{
-    answerSheet: state.get('answerSheet')
-  }
+  return{}
 }
 function mapDispatchToProps(dispatch){
   return {
