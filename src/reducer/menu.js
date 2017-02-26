@@ -15,7 +15,7 @@ export const findMenuInTree = (tree, targetURL) => tree.find(v => v.get('resourc
 // 根据三级菜单找到当前所处的菜单路径，用于面包屑的展示以及路径跳转。
 export const findPath = (tree,targetURL) => {
   return tree.reduce((pre,cur) => {
-    if(cur.get('childResources')){
+    if(!cur.get('childResources').isEmpty()){
       let childPath = findPath(cur.get('childResources'),targetURL)
       if(!childPath.isEmpty()){
         return pre.concat(List([cur])).concat(childPath)
