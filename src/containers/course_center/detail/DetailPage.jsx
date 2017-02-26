@@ -27,10 +27,9 @@ const DetailPage = React.createClass({
           'token':sessionStorage.getItem('accessToken'),
         }
       }).then(res => res.json()).then(res => {
-        // const baseURL = 'http://139.224.194.45:8080'
         this.setState({
           showVidoeoDetailModal:true,
-          videoUrl:`${baseURL}/${res.url}`
+          videoDetail: res,
         })
       })
     }else{
@@ -118,7 +117,7 @@ const DetailPage = React.createClass({
           </Row>
         </div>
 
-        {this.state.showVidoeoDetailModal?<VideoModal videoUrl={this.state.videoUrl} onCancel={()=>{this.setState({showVidoeoDetailModal:false})}}/>:null}
+        {this.state.showVidoeoDetailModal?<VideoModal videoDetail={this.state.videoDetail} onCancel={()=>{this.setState({showVidoeoDetailModal:false})}}/>:null}
         {this.state.showHomeworkDetailModal?<HomeworkDetailModal homeworkId={this.state.homeworkId} onCancel={()=>{this.setState({showHomeworkDetailModal:false})}}/>:null}
       </div>
     )

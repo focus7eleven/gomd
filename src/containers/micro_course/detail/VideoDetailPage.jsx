@@ -26,60 +26,59 @@ const VideoDetailPage = React.createClass({
   },
 
   handleLike(){
-    const type = this.props.videoDetail.liked ? "nolike" : "like"
+    const type = this.props.videoDetail.get('liked') ? "nolike" : "like"
     let formData = new FormData()
-    formData.append('videoId',this.props.videoDetail.id);
+    formData.append('videoId',this.props.videoDetail.get('id'));
     this.props.likeVideo(formData,type)
   },
 
   handleCollect(){
-    const type = this.props.videoDetail.collected ? "nocollect" : "collect"
+    const type = this.props.videoDetail.get('collected') ? "nocollect" : "collect"
     let formData = new FormData()
-    formData.append('videoId',this.props.videoDetail.id);
+    formData.append('videoId',this.props.videoDetail.get('id'));
     this.props.collectVideo(formData,type)
   },
 
   render(){
     const videoDetail = this.props.videoDetail
-    console.log(videoDetail);
     return (
         <div className={styles.container}>
           <div className={styles.header}>
             <div className={styles.title}>
-              微课名称：{videoDetail.name}
+              微课名称：{videoDetail.get('name')}
               <div>
-                <span className={styles.like} onClick={this.handleLike}><Icon style={videoDetail.liked?{color:'#F04134'}:null} type="like" />{videoDetail.likeCount}</span>
-                <span className={styles.collect} onClick={this.handleCollect}><Icon style={videoDetail.collected?{color:'#F04134'}:null} type="heart" />{videoDetail.collected?"取消收藏":"收藏"}</span>
+                <span className={styles.like} onClick={this.handleLike}><Icon style={videoDetail.get('liked')?{color:'#F04134'}:null} type="like" />{videoDetail.get('likeCount')}</span>
+                <span className={styles.collect} onClick={this.handleCollect}><Icon style={videoDetail.get('collected')?{color:'#F04134'}:null} type="heart" />{videoDetail.get('collected')?"取消收藏":"收藏"}</span>
               </div>
             </div>
             <Button type='primary' onClick={this.handleBack}>返回</Button>
           </div>
           <div className={styles.body}>
             <div onClick={this.handlePlay} className={styles.videoContainer}>
-              <video ref="player" poster={baseURL+'/'+videoDetail.coverUrl} className={styles.video} id={videoDetail.id} controls>
-                <source src={baseURL+'/'+videoDetail.url} type="video/mp4"/>
+              <video ref="player" poster={baseURL+'/'+videoDetail.get('coverUrl')} className={styles.video} id={videoDetail.get('id')} controls>
+                <source src={baseURL+'/'+videoDetail.get('url')} type="video/mp4"/>
               </video>
             </div>
             <div className={styles.videoInfo}>
               <div className={styles.horiLayout}>
                 <Card className={styles.card} title={<span><Icon type='appstore'/>学科</span>} bordered={true}>
-                  {videoDetail.subjectName}
+                  {videoDetail.get('subjectName')}
                 </Card>
                 <Card className={styles.card} title={<span><Icon type='appstore'/>年级</span>} bordered={true}>
-                  {videoDetail.gradeName}
+                  {videoDetail.get('gradeName')}
                 </Card>
                 <Card className={styles.card} title={<span><Icon type='appstore'/>学期</span>} bordered={true}>
-                  {videoDetail.textbookMenuTerm}
+                  {videoDetail.get('textbookMenuTerm')}
                 </Card>
               </div>
               <div className={styles.horiLayout}>
                 <Card className={styles.card} title={<span><Icon type='appstore'/>知识点</span>} bordered={true}>
-                  {videoDetail.textBookMenuName}
+                  {videoDetail.get('textBookMenuName')}
                 </Card>
               </div>
               <div className={styles.horiLayout}>
                 <Card className={styles.card} title={<span><Icon type='appstore'/>内容简介</span>} bordered={true}>
-                  {videoDetail.description}
+                  {videoDetail.get('description')}
                 </Card>
               </div>
             </div>

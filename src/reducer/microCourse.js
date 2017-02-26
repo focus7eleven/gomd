@@ -40,15 +40,15 @@ export default (state = initialState,action)=>{
     case GET_VIDEO_DETAIL[0]:
       return state.set('loadingDetail', true)
     case GET_VIDEO_DETAIL[1]:
-      return state.set('videoDetail',action.data).set('loadingDetail', false)
+      return state.set('videoDetail',fromJS(action.data)).set('loadingDetail', false)
     case LIKE_VIDEO:
       ({videoId,result,type} = action.payload);
       const newLikeType = type === 'like' ? true : false;
-      return state.updateIn(['data','result'],v => v.update(v.findIndex(v => v.get('id') == videoId), v => v.set('likeCount', Number.parseInt(result)).set('liked', newLikeType)))
+      return state.update('videoDetail', v => v.set('liked', newLikeType).set('likeCount',Number.parseInt(result)))
     case COLLECT_VIDEO:
       ({videoId,result,type} = action.payload);
       const newCollectType = type === 'collect' ? true : false;
-      return state.updateIn(['data','result'],v => v.update(v.findIndex(v => v.get('id') == videoId), v => v.set('collectionCount', Number.parseInt(result)).set('collected', newCollectType)))
+      return state.update('videoDetail', v => v.set('collected', newCollectType).set('collectionCount',Number.parseInt(result)))
     case SET_DETAIL:
       const videoDetail = action.payload.data
       return state.set('videoDetail', videoDetail)
