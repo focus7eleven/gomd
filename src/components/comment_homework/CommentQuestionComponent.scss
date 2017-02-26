@@ -1,0 +1,58 @@
+@import "~theme.scss";
+@import "~mixins.scss";
+
+:local(.container) {
+  border: 1px $border-grey solid;
+
+
+  :local(.name) {
+    height: 36px;
+    display:flex;
+    align-items:center;
+    padding-left: 10px;
+  }
+  :local(.commentView) {
+    :local(.commentItems) {
+      padding-left:20px;
+      :local(.commentItem) {
+        display: inline-block;
+        margin-right: 20px;
+      }
+    }
+  }
+
+  :local(.scoreView) {
+    height: 36px;
+    display:flex;
+    align-items:center;
+    justify-content: flex-end;
+    padding-left: 5px;
+    padding-right: 5px;
+
+    :local(.scoreSelect) {
+      width: 60px;
+      margin-left: 5px;
+    }
+
+    :local(.evaluteSpan) {
+      margin-left: 15px;
+    }
+    :local(.correctButton) {
+      margin-left: 5px;
+      background-color: $primary-color;
+      color: white;
+    }
+    :local(.halfCorrectButton) {
+      margin-left: 5px;
+      background-color: $highlight-color;
+      color: white;
+    }
+    :local(.wrongButton) {
+      margin-left: 5px;
+      background-color: $warning-color;
+      color: white;
+
+    }
+
+  }
+}

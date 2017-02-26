@@ -1,0 +1,70 @@
+@import "~theme.scss";
+@import "~mixins.scss";
+
+:local(.mainHeader) {
+  @include contentMainHeader
+}
+
+:local(.subHeader) {
+  @include contentSubHeader
+}
+
+:local(.rightActionItems) {
+  @include contentRightActionItems;
+}
+
+:local(.viewContent) {
+  border-left:1px solid $border-grey;
+  border-right:1px solid $border-grey;
+  border-bottom:1px solid $border-grey;
+  padding:20px;
+}
+
+:local(.container){
+  width: 100%;
+  height: 100%;
+  :local(.body){
+    :local(.wrapper){
+      display:flex;
+      justify-content: space-between;
+      align-items: center;
+      :local(.title){
+        font-size:20px;
+        margin-bottom: 10px;
+        word-break: keep-all;
+        white-space: nowrap;
+      }
+
+    }
+
+  }
+
+  :local(.tableColumn){
+    @include tableColumn;
+  }
+
+  :local(.footer){
+    display: flex;
+    width: 100%;
+    justify-content: flex-end;
+    >button{
+      width: 72px;
+      height: 32px;
+      font-size: 13px;
+    }
+  }
+
+  :local(.courseCard){
+    >div:nth-child(2){
+      padding-left: 42px;
+      font-size: 13px;
+    }
+  }
+
+  :local(.cardHead){
+    >i{
+      margin-right: 3px;
+    }
+  }
+}
+

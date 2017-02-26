@@ -1,0 +1,41 @@
+@import "~theme.scss";
+@import "~mixins.scss";
+
+$cardHeight: 120px;
+
+:local(.customCard) {
+  height: $cardHeight;
+  @include centric;
+
+  :local(.cardBody) {
+    height: $cardHeight;
+    position: relative;
+
+    :local(.cardImage) {
+      width: 100%;
+      height: 100%;
+    }
+    :local(.cardAction) {
+      position: absolute;
+      top:50%;
+      left:50%;
+      transform: translate(-50%,-50%);
+
+      :local(.cardActionButton) {
+      }
+    }
+  }
+}
+
+:local(.cardUpload) {
+  height: $cardHeight;
+  @include centric;
+  cursor: pointer;
+
+  background-color:$highlight-color;
+  color:$border-grey;
+
+  :local(.cardUploadBody) {
+    text-align: center;
+  }
+}

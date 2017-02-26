@@ -1,0 +1,69 @@
+@import "~theme.scss";
+@import "~mixins.scss";
+
+:local(.nextActionButtons) {
+	padding:0;
+	margin-top:10px;
+	text-align: right;
+}
+
+:local(.nextButton) {
+	background-color: $primary-color
+}
+
+:local(.tableClicked) {
+	background-color: $primary-color
+}
+
+:local(.tableUnClicked) {
+	background-color: white
+}
+
+:local(.card) {
+	height:120px;
+	border: 1px solid #e9e9e9;
+	padding:0;
+	width:100%;
+}
+
+:local(.tagFont) {
+	color:#67C09C;
+	font-size:14px;
+	border-color: $border-grey;
+	background-color: #ffffff;
+}
+
+:local(.typeButton) {
+	background-color: $primary-color;
+}
+:local(.myAnwser) {
+  align-items:center;
+  display:flex;
+  justify-content: space-between;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+:local(.hiddenTableRow){
+	display: none;
+}
+
+:local(.answerImage) {
+	width:400px;
+	height:400px;
+}
+
+:local(.threadCenter) {
+	text-align : center !important;
+}
+:local(.threadRight) {
+	text-align : right !important;
+}
+
+:local(.tdLeft) {
+	text-align: left;
+}
+
+:local(.tdRight) {
+	text-align: right;
+}

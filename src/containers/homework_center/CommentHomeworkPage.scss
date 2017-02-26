@@ -1,0 +1,43 @@
+@import "~theme.scss";
+@import "~mixins.scss";
+
+:local(.loading){
+  @include loading;
+}
+
+:local(.container) {
+  :local(.mainHeader) {
+    @include contentMainHeader
+  }
+
+  :local(.subHeader) {
+    @include contentSubHeader
+  }
+
+  :local(.rightActionItems) {
+    @include contentRightActionItems;
+  }
+
+  :local(.contentContainer) {
+
+    :local(.leftContent) {
+      border-left: 1px $border-grey solid;
+      border-right: 1px $border-grey solid;
+    }
+    :local(.rightContent) {
+      padding:8px;
+
+      :local(.centerAction) {
+        @include centric;
+        margin-top: 10px;
+      }
+    }
+  }
+
+  :local(.emptyContentContainer) {
+    text-align: center;
+    margin-top: 50px;
+  }
+}
+
+

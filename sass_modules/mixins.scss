@@ -47,9 +47,10 @@
 }
 
 @mixin tableMsg {
-  position: absolute;
-  left: 10px;
-  bottom: 25px;
+  //position: absolute;
+  //left: 10px;
+  //bottom: 25px;
+  margin-top: 16px;
 }
 
 @mixin editButton {
@@ -77,11 +78,21 @@
 }
 
 @mixin filterInput{
-  width: 150px;
+  width: 260px;
+}
+
+@mixin filterSelect{
+  width: 100px;
 }
 
 @mixin highlight{
   color: #f50;
+}
+
+@mixin centric {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 @mixin treeContainer {
@@ -127,5 +138,48 @@
     max-width: 1000px;
     margin-top: 20px;
     padding:10px;
+  }
+}
+
+@mixin contentMainHeader {
+  color: white;
+  background-color: $main-header-color;
+  height: 42px;
+
+  @include centric
+}
+
+@mixin contentSubHeader {
+  color: black;
+  background-color: $sub-header-color;
+  height: 38px;
+  border-bottom: 1px $main-header-color solid;
+
+  @include centric
+}
+
+@mixin contentRightActionItems {
+  height: 38px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  border-bottom: 1px #d9d9d9 solid;
+
+  :local(.rightActionItem:not(:first-child)) {
+    margin-left: 10px;
+  }
+
+  :local(.rightActionItem:last-child) {
+    margin-right: 5px;
+  }
+
+  :local(.commitButton) {
+    background-color: $primary-color;
+    color: white;
+  }
+
+  :local(.backButton) {
+    background-color: $highlight-color;
+    color: white;
   }
 }

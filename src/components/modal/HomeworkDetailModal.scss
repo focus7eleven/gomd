@@ -1,61 +1,50 @@
+@import "~theme.scss";
+@import "~mixins.scss";
+
 :local(.container){
-  display: flex;
-  flex-direction: row;
-  padding-top: 8px;
-
-  :local(.column1){
-    border-right: 1px solid #E9E9E9;
-    width: 290px;
-  }
-
-  :local(.column2){
-    border-right: 1px solid #E9E9E9;
-    width: 310px;
-    padding-left: 20px;
-    >div{
-      height: 91%;
-    }
-  }
-
-  :local(.column3){
-    width: 300px;
-    padding-left: 20px;
-
-    :local(.verticalBox){
-      display: flex;
-      flex-direction: column;
-      margin-bottom: 20px;
-      >span{
-        margin-bottom: 5px;
+  width: 100%;
+  height: 100%;
+  :local(.body){
+    :local(.wrapper){
+      display:flex;
+      justify-content: space-between;
+      align-items: center;
+      :local(.title){
+        font-size:20px;
+        margin-bottom: 10px;
+        word-break: keep-all;
+        white-space: nowrap;
       }
-      >textarea{
-        background-color: white;
-        color: #424242;
-      }
+
     }
+
   }
 
-  :local(.box){
+  :local(.tableColumn){
+    @include tableColumn;
+  }
+
+  :local(.footer){
     display: flex;
-    flex-direction: row;
-    margin-bottom: 24px;
-
-    >span:first-child{
-      font-size: 14px;
-      line-height: 28px;
+    width: 100%;
+    justify-content: flex-end;
+    >button{
+      width: 72px;
+      height: 32px;
+      font-size: 13px;
     }
+  }
 
-    >input{
-      background-color: white;
-      margin-left: 15px;
-      width: 210px;
-      color: #424242;
+  :local(.courseCard){
+    >div:nth-child(2){
+      padding-left: 42px;
+      font-size: 13px;
     }
-    >textarea{
-      background-color: white;
-      margin-left: 15px;
-      width: 210px;
-      color: #424242;
+  }
+
+  :local(.cardHead){
+    >i{
+      margin-right: 3px;
     }
   }
 }

@@ -27,7 +27,6 @@ const MainContainer = React.createClass({
     }
   },
   componentWillReceiveProps(nextProps){
-    console.log("--->:",nextProps.menu.toJS())
     let menuUrl = nextProps.location.pathname.split('/').slice(-1)[0]
     let path = !nextProps.menu.get('data').isEmpty()?findPath(nextProps.menu.get('data'),menuUrl):List()
     let temp = nextProps.location.pathname.split('/').slice(-2)[0]

@@ -228,7 +228,7 @@ const CreateHomeworkPage = React.createClass({
       <div className={styles.container}>
         <div className={styles.body}>
           <Form>
-          <Row type='flex' gutter={8}>
+          <Row type='flex' gutter={8} style={{borderBottom:'1px solid #cccccc'}}>
             <Col span={8} style={{borderRight:'1px solid #cccccc'}}>
               <div className={styles.itemBox}>
                 <span><Icon type='appstore'/>学科</span>

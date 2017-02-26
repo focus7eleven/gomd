@@ -1,0 +1,19 @@
+@import "~theme.scss";
+@import "~mixins.scss";
+
+:local(.questionContainer) {
+  margin-bottom: 20px;
+
+  :local(.indexTd) {
+    width: 40px;
+    text-align: center;
+  }
+
+  :local(.questionContent) {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    display: -webkit-flex; /* Safari */
+    display: flex;
+  }
+}

@@ -1,0 +1,11 @@
+@import '~mixins.scss';
+
+:local(.loading){
+  @include loading;
+}
+
+:local(.editHomeworkButton){
+  //background-color: $primary-color;
+  //border-color: $primary-color;
+  margin-right: 5px;
+}

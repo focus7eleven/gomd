@@ -1,0 +1,23 @@
+@import "~theme.scss";
+@import "~mixins.scss";
+
+:local(.mainHeader) {
+  @include contentMainHeader
+}
+
+:local(.subHeader) {
+  @include contentSubHeader
+}
+
+:local(.rightActionItems) {
+  @include contentRightActionItems;
+}
+:local(.questionList) {
+  margin-top: 5px;
+
+  > div:not(:first-child) {
+    margin-top: 10px;
+  }
+}
+
+
