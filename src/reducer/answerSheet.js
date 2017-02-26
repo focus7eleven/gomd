@@ -9,6 +9,7 @@ import _ from 'lodash'
 const initialState = fromJS({
   data: [],
   loading: false,
+  loadingDetail: false,
   answerSheetDetail: {},
   answerSheetQuestion: [],
 })
@@ -21,8 +22,10 @@ export default (state = initialState,action)=>{
       return state.set('data',fromJS(action.data)).set('loading',false)
     case GET_SHEET_DETAIL[1]:
       return state.set('answerSheetDetail',action.data)
+    case GET_SHEET_QUESTION[0]:
+      return state.set('loadingDetail',true)
     case GET_SHEET_QUESTION[1]:
-      return state.set('answerSheetQuestion',action.data)
+      return state.set('answerSheetQuestion',action.data).set('loadingDetail',false)
     default:
       return state
   }

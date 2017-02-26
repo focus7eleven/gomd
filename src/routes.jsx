@@ -78,6 +78,8 @@ import NoteQuestion from './components/table/exampaper/NoteQuestion'
 import AnswerSheetContainer from './containers/answer_sheet/AnswerSheetContainer'
 import CreateAnswerSheetPage from './containers/answer_sheet/CreateAnswerSheetPage'
 import AnswerSheetPage from './containers/answer_sheet/AnswerSheetPage'
+import EditSheetContainer from './containers/answer_sheet/EditSheetContainer'
+import EditAnswerSheetPage from './containers/answer_sheet/EditAnswerSheetPage'
 import WelcomPageContainer from './containers/index_homepage/WelcomePageContainer'
 
 import TeachingPlanContainer from './containers/teaching-plan/TeachingPlanContainer'
@@ -221,6 +223,9 @@ const routes = (
 				<Route path=':second' component={AnswerSheetContainer}>
 					<Route path='addAnswersheet' component={CreateAnswerSheetPage}></Route>
 					<Route path='answersheet' component={AnswerSheetPage}></Route>
+					<Route path='answersheet/editAnswersheet/(:sheetId)' component={EditSheetContainer}>
+						<IndexRoute component={EditAnswerSheetPage} />
+					</Route>
 				</Route>
 
 			</Route>

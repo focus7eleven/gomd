@@ -1,6 +1,6 @@
 import React from 'react'
 import {notification,Icon,Input,Button,Modal} from 'antd'
-import {getSheetDetail,getSheetQuestion,editAnswerSheet,getAnswerSheet,downloadSheet} from '../../actions/answer_sheet/main'
+import {getSheetQuestion,editAnswerSheet,getAnswerSheet,downloadSheet} from '../../actions/answer_sheet/main'
 import {fromJS,Map,List} from 'immutable'
 import {connect} from 'react-redux'
 import {findMenuInTree} from '../../reducer/menu'
@@ -16,6 +16,10 @@ const Search = Input.Search
 const confirm = Modal.confirm
 
 const AnswerSheetPage = React.createClass({
+  contextTypes: {
+    router: React.PropTypes.object
+  },
+
   downloadLink: {},
 
   _currentMenu:Map({
@@ -27,6 +31,7 @@ const AnswerSheetPage = React.createClass({
       searchStr: '',
       editModalVisibility: false,
       sheetName: '',
+      continuedIndex: false,
       sheetId: 0,
       questions: fromJS([]),
       file: null,
@@ -137,7 +142,7 @@ const AnswerSheetPage = React.createClass({
     result.then((res)=>{
       if(res.type==="GET_SHEET_QUESTION_SUCCESS"){
         const immutableQuestions = this.handleConvertParams(res.data)
-        this.setState({detailModalVisibility: true, questions: immutableQuestions, sheetName: record.answersheet_name})
+        this.setState({detailModalVisibility: true, questions: immutableQuestions,sheetId:record.answersheet_id, sheetName: record.answersheet_name, continuedIndex: record.num_chapter_continue})
       }else{
         notification.error({message:'系统错误',description: res.result})
       }
@@ -183,7 +188,7 @@ const AnswerSheetPage = React.createClass({
   },
 
   handleEnterEditSheet(){
-
+    this.context.router.push(`/index/answersheet_exam_make/answersheet/editAnswersheet/${this.state.sheetId}`)
   },
 
   handleConvertParams(questions){
@@ -193,7 +198,7 @@ const AnswerSheetPage = React.createClass({
       afterConvert['isChild'] = item.child_question_flag
       const title = item.question_title.split('、')
       afterConvert['questionTitle'] = title[title.length-1]
-      const subTitle = item.child_question_title.split(' ')
+      const subTitle = item.child_question_title?item.child_question_title.split(' '):['']
       afterConvert['childQuestionTitle'] = subTitle[subTitle.length-1]
       afterConvert['questionType'] = item.question_type
       afterConvert['questionNum'] = item.question_num
@@ -209,13 +214,13 @@ const AnswerSheetPage = React.createClass({
   },
 
   renderSheetDetailModal(){
-    const {questions,sheetName,detailModalVisibility} = this.state
+    const {questions,sheetName,continuedIndex,detailModalVisibility} = this.state
     return (
       <Modal width={1000} title="答题卡详情" visible={detailModalVisibility} footer={[
         <Button key="close" size="large" type="primary" onClick={this.handleCloseDetailModal}>关闭</Button>,
         <Button key="edit" size="large" type="primary" onClick={this.handleEnterEditSheet}>编辑</Button>,
       ]}>
-        <Sheet questions={questions} sheetName={sheetName}></Sheet>
+        <Sheet questions={questions} sheetName={sheetName} continuedIndex={continuedIndex}></Sheet>
       </Modal>
     )
   },
@@ -263,7 +268,6 @@ function mapDispatchToProps(dispatch){
     getAnswerSheet: bindActionCreators(getAnswerSheet,dispatch),
     downloadSheet: bindActionCreators(downloadSheet,dispatch),
     editAnswerSheet: bindActionCreators(editAnswerSheet,dispatch),
-    getSheetDetail: bindActionCreators(getSheetDetail,dispatch),
     getSheetQuestion: bindActionCreators(getSheetQuestion,dispatch),
   }
 }
