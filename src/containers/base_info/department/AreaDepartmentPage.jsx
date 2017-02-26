@@ -74,11 +74,11 @@ const AreaDepartmentPage = React.createClass({
       className:styles.tableColumn,
     },{
       title: '负责人',
-      dataIndex: 'phaseName',
-      key: 'phaseName',
+      dataIndex: 'leaderName',
+      key: 'leaderName',
       className:styles.tableColumn,
       render:(text,record)=>{
-        return (<a onClick={this.handleShowAddOfficerModal.bind(this,record.key)}><Icon type='edit' /></a>)
+        return (<a onClick={this.handleShowAddOfficerModal.bind(this,record.key)}><Icon type='edit' />{text}</a>)
       }
     },{
       title: '科室成员',
@@ -220,7 +220,7 @@ const AreaDepartmentPage = React.createClass({
   handleShowAddOfficer(){
     this.props.addOffice({
       departmentId:this._currentRow.get('departmentId'),
-      leaderId:this.state.officerList[this.state.chosenOfficer].id,
+      leaderId:this.state.officerList[this.state.chosenOfficer].userId,
       action:'edit'
     })
   },
@@ -323,7 +323,7 @@ const AreaDepartmentPage = React.createClass({
     })
   },
   handleAddMember(){
-    let addList = this.state.selectedMembers.keySeq().toJS().map(v => this.state.allMembers[v]).map(v => v.id)
+    let addList = this.state.selectedMembers.keySeq().toJS().map(v => this.state.allMembers[v]).map(v => v.userId)
     this.props.addMember({
       departmentId:this._currentRow.get('departmentId'),
       addList:JSON.stringify(addList),

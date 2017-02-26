@@ -90,11 +90,6 @@ const PhasePage = React.createClass({
       dataIndex: 'subjectStr',
       key: 'subjectStr',
       className:styles.tableColumn,
-    },{
-      title: '备注',
-      dataIndex: 'remark',
-      key: 'remark',
-      className:styles.tableColumn,
     },])
     if(authList.some(v => v.get('authUrl')=='/subject/list')){
       tableHeader = tableHeader.push({
@@ -106,6 +101,12 @@ const PhasePage = React.createClass({
         render:(text,record) => <a onClick={this.handleShowAddSubjectModal.bind(this,record.key)} >{PermissionDic['list']}</a>
       })
     }
+    tableHeader = tableHeader.push({
+      title: '备注',
+      dataIndex: 'remark',
+      key: 'remark',
+      className:styles.tableColumn,
+    })
     if(authList.some(v => v.get('authUrl')=='/phase/edit')){
       tableHeader = tableHeader.push({
         title: PermissionDic['edit'],
