@@ -19,7 +19,7 @@ const CourseCenterContainer = React.createClass({
   },
 
   render(){
-    if(this.props.location.pathname.split('/').slice(-2)[0]!='detail'){
+    if(this.props.location.pathname.split('/').slice(-2)[0]!='detail'&&this.props.location.pathname.split('/').slice(-1)[0]!='newCourse'){
       return !this.props.courseCenter.get('data').get('result') || this.props.courseCenter.get('loading') || this.props.menu.get('data').isEmpty()?<div className={styles.loading}><Spin size="large" /></div>:this.props.children
     }else{
       return this.props.courseCenter.get('loading') || this.props.menu.get('data').isEmpty()?<div className={styles.loading}><Spin size="large" /></div>:this.props.children

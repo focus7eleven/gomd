@@ -67,6 +67,7 @@ import AnswerSheetContainer from './containers/answer_sheet/AnswerSheetContainer
 import CreateAnswerSheetPage from './containers/answer_sheet/CreateAnswerSheetPage'
 import AnswerSheetPage from './containers/answer_sheet/AnswerSheetPage'
 import WelcomPageContainer from './containers/index_homepage/WelcomePageContainer'
+import ZTreeComponent from './components/ztree/ZTreeComponent'
 
 const routes = (
 	<Router history={browserHistory}>
@@ -83,6 +84,7 @@ const routes = (
 				<Route path='ueditor' component={UEditor}></Route>
 				<Route path='multipleChoiceQuestion' component={MultipleChoiceQuestion}></Route>
 				<Route path='noteQuestion' component={NoteQuestion}></Route>
+				<Route path='ztreecomponent' component={ZTreeComponent}></Route>
 			</Route>
 			<Route path='login' component={LoginContainer}></Route>
 
