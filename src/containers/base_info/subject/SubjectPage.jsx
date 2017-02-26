@@ -163,7 +163,10 @@ const SubjectPage = React.createClass({
     const { modalType, showAddSubjectModal } = this.state;
     return (
       <Modal title="添加学科" visible={showAddSubjectModal}
-          onOk={modalType==="add"?this.handlePostSubject:this.handleEditSubject} onCancel={this.handleHideAddSubjectModal}
+          footer={[
+            <Button key='cancel' onClick={this.handleHideAddSubjectModal} type='ghost'>取消</Button>,
+            <Button key='ok' onClick={modalType==="add"?this.handlePostSubject:this.handleEditSubject} type='primary'>确认</Button>
+          ]}
         >
         <div>
           <Form>

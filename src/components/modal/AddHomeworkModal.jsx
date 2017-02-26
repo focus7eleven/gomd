@@ -40,7 +40,8 @@ const AddHomeworkModal = React.createClass({
 
     })
   },
-  onChangeTimeRange(dates, dateStrings) {
+  onChangeTimeRange(dates,dateStrings) {
+    console.log("asdfasfd")
     console.log('From: ', dates[0], ', to: ', dates[1]);
     console.log('From: ', dateStrings[0], ', to: ', dateStrings[1]);
     Promise.all([
@@ -60,7 +61,7 @@ const AddHomeworkModal = React.createClass({
     })
   },
   getTableData(){
-    return this.state.homeworkList.isEmpty()?[]:this.state.homeworkList.get('result').map((v,k) => v.set('key',v.get('homework_id')).set('num',k)).toJS()
+    return this.state.homeworkList.isEmpty()?[]:this.state.homeworkList.get('result').map((v,k) => v.set('key',k).set('num',k)).toJS()
   },
   render(){
     const microClassTypeList =fromJS([{id:'1',text:'公共微课'},{id:'2',text:'学校微课'},{id:'3',text:'个人微课'}])
@@ -97,7 +98,7 @@ const AddHomeworkModal = React.createClass({
       key:'subject'
     }]
     return (
-      <Modal title="添加微课" visible={true} onOk={()=>{this.props.onSubmit(this.state.selectedHomeworks)}} onCancel={this.props.onCancel} width={850}>
+      <Modal title="添加作业" visible={true} onOk={()=>{console.log("00",this.state.selectedHomeworks.toJS());this.props.onSubmit(this.state.selectedHomeworks)}} onCancel={this.props.onCancel} width={850}>
         <div>
           <div className={styles.filters}>
             <Form>
@@ -109,7 +110,7 @@ const AddHomeworkModal = React.createClass({
                   })(
                   <RangePicker
                   showTime
-                  format="YYYY-MM-DD HH:mm:ss"
+                  format="YYYY/MM/DD HH:mm"
                   placeholder={['开始时间', '结束时间']}
                   onChange={this.onChangeTimeRange}
                   />
@@ -132,7 +133,7 @@ const AddHomeworkModal = React.createClass({
           <Table rowSelection={{
             onChange:(selectedRowKeys,selectedRows)=>{
               let selectedHomeworks = selectedRowKeys.reduce((pre,cur)=>{
-                return pre.push(this.state.homeworkList.get('result').find(v => v.get('homework_id')==cur).set('type','homework'))
+                return pre.push(this.state.homeworkList.get('result').find((v,k) => k==cur).set('type','homework'))
               },List())
               this.setState({
                 selectedHomeworks:selectedHomeworks
