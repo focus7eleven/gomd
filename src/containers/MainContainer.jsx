@@ -31,7 +31,7 @@ const MainContainer = React.createClass({
     let menuUrl = nextProps.location.pathname.split('/').slice(-1)[0]
     let path = !nextProps.menu.get('data').isEmpty()?findPath(nextProps.menu.get('data'),menuUrl):List()
     let temp = nextProps.location.pathname.split('/').slice(-2)[0]
-    if(temp == 'detail'){
+    if(temp == 'detail' || temp == 'video_detail'){
       let menuUrl2 = nextProps.location.pathname.split('/').slice(-3)[0]
       let path2 = !nextProps.menu.get('data').isEmpty()?findPath(nextProps.menu.get('data'),menuUrl2):List()
       const tail = temp === 'detail' ? '课程内容' : '微课详情'
