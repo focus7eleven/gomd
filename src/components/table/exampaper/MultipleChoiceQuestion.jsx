@@ -188,7 +188,7 @@ const MultipleChoiceQuestion = React.createClass({
     this.setState({
       // editingQuestion:false,
       // editingAnswerItem:this.state.editingAnswerItem.map(v => false),
-      showFooter:false,
+      // showFooter:false,
       showScoreSetting:false,
     })
   },

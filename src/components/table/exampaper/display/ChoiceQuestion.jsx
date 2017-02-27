@@ -14,13 +14,13 @@ const ChoiceQuestion = React.createClass({
       let selectComponent = null
       switch (questionType) {
         case '01'://单选
-          selectComponent = (record)=>(<Radio ></Radio>)
+          selectComponent = (record)=>(<Radio disabled></Radio>)
           break;
         case '02'://判断
-          selectComponent = (record)=>(<Radio ></Radio>)
+          selectComponent = (record)=>(<Radio disabled></Radio>)
           break;
         case '03'://多选
-          selectComponent = (record)=>(<Checkbox />)
+          selectComponent = (record)=>(<Checkbox disabled/>)
           break;
         default:
           selectComponent = ()=>null
