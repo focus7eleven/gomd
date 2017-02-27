@@ -39,16 +39,16 @@ const StudentWelcomePage = React.createClass({
     }
     return (
       <div className={styles.container}>
-        <div>
+        <div className={styles.sliderContainer}>
           <Slider {...settings}>
             <div className={styles.carouselItem}>
-              <img src={teacher1} />
+              <img src={student1} />
             </div>
             <div className={styles.carouselItem}>
-              <img src={teacher1} />
+              <img src={student1} />
             </div>
             <div className={styles.carouselItem}>
-              <img src={teacher1} />
+              <img src={student1} />
             </div>
           </Slider>
         </div>
@@ -59,15 +59,15 @@ const StudentWelcomePage = React.createClass({
               <Button className={styles.button} onClick={this.handleCourse}>学课程</Button>
             </div>
             <div className={styles.item}>
-              <img src={publishHomework} />
+              <img src={mircoVideo} />
               <Button className={styles.button} onClick={this.handleMicroVideo}>看微课</Button>
             </div>
             <div className={styles.item}>
-              <img src={checkHomework} />
+              <img src={doHomework} />
               <Button className={styles.button} onClick={this.handleDoHomework}>做作业</Button>
             </div>
             <div className={styles.item}>
-              <img src={checkResult} />
+              <img src={errorBook} />
               <Button className={styles.button} onClick={this.handleError}>错题本</Button>
             </div>
           </div>
