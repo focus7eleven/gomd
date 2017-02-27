@@ -1,6 +1,6 @@
 import React from 'react'
 import {notification,Icon,Input,Button,Modal} from 'antd'
-import {getSheetQuestion,editAnswerSheet,getAnswerSheet,downloadSheet} from '../../actions/answer_sheet/main'
+import {getAdduction,getSheetQuestion,editAnswerSheet,getAnswerSheet,downloadSheet} from '../../actions/answer_sheet/main'
 import {fromJS,Map,List} from 'immutable'
 import {connect} from 'react-redux'
 import {findMenuInTree} from '../../reducer/menu'
@@ -188,7 +188,23 @@ const AnswerSheetPage = React.createClass({
   },
 
   handleEnterEditSheet(){
-    this.context.router.push(`/index/answersheet_exam_make/answersheet/editAnswersheet/${this.state.sheetId}`)
+    const result = this.props.getAdduction()
+    result.then(res => {
+      const that = this
+      if(res){
+        confirm({
+          title: '提醒',
+          content: '本答题卡已经被使用，不可以被编辑，只能另存为另外一份答题卡。确认是否需要继续编辑？',
+          onOk() {
+            that.context.router.push(`/index/answersheet_exam_make/answersheet/editAnswersheet/${this.state.sheetId}`)
+          },
+          onCancel() {},
+        });
+      }else{
+        this.context.router.push(`/index/answersheet_exam_make/answersheet/editAnswersheet/${this.state.sheetId}`)
+      }
+    })
+    // this.context.router.push(`/index/answersheet_exam_make/answersheet/editAnswersheet/${this.state.sheetId}`)
   },
 
   handleConvertParams(questions){
@@ -225,7 +241,7 @@ const AnswerSheetPage = React.createClass({
   renderSheetDetailModal(){
     const {questions,sheetName,continuedIndex,detailModalVisibility} = this.state
     return (
-      <Modal width={1000} title="答题卡详情" visible={detailModalVisibility} footer={[
+      <Modal width={1000} title="答题卡详情" visible={detailModalVisibility} onCancel={this.handleCloseDetailModal} footer={[
         <Button key="close" size="large" type="primary" onClick={this.handleCloseDetailModal}>关闭</Button>,
         <Button key="edit" size="large" type="primary" onClick={this.handleEnterEditSheet}>编辑</Button>,
       ]}>
@@ -278,6 +294,7 @@ function mapDispatchToProps(dispatch){
     downloadSheet: bindActionCreators(downloadSheet,dispatch),
     editAnswerSheet: bindActionCreators(editAnswerSheet,dispatch),
     getSheetQuestion: bindActionCreators(getSheetQuestion,dispatch),
+    getAdduction: bindActionCreators(getAdduction,dispatch),
   }
 }
 

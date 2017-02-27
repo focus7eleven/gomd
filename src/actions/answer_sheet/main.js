@@ -31,9 +31,33 @@ export function createAnswerSheet(data){
       body: data
     }).then(res => res.json()).then(res => {
       if(res.title == 'Success'){
-        dispatch(getAnswerSheet('answersheet','',1)).then(res => {notification.success({message:'创建成功'});return res})
+        notification.success({message:'创建成功'})
+        return 'success'
+        // dispatch(getAnswerSheet('answersheet','',1)).then(res => {notification.success({message:'创建成功'});return res})
       }else{
         notification.error({message:'创建失败',description: res.result});
+        return "error";
+      }
+    })
+  }
+}
+
+export function saveAnswerSheet(data){
+  return dispatch => {
+    return fetch(config.api.answersheet.editSheetQuestion,{
+      method:'post',
+      headers:{
+        'from':'nodejs',
+        'token':sessionStorage.getItem('accessToken'),
+      },
+      body: data
+    }).then(res => res.json()).then(res => {
+      if(res.title == 'Success'){
+        notification.success({message:'保存成功'})
+        return 'success'
+        // dispatch(getAnswerSheet('answersheet','',1)).then(res => {notification.success({message:'保存成功'});return res})
+      }else{
+        notification.error({message:'保存失败',description: res.result});
         return "error";
       }
     })
@@ -117,6 +141,44 @@ export function getSheetQuestion(id){
     types:GET_SHEET_QUESTION,
     callAPI:()=>{
       return fetch(config.api.answersheet.getAnswerSheetQuestion(id),{
+        method:'GET',
+        headers:{
+          'from':'nodejs',
+          'token':sessionStorage.getItem('accessToken'),
+        }
+      }).then(res => res.json())
+    }
+  }
+}
+
+export const GET_ADDUCTION = 'GET_ADDUCTION'
+export function getAdduction(id){
+  let formData = new FormData()
+  formData.append('answersheetId',id)
+  return dispatch => {
+    return fetch(config.api.answersheet.getAdduction,{
+      method:'post',
+      headers:{
+        'from':'nodejs',
+        'token':sessionStorage.getItem('accessToken'),
+      },
+      body: formData
+    }).then(res => res.json()).then(res => {
+      if(res==0){
+        return false
+      }else{
+        return true
+      }
+    })
+  }
+}
+
+export const CHECK_SHEET_NAME = actionNames('CHECK_SHEET_NAME')
+export function checkSheetName(name){
+  return {
+    types: CHECK_SHEET_NAME,
+    callAPI:()=>{
+      return fetch(config.api.answersheet.checkSheetName(name),{
         method:'GET',
         headers:{
           'from':'nodejs',

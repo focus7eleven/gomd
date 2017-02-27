@@ -2,7 +2,7 @@ import React from 'react'
 import styles from './EditAnswerSheetPage.scss'
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
-import {createAnswerSheet} from '../../actions/answer_sheet/main'
+import {checkSheetName,saveAnswerSheet,getAdduction,createAnswerSheet} from '../../actions/answer_sheet/main'
 import {InputNumber,Modal,Select,Icon,Button,Input,Checkbox} from 'antd'
 import {Map,Record,List,fromJS} from 'immutable'
 import classnames from 'classnames'
@@ -68,17 +68,14 @@ const EditAnswerSheetPage = React.createClass({
   componentWillMount(){
     const detail = this.props.answerSheet.get('answerSheetDetail')
     const questions = this.handleConvertParams(this.props.answerSheet.get('answerSheetQuestion'))
-    this.setState({sheetName: detail.answersheet_name, continuousIndex: detail.num_chapter_continue, questions})
-    // console.log("ddd");
-    // console.log(nextProps.answerSheetQuestion.toJS());
-    // this.setState({questions: nextProps.answerSheetQuestion},()=>{
-    //   console.log(this.state.questions);
-    // })
+    this.setState({answersheetId:detail.answersheet_id,sheetName: detail.answersheet_name, continuousIndex: detail.num_chapter_continue, questions})
   },
 
   getInitialState(){
     return {
+      nameError: false,
       sheetName: moment().format("YYYYMMDD-SSSSS"),
+      answersheetId: 0,
       continuousIndex: false,
       questions: fromJS([{
         questionType: 'xuanze',
@@ -147,6 +144,7 @@ const EditAnswerSheetPage = React.createClass({
     let result = fromJS([])
     questions.map((item,index)=>{
       let afterConvert = {}
+      afterConvert['questionId'] = item.answersheet_question_id
       afterConvert['isChild'] = item.child_question_flag
       const title = item.question_title.split('、')
       afterConvert['questionTitle'] = title[title.length-1]
@@ -195,7 +193,7 @@ const EditAnswerSheetPage = React.createClass({
   },
 
   handleSheetNameChange(e){
-    this.setState({sheetName: e.target.value})
+    this.setState({nameError: false,sheetName: e.target.value})
   },
 
   handleContinuousIndex(e){
@@ -278,7 +276,7 @@ const EditAnswerSheetPage = React.createClass({
   },
 
   handleFieldChange(index,key,e){
-    const questions = this.state.questions;
+    let questions = this.state.questions;
     let value
     switch (key) {
       case 'questionType':
@@ -298,10 +296,21 @@ const EditAnswerSheetPage = React.createClass({
         value = e;
         this.handleInitWidthAndHeight(index,value)
         break;
+      case 'answerWidth':
+        value = e;
+        const newWidth = Array.from({length: questions.get(index).get('questionNum')},(v,i)=>e);
+        questions = questions.update(index, v => v.set('widthArr',newWidth));
+        break;
+      case 'answerHeight':
+        value = e;
+        const newHeight = Array.from({length: questions.get(index).get('questionNum')},(v,i)=>e);
+        questions = questions.update(index, v => v.set('heightArr',newHeight));
+        break;
       default:
         value = e
     }
-    key === 'questionType' || key === 'questionNum' ? null : this.setState({questions: questions.update(index, v => v.set(key, value))})
+    questions = questions.update(index, v => v.set(key, value));
+    key === 'questionType' || key === 'questionNum' ? null : this.setState({questions})
   },
 
   handleDeleteQuestion(index){
@@ -332,13 +341,28 @@ const EditAnswerSheetPage = React.createClass({
     }
   },
 
-  handleSaveAnswerSheet(){
+  handleBeforeSave(){
+    const result = this.props.getAdduction()
+    result.then(res => {
+      if(res){
+        Modal.warning({
+          title: '操作失败',
+          content: '本答题卡已经被使用，不可以被编辑。请使用“另存为”功能，将编辑后的答题卡保存为另外一份答题卡。',
+        });
+      }else{
+        this.handleSaveAnswerSheet('save')
+      }
+    })
+  },
+
+  handleSaveAnswerSheet(type){
     let formData = new FormData();
-    const {sheetName,questions,continuousIndex} = this.state;
+    const {sheetName,questions,continuousIndex,answersheetId} = this.state;
     formData.append('answersheet_name',sheetName)
+    formData.append('answersheet_id', answersheetId)
     formData.append('num_chapter_continue',continuousIndex);
     questions.map((item,index)=>{
-      formData.append('question_id',0);
+      formData.append('question_id',item.get('questionId'));
       formData.append('question_sort',index+1);
       formData.append('question_type',item.get('questionType'));
       item.get('isChild')?formData.append('child_question_flag',index+1):null
@@ -364,8 +388,34 @@ const EditAnswerSheetPage = React.createClass({
         formData.append('answer_width',item.get('answerWidth'));
       }
     })
-    this.props.createAnswerSheet(formData);
-    this.context.router.push(`/index/answer-sheet/answersheet`)
+    if(type==='save'){
+      const result = this.props.saveAnswerSheet(formData);
+      result.then(res => {
+        console.log(res);
+        if(res==='success'){
+          this.context.router.push(`/index/answer-sheet/answersheet`)
+        }
+      })
+    }else if(type==='saveAs'){
+      this.props.createAnswerSheet(formData);
+      this.context.router.push(`/index/answer-sheet/answersheet`)
+    }
+  },
+
+  handleSaveAsAnswerSheet(){
+    const result = this.props.checkSheetName(this.state.sheetName)
+    result.then(res => {
+      console.log("~",res);
+      if(res.data>0){
+        Modal.warning({
+          title: '操作失败',
+          content: '答题卡名称重复',
+        });
+        this.setState({nameError:true})
+      }else if(res.data===0){
+        this.handleSaveAnswerSheet('saveAs')
+      }
+    })
   },
 
   // 弹出模态框
@@ -699,21 +749,18 @@ const EditAnswerSheetPage = React.createClass({
   },
 
   render(){
-    const {sheetName, continuousIndex, questions} = this.state;
-    // const sheetName = this.props.answerSheet.get('answerSheetDetail').answersheet_name
-    // const continuousIndex = this.props.answerSheet.get('answerSheetDetail').num_chapter_continue
-    // const questions = this.handleConvertParams(this.props.answerSheet.get('answerSheetQuestion'))
+    const {nameError,sheetName, continuousIndex, questions} = this.state;
     return (
       <div className={styles.container}>
         <div className={styles.header}>
           <div className={styles.sheetHead}>
             <span>答题卡名称</span>
-            <Input onChange={this.handleSheetNameChange} value={sheetName} />
+            <Input onChange={this.handleSheetNameChange} value={sheetName} className={nameError?styles.errorInput:null}/>
             <Checkbox checked={continuousIndex} onChange={this.handleContinuousIndex}>跨章节连续编号</Checkbox>
           </div>
           <div>
-            <Button style={{marginRight: 10}} type="primary" onClick={this.handleSaveAnswerSheet}>保存</Button>
-            <Button type="primary" onClick={this.handleSaveAnswerSheet}>另存为</Button>
+            <Button style={{marginRight: 10}} type="primary" onClick={this.handleBeforeSave}>保存</Button>
+            <Button type="primary" onClick={this.handleSaveAsAnswerSheet}>另存为</Button>
           </div>
         </div>
         <div className={styles.body}>
@@ -734,6 +781,9 @@ function mapStateToProps(state){
 function mapDispatchToProps(dispatch){
   return {
     createAnswerSheet: bindActionCreators(createAnswerSheet,dispatch),
+    saveAnswerSheet: bindActionCreators(saveAnswerSheet,dispatch),
+    getAdduction: bindActionCreators(getAdduction,dispatch),
+    checkSheetName: bindActionCreators(checkSheetName,dispatch),
   }
 }
 

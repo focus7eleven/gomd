@@ -215,7 +215,7 @@ const CreateAnswerSheetPage = React.createClass({
   },
 
   handleFieldChange(index,key,e){
-    const questions = this.state.questions;
+    let questions = this.state.questions;
     let value
     switch (key) {
       case 'questionType':
@@ -235,10 +235,21 @@ const CreateAnswerSheetPage = React.createClass({
         value = e;
         this.handleInitWidthAndHeight(index,value)
         break;
+      case 'answerWidth':
+        value = e;
+        const newWidth = Array.from({length: questions.get(index).get('questionNum')},(v,i)=>e);
+        questions = questions.update(index, v => v.set('widthArr',newWidth));
+        break;
+      case 'answerHeight':
+        value = e;
+        const newHeight = Array.from({length: questions.get(index).get('questionNum')},(v,i)=>e);
+        questions = questions.update(index, v => v.set('heightArr',newHeight));
+        break;
       default:
         value = e
     }
-    key === 'questionType' || key === 'questionNum' ? null : this.setState({questions: questions.update(index, v => v.set(key, value))})
+    questions = questions.update(index, v => v.set(key, value));
+    key === 'questionType' || key === 'questionNum' ? null : this.setState({questions})
   },
 
   handleDeleteQuestion(index){

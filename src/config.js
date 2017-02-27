@@ -278,7 +278,7 @@ const config = _.extend({
 	  //查看批改结果
 	  checkResultByQuestion:(homeworkClassId) => `${baseURL}/homework/getPaperAndAnswerTeaByQuestion?homeworkClassId=${homeworkClassId}`,
 	  checkResultByStudents:(homeworkClassId) => `${baseURL}/homework/getPaperAndAnswerTeaByStu?homeworkClassId=${homeworkClassId}`
-	  
+
 		},
 		notify:{
             //收到的通知
@@ -338,6 +338,9 @@ const config = _.extend({
 			edit: `${baseURL}/answersheet/edit`,
 			getAnswerSheet: (id) => `${baseURL}/answersheet/getAnswersheetDetail?answersheetId=${id}`,
 			getAnswerSheetQuestion: (id) => `${baseURL}/answersheet/getAnswersheetQuestionDetail?answersheetId=${id}`,
+			editSheetQuestion: `${baseURL}/answersheet/editNew`,
+			getAdduction: `${baseURL}/answersheet/getAdduction`,
+			checkSheetName: (name) => `${baseURL}/answersheet/checkanswersheetname?answersheet_name=${name}`,
 		},
 		wordquestion:{
 			addChoose:`${baseURL}/wordquestion/addChoose`,

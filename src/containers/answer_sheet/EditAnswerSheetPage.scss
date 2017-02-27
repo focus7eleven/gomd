@@ -8,6 +8,9 @@
   :local(.header){
     @include headerWithoutFilter;
     :local(.sheetHead){
+      :local(.errorInput){
+        border-color: $warning-color;
+      }
       display: flex;
       flex-direction: row;
       justify-content: flex-start;

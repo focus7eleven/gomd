@@ -2,6 +2,7 @@ import {
   GET_TABLEDATA,
   GET_SHEET_DETAIL,
   GET_SHEET_QUESTION,
+  GET_ADDUCTION,
 } from '../actions/answer_sheet/main'
 import {fromJS} from 'immutable'
 import _ from 'lodash'
@@ -12,6 +13,7 @@ const initialState = fromJS({
   loadingDetail: false,
   answerSheetDetail: {},
   answerSheetQuestion: [],
+  adduction: 0,
 })
 
 export default (state = initialState,action)=>{
@@ -28,6 +30,8 @@ export default (state = initialState,action)=>{
       return state.set('loadingDetail',true)
     case GET_SHEET_QUESTION[1]:
       return state.set('answerSheetQuestion',action.data).set('loadingDetail',false)
+    case GET_ADDUCTION:
+      return state.set('adduction',action.payload.data)
     default:
       return state
   }

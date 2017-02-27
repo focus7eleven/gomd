@@ -217,7 +217,6 @@ const Sheet = React.createClass({
 
   render(){
     const {sheetName, questions} = this.props;
-    console.log(questions.toJS());
     return (
       <div className={styles.container}>
         <div className={styles.header}>
