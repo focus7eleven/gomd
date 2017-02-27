@@ -326,7 +326,12 @@ const CreateAnswerSheetPage = React.createClass({
       const newHeight = Array.from({length: question.get('questionNum')},(v,i)=>h)
       this.setState({questions: questions.update(index, v => v.set('isCustomized',false).set('widthArr',fromJS(newWidth)).set('heightArr',fromJS(newHeight)))})
     }else if(question.get('questionType')==='jianda'){
-
+      const h = question.get('answerHeight')
+      const r = question.get('jiandaAnswerRow')
+      const c = question.get('jiandaAnswerCol')
+      const newHeight = Array.from({length: question.get('questionNum')},(v,i)=>[h,r,c])
+      const newTitle = Array.from({length: question.get('questionNum')}, (v,i)=>question.get('childQuestionTitle'))
+      this.setState({questions: questions.update(index, v => v.set('isCustomized',false).set('titleArr',fromJS(newTitle)).set('heightArr',fromJS(newHeight)))})
     }
   },
 
@@ -534,7 +539,7 @@ const CreateAnswerSheetPage = React.createClass({
             </div>
             <div className={styles.block}>
               <span>子标题</span>
-              <Input placeholder="输入少于30个字" style={{width: 240}} value={item.get('childQuestionTitle')} onChange={this.handleFieldChange.bind(null,index,'childQuestionTitle')} />
+              <Input placeholder="输入少于30个字" disabled={isCustomized&&questionType==='jianda'} style={{width: 240}} value={item.get('childQuestionTitle')} onChange={this.handleFieldChange.bind(null,index,'childQuestionTitle')} />
             </div>
             <div className={styles.block}>
               <span>题目个数</span>

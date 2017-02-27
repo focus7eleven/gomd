@@ -91,13 +91,21 @@ export function getSheetDetail(id){
   return {
     types:GET_SHEET_DETAIL,
     callAPI:()=>{
-      return fetch(config.api.answersheet.getAnswersheetDetail(id),{
+      return fetch(config.api.answersheet.getAnswerSheet(id),{
         method:'GET',
         headers:{
           'from':'nodejs',
           'token':sessionStorage.getItem('accessToken'),
         }
-      }).then(res => res.json())
+      }).then(res => res.json()).then(res => {
+        return fetch(config.api.answersheet.getAnswerSheetQuestion(id),{
+          method:'GET',
+          headers:{
+            'from':'nodejs',
+            'token':sessionStorage.getItem('accessToken'),
+          }
+        }).then(res2 => res2.json()).then(res2 => ({detail: res, question: res2}))
+      })
     }
   }
 }

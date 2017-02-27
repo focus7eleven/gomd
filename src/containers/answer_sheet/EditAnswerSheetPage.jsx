@@ -8,6 +8,7 @@ import {Map,Record,List,fromJS} from 'immutable'
 import classnames from 'classnames'
 import parseIndex from '../../utils/chineseIndex'
 import moment from 'moment'
+import _ from 'lodash'
 
 const Option = Select.Option;
 
@@ -62,6 +63,17 @@ const getTypeName = (type) => {
 const EditAnswerSheetPage = React.createClass({
   contextTypes: {
     router: React.PropTypes.object
+  },
+
+  componentWillMount(){
+    const detail = this.props.answerSheet.get('answerSheetDetail')
+    const questions = this.handleConvertParams(this.props.answerSheet.get('answerSheetQuestion'))
+    this.setState({sheetName: detail.answersheet_name, continuousIndex: detail.num_chapter_continue, questions})
+    // console.log("ddd");
+    // console.log(nextProps.answerSheetQuestion.toJS());
+    // this.setState({questions: nextProps.answerSheetQuestion},()=>{
+    //   console.log(this.state.questions);
+    // })
   },
 
   getInitialState(){
@@ -129,6 +141,57 @@ const EditAnswerSheetPage = React.createClass({
       const suffix = index - parentIndex + 1
       return prefix + "." + suffix
     }
+  },
+
+  handleConvertParams(questions){
+    let result = fromJS([])
+    questions.map((item,index)=>{
+      let afterConvert = {}
+      afterConvert['isChild'] = item.child_question_flag
+      const title = item.question_title.split('、')
+      afterConvert['questionTitle'] = title[title.length-1]
+      const subTitle = item.child_question_title?item.child_question_title.split(' '):['']
+      afterConvert['childQuestionTitle'] = subTitle[subTitle.length-1]
+      afterConvert['questionType'] = item.question_type
+      afterConvert['questionNum'] = item.question_num
+      afterConvert['optionType'] = item.option_type
+      afterConvert['optionNum'] = item.option_num
+      const width = item.answer_width.split('|')
+      afterConvert['answerWidth'] = width[0]
+      const height = item.answer_height.split('|')
+      afterConvert['answerHeight'] = height[0]
+      if(item.question_type==='jianda'){
+        const hrc = height[0].split('*')
+        afterConvert['answerHeight'] = hrc[0]
+        afterConvert['jiandaAnswerRow'] = hrc[1]
+        afterConvert['jiandaAnswerCol'] = hrc[2]
+        if(height.length>1){
+          afterConvert['childQuestionTitle'] = item.child_question_title.split('|')[0]
+        }
+        const titleArr = item.child_question_title.split('|')
+        let heightArr = []
+        height.forEach((item)=>{
+          heightArr.push(item.split('*'))
+        })
+        if(_.uniq(titleArr).length===1&&_.uniq(height).length===1){
+          afterConvert['isCustomized'] = false;
+        }else{
+          afterConvert['isCustomized'] = true;
+        }
+        afterConvert['titleArr'] = fromJS(titleArr)
+        afterConvert['heightArr'] = fromJS(heightArr)
+      }else if(item.question_type==='tiankong'){
+        if(_.uniq(width).length===1&&_.uniq(height).length===1){
+          afterConvert['isCustomized'] = false;
+        }else{
+          afterConvert['isCustomized'] = true;
+        }
+        afterConvert['widthArr'] = fromJS(width)
+        afterConvert['heightArr'] = fromJS(height)
+      }
+      result = result.push(fromJS(afterConvert))
+    })
+    return result
   },
 
   handleSheetNameChange(e){
@@ -326,7 +389,12 @@ const EditAnswerSheetPage = React.createClass({
       const newHeight = Array.from({length: question.get('questionNum')},(v,i)=>h)
       this.setState({questions: questions.update(index, v => v.set('isCustomized',false).set('widthArr',fromJS(newWidth)).set('heightArr',fromJS(newHeight)))})
     }else if(question.get('questionType')==='jianda'){
-
+      const h = question.get('answerHeight')
+      const r = question.get('jiandaAnswerRow')
+      const c = question.get('jiandaAnswerCol')
+      const newHeight = Array.from({length: question.get('questionNum')},(v,i)=>[h,r,c])
+      const newTitle = Array.from({length: question.get('questionNum')}, (v,i)=>question.get('childQuestionTitle'))
+      this.setState({questions: questions.update(index, v => v.set('isCustomized',false).set('titleArr',fromJS(newTitle)).set('heightArr',fromJS(newHeight)))})
     }
   },
 
@@ -534,7 +602,7 @@ const EditAnswerSheetPage = React.createClass({
             </div>
             <div className={styles.block}>
               <span>子标题</span>
-              <Input placeholder="输入少于30个字" style={{width: 240}} value={item.get('childQuestionTitle')} onChange={this.handleFieldChange.bind(null,index,'childQuestionTitle')} />
+              <Input placeholder="输入少于30个字" disabled={isCustomized} style={{width: 240}} value={item.get('childQuestionTitle')} onChange={this.handleFieldChange.bind(null,index,'childQuestionTitle')} />
             </div>
             <div className={styles.block}>
               <span>题目个数</span>
@@ -632,6 +700,9 @@ const EditAnswerSheetPage = React.createClass({
 
   render(){
     const {sheetName, continuousIndex, questions} = this.state;
+    // const sheetName = this.props.answerSheet.get('answerSheetDetail').answersheet_name
+    // const continuousIndex = this.props.answerSheet.get('answerSheetDetail').num_chapter_continue
+    // const questions = this.handleConvertParams(this.props.answerSheet.get('answerSheetQuestion'))
     return (
       <div className={styles.container}>
         <div className={styles.header}>
@@ -640,7 +711,10 @@ const EditAnswerSheetPage = React.createClass({
             <Input onChange={this.handleSheetNameChange} value={sheetName} />
             <Checkbox checked={continuousIndex} onChange={this.handleContinuousIndex}>跨章节连续编号</Checkbox>
           </div>
-          <Button type="primary" onClick={this.handleSaveAnswerSheet}>保存</Button>
+          <div>
+            <Button style={{marginRight: 10}} type="primary" onClick={this.handleSaveAnswerSheet}>保存</Button>
+            <Button type="primary" onClick={this.handleSaveAnswerSheet}>另存为</Button>
+          </div>
         </div>
         <div className={styles.body}>
           {questions.map((item,index) => item.get('questionType')==='zhangjie'?this.renderChapter(item,index):this.renderQuestion(item,index))}
@@ -653,7 +727,9 @@ const EditAnswerSheetPage = React.createClass({
 })
 
 function mapStateToProps(state){
-  return{}
+  return{
+    answerSheet: state.get('answerSheet'),
+  }
 }
 function mapDispatchToProps(dispatch){
   return {

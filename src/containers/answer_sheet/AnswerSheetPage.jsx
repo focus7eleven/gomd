@@ -208,6 +208,15 @@ const AnswerSheetPage = React.createClass({
       afterConvert['answerWidth'] = width[0]
       const height = item.answer_height.split('|')
       afterConvert['answerHeight'] = height[0]
+      if(item.question_type==='jianda'){
+        const hrc = height[0].split('*')
+        afterConvert['answerHeight'] = hrc[0]
+        afterConvert['jiandaAnswerRow'] = hrc[1]
+        afterConvert['jiandaAnswerCol'] = hrc[2]
+        if(height.length>1){
+          afterConvert['childQuestionTitle'] = item.child_question_title.split('|')[0]
+        }
+      }
       result = result.push(fromJS(afterConvert))
     })
     return result
