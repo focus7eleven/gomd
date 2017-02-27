@@ -44,7 +44,7 @@ const TeacherWelcomePage = React.createClass({
     };
     return (
       <div className={styles.container}>
-        <div>
+        <div className={styles.sliderContainer}>
           <Slider {...settings}>
             <div className={styles.carouselItem}>
               <img src={teacher1} />

@@ -65,7 +65,7 @@ const NoteQuestion = React.createClass({
   //给题目添加一个空格
   handleAddBlank(){
     // this.ue = UE.instants.ueditorInstant0
-    this.ue = window.currentEditor
+    this.ue = window.currentEditor[this.props.questionInfo.get('id')]
     let range = this.ue.selection.getRange()
     range.select()
     let content = this.ue.selection.getText()
@@ -168,7 +168,7 @@ const NoteQuestion = React.createClass({
           </div>
           <div className={styles.questionContent} onClick={this.handleEditQuestion}>
           {
-            this.state.editingQuestion?<div><Ueditor initialContent={this.props.questionInfo.get('examination')||'请输入题目内容'} onDestory={this.handleUpdateQuestion}/></div>:<div dangerouslySetInnerHTML={{__html:this.props.questionInfo.get('examination')||'请输入题目内容'}}></div>
+            this.state.editingQuestion?<div><Ueditor name={this.props.questionInfo.get('id')} initialContent={this.props.questionInfo.get('examination')||'请输入题目内容'} onDestory={this.handleUpdateQuestion}/></div>:<div dangerouslySetInnerHTML={{__html:this.props.questionInfo.get('examination')||'请输入题目内容'}}></div>
           }
           {
             this.state.showScoreSetting?<div onClick={(e)=>{e.stopPropagation()}}><InputNumber min={0} defaultValue={0}
