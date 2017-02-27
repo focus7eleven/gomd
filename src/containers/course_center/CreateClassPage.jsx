@@ -340,7 +340,7 @@ const CreateClassPage = React.createClass({
               </Col>
               <Col span={6} offset={1}>
                 <div className={styles.filterItem}>
-                上课时间：<DatePicker value={moment(this.state.chapterTime,'YYYY/MM/DD')} onChange={(date,dateString)=>{this.setState({chapterTime:dateString})}}  size='large' style={{width:'100%'}} showTime format="YYYY-MM-DD HH:mm" />
+                上课时间：<DatePicker value={moment(this.state.chapterTime||'2001/1/1','YYYY/MM/DD')} onChange={(date,dateString)=>{this.setState({chapterTime:dateString})}}  size='large' style={{width:'100%'}} showTime format="YYYY-MM-DD HH:mm" />
                 </div>
               </Col>
             </Row>

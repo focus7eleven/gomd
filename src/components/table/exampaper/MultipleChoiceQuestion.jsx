@@ -306,8 +306,10 @@ const MultipleChoiceQuestion = React.createClass({
         <div className={styles.tag}>
           <span className={styles.text}>{questionTypeName}</span>
         </div>
-        <Table onRowClick={(record,index)=>{this.setState({
-          editingAnswerItem:this.state.editingAnswerItem.map((v,k) => k==record.key?!v:v)})}} bordered dataSource={tableData.tableBody} columns={tableData.tableHeader} pagination={false}/>
+        <Table onRowClick={(record,index)=>{
+          this.setState({
+          editingAnswerItem:this.state.editingAnswerItem.map((v,k) => k==record.key?!v:v)})}
+        } bordered dataSource={tableData.tableBody} columns={tableData.tableHeader} pagination={false}/>
         <div className={styles.moveButton}>
             {this.props.questionInfo.get('questionNo')==1?null:<Button onClick={(e)=>{this.props.moveUp(this.props.questionInfo.get('id'))}}><Icon type="caret-up" /></Button>}
             <Button onClick={(e)=>{this.props.moveDown(this.props.questionInfo.get('id'))}}><Icon type="caret-down" /></Button>
