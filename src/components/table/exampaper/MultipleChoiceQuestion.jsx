@@ -65,7 +65,7 @@ const MultipleChoiceQuestion = React.createClass({
     const tableHeader = [{
       title:this.props.questionInfo.get('questionNo'),
       key:'num',
-      className:styles.columns,
+      className:styles.columnsNo,
       width:50,
       render:(text,record)=>{
         return <div onClick={(e)=>{e.stopPropagation()}}>{selectComponent(record)}</div>
@@ -74,11 +74,12 @@ const MultipleChoiceQuestion = React.createClass({
       title:this.renderQuestion(),
       dataIndex:'answer',
       key:'answer',
+      className:styles.columns,
       render:(text,record) => {
         return (
         <div className={styles.question} onClick={()=>{}}>
         {
-          this.state.editingAnswerItem[record.key]?<Ueditor initialContent={text} onDestory={this.handleUpdateOption.bind(this,record.key)}/>:<span dangerouslySetInnerHTML={{__html: text||'请输入选项内容'}}></span>
+          this.state.editingAnswerItem[record.key]?<Ueditor name={this.props.questionInfo.getIn(['optionPojoList',record.key,'id'])} initialContent={text} onDestory={this.handleUpdateOption.bind(this,record.key)}/>:<span dangerouslySetInnerHTML={{__html: text||'请输入选项内容'}}></span>
         }
         {this.state.showScoreSetting?<div onClick={(e)=>{e.stopPropagation()}}><InputNumber min={0} defaultValue={0}
           value={this.props.questionInfo.getIn(['optionPojoList',record.key,'score'])}
@@ -87,7 +88,7 @@ const MultipleChoiceQuestion = React.createClass({
       )}
     },{
       title:<Icon type='close' onClick={(e)=>{e.stopPropagation();this.props.onDelete(this.props.questionInfo.get('id'))}}/>,
-      className:styles.columns,
+      className:styles.columnsNo,
       width:50,
       render:(text,record)=>{
         return <div onClick={(e)=>{e.stopPropagation()}}><Icon type='close' onClick={this.handleDeleteAnswerItem.bind(this,record.key)}/></div>
@@ -238,9 +239,9 @@ const MultipleChoiceQuestion = React.createClass({
   },
   renderQuestion(){
     return (
-      <div className={styles.question} onClick={(e)=>{e.stopPropagation();this.setState({editingQuestion:!this.state.editingQuestion,showFooter:true})}}>
+      <div className={styles.question} onClick={(e)=>{e.stopPropagation();this.setState({editingQuestion:!this.state.editingQuestion,showFooter:!this.state.showFooter})}}>
       {
-        this.state.editingQuestion?<Ueditor initialContent={this.props.questionInfo.get('examination')||'请输入题目内容'} onDestory={this.handleUpdateQuestion}/>:<span dangerouslySetInnerHTML={{__html: this.props.questionInfo.get('examination')||'请输入题目内容'}}></span>
+        this.state.editingQuestion?<Ueditor name={this.props.questionInfo.get('id')} initialContent={this.props.questionInfo.get('examination')||'请输入题目内容'} onDestory={this.handleUpdateQuestion}/>:<span dangerouslySetInnerHTML={{__html: this.props.questionInfo.get('examination')||'请输入题目内容'}}></span>
       }
       </div>
     )

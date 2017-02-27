@@ -135,7 +135,7 @@ const ShortAnswerQuestion = React.createClass({
     return (
       <div className={styles.question} onClick={(e)=>{e.stopPropagation();this.setState({editingQuestion:!this.state.editingQuestion,showFooter:!this.state.showFooter,showScoreSetting:false,})}}>
       {
-        this.state.editingQuestion?<Ueditor initialContent={this.props.questionInfo.get('examination')||'请输入题目'} onDestory={this.handleUpdateQuestion.bind(this,'title')}/>:<span dangerouslySetInnerHTML={{__html:this.props.questionInfo.get('examination')||'请输入题目'}}></span>
+        this.state.editingQuestion?<Ueditor name={this.props.questionInfo.get('id')} initialContent={this.props.questionInfo.get('examination')||'请输入题目'} onDestory={this.handleUpdateQuestion.bind(this,'title')}/>:<span dangerouslySetInnerHTML={{__html:this.props.questionInfo.get('examination')||'请输入题目'}}></span>
       }
       {this.state.showScoreSetting?<div onClick={(e)=>{e.stopPropagation()}}><InputNumber min={0} defaultValue={0}
         value={this.props.questionInfo.get('optionPojoList').getIn([0,'score'])}
@@ -149,19 +149,20 @@ const ShortAnswerQuestion = React.createClass({
     const tableHeader = [{
       title:this.props.questionInfo.get('questionNo'),
       key:'num',
-      className:styles.columns,
+      className:styles.columnsNo,
       width:50,
     },{
       title:this.renderQuestion(),
       dataIndex:'answer',
       key:'answer',
+      className:styles.columns,
       render:(text,record) => {
         if(record.key>-1){
           //编辑答案
           return (
             <div className={styles.question}>
             {
-              this.state.editingAnswerItem?<Ueditor initialContent={text||'输入选项内容'} onDestory={this.handleUpdateOption}/>:<span dangerouslySetInnerHTML={{__html:text||'输入选项内容'}}></span>
+              this.state.editingAnswerItem?<Ueditor name={this.props.questionInfo.getIn(['optionPojoList',record.key,'id'])} initialContent={text||'输入选项内容'} onDestory={this.handleUpdateOption}/>:<span dangerouslySetInnerHTML={{__html:text||'输入选项内容'}}></span>
             }
             </div>
           )
@@ -170,7 +171,7 @@ const ShortAnswerQuestion = React.createClass({
           return (
             <div className={styles.question}>
             {
-              this.state.editingDrawZone?<Ueditor onDestory={this.handleUpdateQuestion.bind(this,'drawZone')}/>:<span >{text||'作图区'}</span>
+              this.state.editingDrawZone?<Ueditor name={this.props.questionInfo.get('id')+'drawZone'} onDestory={this.handleUpdateQuestion.bind(this,'drawZone')}/>:<span >{text||'作图区'}</span>
             }
             </div>
           )
@@ -178,7 +179,7 @@ const ShortAnswerQuestion = React.createClass({
       }
     },{
       title:<Icon type='close' onClick={()=>this.props.onDelete(this.props.questionInfo.get('id'),this.state)}/>,
-      className:styles.columns,
+      className:styles.columnsNo,
       width:50,
       render:(text,record)=>{
         return <Icon type='close' onClick={this.handleDeleteAnswerItem}/>
