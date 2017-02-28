@@ -124,6 +124,7 @@ const config = _.extend({
 			addMadeGroup: `${baseURL}/group/add`,
 			editMadeGroup: `${baseURL}/group/edit`,
 			getByTeacherForHomework:`${baseURL}/group/getByTeacherForHomework`,
+			getAllGroupByType:`${baseURL}/group/getAllGroupByType`,
 		},
 		staff: {
 			addStaff: (type) => `${baseURL}/${type}/add`,
@@ -276,6 +277,8 @@ const config = _.extend({
 
 		},
 		notify:{
+			//添加通知
+			add:`${baseURL}/notification/add`,
             //收到的通知
             receiveNotifyUrl:  `${baseURL}/notification/page`,
             //发送的通知
@@ -363,7 +366,14 @@ const config = _.extend({
 			course:{
 				schedules:(subjectId,gradeId,term,version)=>`${baseURL}/teachingPlan/course/schedules?subjectId=${subjectId}&gradeId=${gradeId}&term=${term}&version=${version}`
 			}
+		},
+		task:{
+			add:`${baseURL}/task/add`,
+		},
+		news:{
+			add:`${baseURL}/eduinfo/add`,
 		}
+
 	}
 })
 

@@ -2,8 +2,12 @@ import React from 'react'
 import styles from './CreateNewsPage.scss'
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
-import {Select,Button,DatePicker,Input} from 'antd'
+import {Select,Button,DatePicker,Input,notification} from 'antd'
+import Ueditor from '../../components/ueditor/Ueditor'
+import ZTreeComponent from '../../components/ztree/ZTreeComponent'
 import moment from 'moment'
+import config from '../../config'
+import {fromJS} from 'immutable'
 
 const Option = Select.Option;
 
@@ -30,11 +34,15 @@ const TaskSVG = (props) => (
 // neweduinfo
 // settask
 const CreateNewsPage = React.createClass({
+  contextTypes: {
+    router: React.PropTypes.object
+  },
   getInitialState(){
     return {
       pageType: 'setnotification',
       title: '',
       deadline: moment(),
+      treeData:fromJS({})
     }
   },
 
@@ -47,7 +55,19 @@ const CreateNewsPage = React.createClass({
     const pageType = nextProps.location.pathname.split('/').slice(-1)[0];
     this.setState({pageType})
   },
-
+  componentDidMount(){
+    fetch(config.api.group.getAllGroupByType,{
+      method:'get',
+      headers:{
+        'from':'nodejs',
+        'token':sessionStorage.getItem('accessToken')
+      }
+    }).then(res => res.json()).then(res => {
+      this.setState({
+        treeData:fromJS(res)
+      })
+    })
+  },
   getPageName(){
     switch (this.state.pageType) {
       case 'setnotification':
@@ -81,16 +101,92 @@ const CreateNewsPage = React.createClass({
   },
 
   handleTitleChange(e){
-
+    this.setState({
+      title:e.target.value
+    })
   },
 
   handleDeadlineChange(value, dateString){
     console.log(value);
     console.log(dateString);
+    this.setState({
+      deadline:value,
+      deadlineString:dateString,
+    })
   },
 
   handleSaveNews(){
+    console.log("this.props.pageType",this.state.pageType)
+    if(this.state.pageType=='setnotification'){
+      //通知
+      let formData = new FormData()
+      formData.append('title',this.state.title)
+      formData.append('content',this.refs.notice.getData())
+      formData.append('group_ids',this.refs.treeData.getCheckedData().filter(v => !isNaN(v.get('id'))).map(v => v.get('id')).toJS().join())
+      formData.append('ueditor_textarea_editorValue',this.refs.notice.getData())
+      formData.append('available',1)
+      fetch(config.api.notify.add,{
+        method:'post',
+        headers:{
+          'from':'nodejs',
+          'token':sessionStorage.getItem('accessToken')
+        },
+        body:formData
+      }).then(res => res.json()).then(res => {
+        if(res.title=='Success'){
+          this.context.router.push(`/index/notify-mgr/notify_lib/mynotification`)
+        }else{
+          notification.error({message:res.result})
+        }
 
+      })
+    }else if(this.state.pageType=='settask'){
+      //新建任务
+      let formData = new FormData()
+      formData.append('title',this.state.title)
+      formData.append('finish_time',this.state.deadlineString)
+      formData.append('content',this.refs.notice.getData())
+      formData.append('group_ids',this.refs.treeData.getCheckedData().filter(v => !isNaN(v.get('id'))).map(v => v.get('id')).toJS().join())
+      formData.append('ueditor_textarea_editorValue',this.refs.notice.getData())
+      formData.append('available',1)
+      fetch(config.api.task.add,{
+        method:'post',
+        headers:{
+          'from':'nodejs',
+          'token':sessionStorage.getItem('accessToken')
+        },
+        body:formData
+      }).then(res => res.json()).then(res => {
+        if(res.title=='Success'){
+          this.context.router.push(`/index/notify-mgr/notify_lib/mytask`)
+        }else{
+          notification.error({message:res.result})
+        }
+      })
+    }else if(this.state.pageType=='neweduinfo'){
+      //新建资讯
+      let formData = new FormData()
+      formData.append('title',this.state.title)
+      formData.append('eduInfoStyle','03')
+      formData.append('content',this.refs.news.getData())
+      formData.append('draftFlag','')
+      formData.append('editorValue',this.refs.news.getData())
+      fetch(config.api.news.add,{
+        method:'post',
+        headers:{
+          'from':'nodejs',
+          'token':sessionStorage.getItem('accessToken')
+        },
+        body:formData
+      }).then(res => res.json()).then(res => {
+        if(res.title=='Success'){
+          this.context.router.push(`/index/notify-mgr/notify_lib/classeduinfo`)
+        }else{
+          notification.error({message:res.result})
+        }
+
+      })
+    }
   },
 
   renderNoSplit(){
@@ -114,6 +210,7 @@ const CreateNewsPage = React.createClass({
         <div className={styles.verticalLayout}>
           <span>正文</span>
           {/* Insert UEditor Here */}
+          <Ueditor name='news' ref='news'/>
         </div>
       </div>
     )
@@ -161,12 +258,18 @@ const CreateNewsPage = React.createClass({
                 <div className={styles.verticalLayout}>
                   <span>正文</span>
                   {/* Insert UEditor Here */}
+                  <div className={styles.ueditorContainer}>
+                    <Ueditor name='notice' ref='notice'/>
+                  </div>
                 </div>
               </div>
               <div className={styles.right}>
                 <div className={styles.verticalLayout}>
                   <span>选择群组</span>
                   {/* Insert Ztree Here */}
+                  <div>
+                    {!this.state.treeData.isEmpty()?<ZTreeComponent ref='treeData' treeData={this.state.treeData}/>:null}
+                  </div>
                 </div>
               </div>
             </div>

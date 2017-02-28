@@ -76,7 +76,7 @@
   }
 
   :local(.dropDownPanel){
-    z-index: 10;
+    z-index: 1001;
     width: 100%;
     top: $navigation-height;
     background-color: rgba(145,223,177,0.8)	;

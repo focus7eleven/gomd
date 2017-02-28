@@ -5,13 +5,11 @@
   height: calc( 100% - 60px);
   display: flex;
   flex-direction: column;
+  overflow: auto;
   :global(.slick-dots){
     bottom: 5px;
   }
 
-  :local(.header){
-    @include headerWithoutFilter;
-  }
   :local(.sliderContainer){
     flex-grow: 0;
     :local(.carouselItem){
@@ -25,6 +23,8 @@
     flex-direction: column;
     flex-grow: 1;
     justify-content: center;
+    min-height: 200px;
+    margin-top: 10px;
     :local(.buttonGroup){
       display:flex;
       justify-content: center;
