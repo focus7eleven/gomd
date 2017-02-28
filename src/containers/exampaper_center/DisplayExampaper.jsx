@@ -32,17 +32,16 @@ const DisplayExampaper = React.createClass({
     this.context.router.goBack();
   },
   render(){
-
+    console.log("asdf:",this.state.exampaperInfo.toJS())
     return (
       <div className={styles.container}>
         <div className={styles.header}>
-          <div>
+          <div className={styles.wrapper}>
             <div className={styles.exampaperName}>{this.state.exampaperInfo.get('name')}</div>
-            <div>
-              <span>{this.state.exampaperInfo.get('subject_name')}|</span>
-              <span>{this.state.exampaperInfo.get('gradeName')}|</span>
-              <span>{this.state.exampaperInfo.get('term')}|</span>
-              <span>创建时间：{this.state.exampaperInfo.get('createTime')}|</span>
+            <div className={styles.exampaperInfo}>
+              <span>{`${this.state.exampaperInfo.get('subject_name')||''}（${this.state.exampaperInfo.get('version')||'暂无数据'}）`}&nbsp;&nbsp;|&nbsp;&nbsp;</span>
+              <span>{`${this.state.exampaperInfo.get('gradeName')||''}（${this.state.exampaperInfo.get('term')}）`}&nbsp;&nbsp;|&nbsp;&nbsp;</span>
+              <span>创建时间：{this.state.exampaperInfo.get('createTime')||'暂无数据'}</span>
             </div>
           </div>
           <Button type='primary' onClick={this.handleGoBack}>返回</Button>
