@@ -14,8 +14,12 @@ import {ROLE_TEACHER} from '../../constant';
 import {getGradeOptions,getSubjectOptions,getVersionOptions} from '../../actions/homework_action/main'
 import {AssignHomeworkModal} from './AssignHomeworkModal';
 //import {findMenuInTree} from '../../reducer/menu';
+import styles from './HomeworkUnchecked.scss'
 
 const HomeworkUnchecked = React.createClass({
+	contextTypes: {
+    router: React.PropTypes.object
+  },
   getInitialState(){
     return {
       type: "",
@@ -78,7 +82,6 @@ const HomeworkUnchecked = React.createClass({
       <div> {/* 过滤+表格+分页 */}
         <CustomTable columns={columns} showIndex={true} pageUrl={this.state.pageUrl}
                      filters={filters} ref="uncheckedTable"></CustomTable>
-        <AssignHomeworkModal ref="assignHomeworkModal"></AssignHomeworkModal>
       </div>
     );
   },
@@ -87,7 +90,8 @@ const HomeworkUnchecked = React.createClass({
       {
         title: '作业名称', dataIndex: 'homework_name', key: 'homework_name',
         render: (text, record) => {
-          return <a onClick={() => console.log(record.homework_name)}>{text}</a>
+          //return <a onClick={() => console.log(record.homework_name)}>{text}</a>
+		  return <a onClick={() => {this.context.router.push(`/index/homework/homework_detail/`+record.homework_id)}}>{text}</a>
         }
       },
       {title: '创建时间', dataIndex: 'create_dt', key: 'create_dt'},
@@ -96,12 +100,12 @@ const HomeworkUnchecked = React.createClass({
       {title: '年级', dataIndex: 'gradeName', key: 'gradeName'},
       {title: '学期', dataIndex: 'term', key: 'term'},
       {title: '版本', dataIndex: 'textbook_version', key: 'textbook_version'},
-      {title: permissionDic['edit'], dataIndex: 'edit', key: 'edit',
+      {title: permissionDic['edit'], dataIndex: 'edit', key: 'edit',  className:styles.editColumn,
         render: (text, record) => {
           return (
             <div>
-              <Button type="danger" onClick={()=>this.rejectHomework(record.homework_id)}>打回</Button>
-              <Button type="primary"onClick={()=>this.acceptHomework(record.homework_id)}>同意</Button>
+              <Button type="danger" className={styles.rejectHomeworkButton} onClick={()=>this.rejectHomework(record.homework_id)}>打回</Button>
+              <Button type="primary"className={styles.acceptHomeworkButton} onClick={()=>this.acceptHomework(record.homework_id)}>同意</Button>
             </div>
           )
         }

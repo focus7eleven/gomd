@@ -1,0 +1,17 @@
+@import '~mixins.scss';
+
+:local(.loading){
+  @include loading;
+}
+
+:local(.rejectHomeworkButton){
+  background-color: red;
+  border-color: $border-grey;
+  margin-left: 5px;
+}
+
+:local(.acceptHomeworkButton){ 
+  background-color: $primary-color;
+  border-color: $primary-color;
+  margin-right: 5px;
+}

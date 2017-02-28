@@ -157,7 +157,9 @@ const TeacherPage = React.createClass({
     console.log(this.state.userRoleList);
     let formData = new FormData();
     formData.append('userId',this._teacherUserId)
-    formData.append('roleIds',this.state.userRoleList)
+    this.state.userRoleList.forEach((item)=>{
+      formData.append('roleIds[]',item)
+    })
     this.props.setTeacherRole(formData);
   },
 
@@ -289,7 +291,7 @@ const TeacherPage = React.createClass({
         'sex':this._currentRow.get('sex'),
         'phone1':this._currentRow.get('phone1'),
         'phone2':this._currentRow.get('phone2'),
-        'birth':moment(this._currentRow.get('birth')),
+        'birth':this._currentRow.get('birth')?moment(this._currentRow.get('birth')):'',
         'email':this._currentRow.get('email'),
         'homeAddr':this._currentRow.get('homeAddr'),
         'weChat':this._currentRow.get('weChat'),

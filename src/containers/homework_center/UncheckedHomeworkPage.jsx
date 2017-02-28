@@ -131,7 +131,7 @@ const UncheckedHomeworkPage = React.createClass({
                             if (record.school_check != 0){
                                 return (
                                     <div>
-                                        <Button type="primary">修改</Button>
+                                        <Button type="primary" onClick={this.handleEditHomework.bind(this,this,record.homework_id)}>修改</Button>
                                         <Button type="danger"  style={{marginLeft:'10px'}} onClick={this.handleDeleteHomework.bind(this,record.homework_id)}>删除</Button>
                                     </div>
                                 )
@@ -155,8 +155,7 @@ const UncheckedHomeworkPage = React.createClass({
     },
 
     handleEditHomework(value){
-
-
+        this.context.router.push(menuRoutePath['edit_homework'].path+value);
     },
 
     handleDeleteHomework:function(value){

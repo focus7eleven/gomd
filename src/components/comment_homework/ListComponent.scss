@@ -1,0 +1,31 @@
+@import "~theme.scss";
+@import "~mixins.scss";
+
+:local(.header) {
+  @include centric;
+
+  background-color: $sub-header-color;
+  height: 36px;
+}
+
+:local(.listItems) {
+  :local(.listItem) {
+    display: flex;
+    align-items: center;
+    height: 36px;
+    padding-left: 8px;
+    border-bottom: 1px $border-grey solid;
+    cursor: pointer;
+    color: black;
+  }
+  :local(.listItem2) {
+    display: flex;
+    align-items: center;
+    height: 36px;
+    padding-left: 8px;
+    border-bottom: 1px $border-grey solid;
+    cursor: pointer;
+    background-color: $primary-color;
+    color: white;
+  }
+}

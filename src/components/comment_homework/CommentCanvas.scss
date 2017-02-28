@@ -1,0 +1,21 @@
+@import "~theme.scss";
+@import "~mixins.scss";
+
+
+
+:local(.container) {
+
+  :local(.canvas) {
+    border: 1px solid $border-grey;
+  }
+
+  :local(.buttonGroupVertical) {
+    display: inline-block;
+    vertical-align: top;
+
+    :local(.button) {
+      display: block;
+
+    }
+  }
+}

@@ -28,8 +28,6 @@ const HomeworkLibPage = React.createClass({
       termOptionList:[{key:"上学期",value:"上学期"},{key:"下学期",value:"下学期"}],
       subjectOptionList:[],
       versionOptionList:[],
-
-      assignHomeworkModalVisible:false
     }
   },
   getDefaultProps() {
@@ -91,7 +89,7 @@ const HomeworkLibPage = React.createClass({
       {
         title: '作业名称', dataIndex: 'homework_name', key: 'homework_name',
         render: (text, record) => {
-          return <a onClick={() => {this.context.router.push(`/index/homework_detail/`+record.homework_id)}}>{text}</a>
+          return <a onClick={() => {this.context.router.push(`/index/homework/homework_detail/`+record.homework_id)}}>{text}</a>
         }
       },
       {title: '创建时间', dataIndex: 'create_dt', key: 'create_dt'},

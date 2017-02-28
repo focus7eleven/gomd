@@ -204,7 +204,7 @@ const PatriarchPage = React.createClass({
         'phone1':this._currentRow.get('phone1'),
         'phone2':this._currentRow.get('phone2'),
         'phone3':this._currentRow.get('phone3'),
-        'birth':moment(this._currentRow.get('birth')),
+        'birth':this._currentRow.get('birth')?moment(this._currentRow.get('birth')):'',
         'email':this._currentRow.get('email'),
         'address':this._currentRow.get('address'),
       })

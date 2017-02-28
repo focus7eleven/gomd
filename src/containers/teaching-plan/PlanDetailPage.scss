@@ -1,0 +1,37 @@
+@import "~theme.scss";
+@import "~mixins.scss";
+
+:local(.subHeader) {
+    @include contentSubHeader
+}
+
+:local(.container){
+    border:1px solid #cccccc;
+    :local(.body){
+        margin:20px;
+        :local(.title1){
+            border-bottom:1px solid #cccccc;
+            :local(.text1){
+                font-size:20px;
+            }
+        }
+        :local(.topRow){
+            margin-top:20px;
+            border-bottom:1px solid #cccccc;
+            :local(.leftCol){
+                border-right:1px solid #cccccc;
+            }
+        }
+        :local(.tableDarkRow) {
+            background-color: #7CCD7C;
+        }
+        :local(.tableLightRow) {
+            background-color: #FFFFFF;
+        }
+        :local(.textArea){
+            border:1px solid #cccccc;
+            margin: 20px 10px 20px 10px;
+        }
+
+    }
+}

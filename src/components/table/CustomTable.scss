@@ -4,11 +4,23 @@
 
   :local(.header) {
     @include headerWithoutFilter;
+
     :local(.filterItems) {
       display: -webkit-flex; /* Safari */
       display: flex;
       flex-direction: row;
       justify-content:flex-end;
+
+      :local(:not(:first-child)) {
+        margin-left: 10px;
+      }
+
+      :local(.filterSelect) {
+        @include filterSelect
+      }
+      :local(.filterInput) {
+        @include filterInput
+      }
     }
   }
 

@@ -1,0 +1,23 @@
+@import "~theme.scss";
+
+:local(.indexTd) {
+  width: 40px;
+  text-align: center;
+}
+
+:local(.tag) {
+  color: $primary-color;
+}
+
+:local(.uploadButton) {
+  background-color: $highlight-color;
+  border-color: $highlight-color;
+}
+
+:local(.questionContent) {
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  display: -webkit-flex; /* Safari */
+  display: flex;
+}

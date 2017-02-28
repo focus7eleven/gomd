@@ -118,7 +118,7 @@ const DetailPage = React.createClass({
         </div>
 
         {this.state.showVidoeoDetailModal?<VideoModal videoDetail={this.state.videoDetail} onCancel={()=>{this.setState({showVidoeoDetailModal:false})}}/>:null}
-        {this.state.showHomeworkDetailModal?<HomeworkDetailModal homeworkId={this.state.homeworkId} onCancel={()=>{this.setState({showHomeworkDetailModal:false})}}/>:null}
+        {this.state.showHomeworkDetailModal?<HomeworkDetailModal userInfo={this.props.userInfo} homeworkId={this.state.homeworkId} onCancel={()=>{this.setState({showHomeworkDetailModal:false})}}/>:null}
       </div>
     )
   }
@@ -128,6 +128,7 @@ function mapStateToProps(state){
   return{
     menu: state.get('menu'),
     courseCenter: state.get('courseCenter'),
+    userInfo: state.get('user').get('userInfo'),
   }
 }
 function mapDispatchToProps(dispatch){

@@ -1,0 +1,48 @@
+@import "~theme.scss";
+@import "~mixins.scss";
+
+:local(.container) {
+  border-width: 1px;
+  border-style: solid;
+
+  :local(.name) {
+    height: 36px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+  }
+
+  :local(.answerView) {
+    height: 36px;
+    display:flex;
+    align-items:center;
+    border-bottom:1px solid $border-grey;
+    padding-left: 5px;
+
+    :local(.answer) {
+      margin: 0 auto;
+    }
+  }
+
+  :local(.answerViewImage) {
+    min-height: 36px;
+    border-bottom:1px solid $border-grey;
+    padding-left: 5px;
+  }
+
+
+  :local(.scoreView) {
+    height: 36px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding-left: 5px;
+    padding-right: 5px;
+
+    :local(.score) {
+      width: 25%;
+      max-width: 50px;
+      text-align: center;
+    }
+  }
+}

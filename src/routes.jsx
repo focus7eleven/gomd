@@ -48,7 +48,7 @@ import UncheckVideoPage from './containers/micro_course/UncheckVideoPage'
 import VideoDetailContainer from './containers/micro_course/detail/VideoDetailContainer'
 import VideoDetailPage from './containers/micro_course/detail/VideoDetailPage'
 import HomeworkContainer from './containers/homework_center/HomeworkContainer'
-import CreateHomeworkPage from './containers/homework_center/CreateHomework'
+import CreateOrEditHomeworkPage from './containers/homework_center/CreateOrEditHomework'
 import HomeworkUnchecked from './containers/homework_center/HomeworkUnchecked'
 import ExampaperContainer from './containers/exampaper_center/ExampaperContainer'
 import MyExampaperPage from './containers/exampaper_center/MyExampaperPage'
@@ -57,7 +57,17 @@ import DisplayExampaper from './containers/exampaper_center/DisplayExampaper'
 import HomeworkLibPage from './containers/homework_center/HomeworkLibPage'
 import HomeworkDetailPage from './containers/homework_center/HomeworkDetailPage'
 import HomeworkPublished from './containers/homework_center/HomeworkPublished'
+import ExamPaperReviseResult from './containers/homework_center/ExamPaperReviseResult'
 import UncheckedHomeworkPage from './containers/homework_center/UncheckedHomeworkPage'
+import StudentHomeworkPage from './containers/homework_center/StudentHomeworkPage'
+import AnswerHomeworkPage from './containers/homework_center/AnswerHomeworkPage';
+import HomeworkAnswerResult from './containers/homework_center/HomeworkAnswerResultPage';
+import CommentHomeworkPage from './containers/homework_center/CommentHomeworkPage';
+import NotifyContainer from './containers/notify_center/NotifyContainer'
+import NotificationLibPage from './containers/notify_center/NotificationLibPage'
+import NotificationDetail from './containers/notify_center/NotificationDetail'
+import TaskDetail from './containers/notify_center/TaskDetail'
+import EduInfoDetail from './containers/notify_center/EduInfoDetail'
 
 import VideoComponent from './components/video/VideoComponent'
 import CourseTree from './components/tree/CourseTree'
@@ -68,7 +78,13 @@ import NoteQuestion from './components/table/exampaper/NoteQuestion'
 import AnswerSheetContainer from './containers/answer_sheet/AnswerSheetContainer'
 import CreateAnswerSheetPage from './containers/answer_sheet/CreateAnswerSheetPage'
 import AnswerSheetPage from './containers/answer_sheet/AnswerSheetPage'
+import EditSheetContainer from './containers/answer_sheet/EditSheetContainer'
+import EditAnswerSheetPage from './containers/answer_sheet/EditAnswerSheetPage'
 import WelcomPageContainer from './containers/index_homepage/WelcomePageContainer'
+
+import TeachingPlanContainer from './containers/teaching-plan/TeachingPlanContainer'
+import KindergartenPage from './containers/teaching-plan/KindergartenPage'
+import PlanDetailPage from './containers/teaching-plan/PlanDetailPage'
 import ZTreeComponent from './components/ztree/ZTreeComponent'
 
 const routes = (
@@ -146,6 +162,15 @@ const routes = (
 					<Route path='schoolCourse' component={SchoolCoursePage} />
 					<Route path='uncheckCourse' component={UncheckedCoursePage} />
 				</Route>
+                {/* 教学计划及总结*/}
+                <Route path=':second' component={TeachingPlanContainer}>
+					<Route path='plan/:type' component={KindergartenPage}/>
+					<Route path='planDetail/:planId' component={PlanDetailPage}/>
+					{/*<Route path='primarySchool' component={}/>*/}
+					{/*<Route path='juniorHighSchool' component={}/>*/}
+					{/*<Route path='seniorMiddleSchool' component={}/>*/}
+				</Route>
+
 
 				{/* 微课中心 */}
 				<Route path=':second' component={MicroCourseContainer}>
@@ -160,14 +185,27 @@ const routes = (
 				</Route>
 
 				{/* 作业中心 */}
-				<Route path="homework_lib/:type" component={HomeworkLibPage}/>
-				<Route path="homework_detail/:homeworkId" component={HomeworkDetailPage}/>
-				<Route path="unchecked_homework/:type" component={UncheckedHomeworkPage}/>
 				<Route path=':second' component={HomeworkContainer}>
-					<Route path='sethomework' component={CreateHomeworkPage}></Route>
+					<Route path='sethomework(/:type)(/:homeworkId)' component={CreateOrEditHomeworkPage}></Route>
                     <Route path='homework' component={HomeworkPublished}></Route>
-					<Route path='homework_unchecked' component={HomeworkUnchecked}></Route>
+                    <Route path="check_results/:homeworkClassId" component={ExamPaperReviseResult}></Route>
+					<Route path="homework_lib/:type" component={HomeworkLibPage}/>{/* 公共作业，学校作业，教师个人作业 */}
+					<Route path="homework_detail/:homeworkId" component={HomeworkDetailPage}/>{/* 作业详情 */}
+					<Route path="homework_my_unchecked" component={UncheckedHomeworkPage}/>{/* 自己提交给别人审核的作业 */}
+					<Route path='homework_unchecked' component={HomeworkUnchecked}></Route>{/* 需要我审核的作业 */}
+					<Route path="stu_homework" component={StudentHomeworkPage}></Route>{/* 学生我的作业 */}
+					<Route path="answer_homework" component={AnswerHomeworkPage}></Route>{/* 学生-答卷/订正 */}
+					<Route path="homework_answer_result" component={HomeworkAnswerResult}></Route>{/* 学生-查看结果 */}
+					<Route path="comment_homework" component={CommentHomeworkPage}></Route>{/* 老师-批改答题/批改订正 */}
 				</Route>
+
+                {/*资讯中心*/}
+                <Route path=':second' component={NotifyContainer}>
+                    <Route path='notify_lib/:type' component={NotificationLibPage}></Route>
+                    <Route path="showNotificationDetail/:notificationId" component={NotificationDetail}></Route>{/* 通知详情 */}
+                    <Route path="showTaskDetail/:taskId" component={TaskDetail}></Route>{/* 任务详情 */}
+                    <Route path="showEduInfoDetail/:eduinfoId" component={EduInfoDetail}></Route>{/* 资讯详情 */}
+                </Route>
 
 				{/* 题库机组卷 */}
 				<Route path=':second' component={ExampaperContainer}>
@@ -185,6 +223,9 @@ const routes = (
 				<Route path=':second' component={AnswerSheetContainer}>
 					<Route path='addAnswersheet' component={CreateAnswerSheetPage}></Route>
 					<Route path='answersheet' component={AnswerSheetPage}></Route>
+					<Route path='answersheet/editAnswersheet/(:sheetId)' component={EditSheetContainer}>
+						<IndexRoute component={EditAnswerSheetPage} />
+					</Route>
 				</Route>
 
 			</Route>

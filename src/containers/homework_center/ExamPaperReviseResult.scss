@@ -1,0 +1,166 @@
+@import "~theme.scss";
+@import "~mixins.scss";
+
+:local(.mainHeader) {
+  color: black;
+  height: 42px;
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid #e9e9e9;
+}
+
+:local(.fontStyle) {
+  font-size:16px;
+  font-weight:bold;
+  color: #2EB880;;
+  vertical-align:middle;
+}
+:local(.subHeader) {
+  color: black;
+  background-color: #E7F9F2;
+  height: 38px;
+  @include centric
+}
+
+:local(.rightActionButtons) {
+  height: 38px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  
+  :fist-child {
+	width: 100%;
+	margin-top: 10px;
+    background-color: red;
+  }
+  
+  :local(:not(:first-child)) {
+    margin-left: 10px;
+  }
+
+  :local(.commitButton) {
+    background-color: $primary-color;
+    color: white;
+  }
+
+  :local(.backButton) {
+    background-color: $highlight-color;
+    color: white;
+  }
+}
+
+:local(.questionList) {
+  > div:not(:first-child) {
+    margin-top: 10px;
+  }
+}
+
+:local(.cardBorder) {
+  border-color: lightgreen;
+}
+
+:local(.column-first) {
+  width: 100px;
+  align-items: center;
+
+}
+
+:local(.tableRowClass) {
+  text-align: center;
+  color:  black;
+}
+
+:local(.tableHeaderClass) {
+  text-align: center;
+  color:  green;
+  background-color: lightgreen;
+}
+
+:local(.tableColumn) {
+  @include tableColumn;
+  color:  black;
+}
+
+:local(.wrapper) {
+  height: calc(100% - 40px);
+  width: 100%;
+  position: relative;
+
+  :local(.tableDarkRow) {
+    @include tableDarkRow;
+  }
+  :local(.tableLightRow) {
+    @include tableLightRow;
+  }
+  :local(.tableColumn) {
+    @include tableColumn;
+  }
+  :local(.tableMsg) {
+    @include tableMsg;
+  }
+}
+
+:local(.table) {
+	border: 1px solid #e9e9e9;
+    border-right: 0;
+    border-bottom: 0;
+	width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    text-align: left;
+    border-radius: 4px 4px 0 0;
+    overflow: hidden;
+}
+:local(.thead) {
+    display: table-header-group;
+    vertical-align: middle;
+	border:1px solid #E7F9F2;  
+}
+:local(.th) {
+    border-right: 1px solid #e9e9e9;
+	border-bottom: 1px solid #e9e9e9;
+	padding: 16px 8px;
+    word-break: break-all;
+}
+
+:local(.td) {
+    border-right: 1px solid #e9e9e9;
+	border-bottom: 1px solid #e9e9e9;
+	padding: 16px 8px;
+    word-break: break-all;
+}
+:local(.numberTd) {
+  border-right: 1px solid #e9e9e9;
+  border-bottom: 1px solid #e9e9e9;
+  padding: 16px 8px;
+  word-break: break-all;
+  text-align:right;
+}
+
+:local(.infoUnsubmit) {
+	background-color: #E0F7FF;
+	border:1px solid #00CBFF;
+    vertical-align:middle;
+}
+:local(.infoUnrevise) {
+	background-color: #FFECFB;
+	border:1px solid #C07EB2;
+    vertical-align:middle;
+}
+:local(.infoRight) {
+	border:1px solid #00D89F;  
+	background-color: #E0F9F2;
+    vertical-align:middle;
+}
+:local(.infoWrong) {
+	background-color: #FFE1DF;
+	border:1px solid #FF5449;
+    vertical-align:middle;
+}
+
+:local(.infoHalf) {
+  background-color: #FDF7E0;
+  border:1px solid #FFAD06;
+  vertical-align:middle;
+}

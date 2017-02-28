@@ -215,7 +215,7 @@ const CreateAnswerSheetPage = React.createClass({
   },
 
   handleFieldChange(index,key,e){
-    const questions = this.state.questions;
+    let questions = this.state.questions;
     let value
     switch (key) {
       case 'questionType':
@@ -235,10 +235,21 @@ const CreateAnswerSheetPage = React.createClass({
         value = e;
         this.handleInitWidthAndHeight(index,value)
         break;
+      case 'answerWidth':
+        value = e;
+        const newWidth = Array.from({length: questions.get(index).get('questionNum')},(v,i)=>e);
+        questions = questions.update(index, v => v.set('widthArr',newWidth));
+        break;
+      case 'answerHeight':
+        value = e;
+        const newHeight = Array.from({length: questions.get(index).get('questionNum')},(v,i)=>e);
+        questions = questions.update(index, v => v.set('heightArr',newHeight));
+        break;
       default:
         value = e
     }
-    key === 'questionType' || key === 'questionNum' ? null : this.setState({questions: questions.update(index, v => v.set(key, value))})
+    questions = questions.update(index, v => v.set(key, value));
+    key === 'questionType' || key === 'questionNum' ? null : this.setState({questions})
   },
 
   handleDeleteQuestion(index){
@@ -271,8 +282,9 @@ const CreateAnswerSheetPage = React.createClass({
 
   handleSaveAnswerSheet(){
     let formData = new FormData();
-    const {sheetName,questions} = this.state;
+    const {sheetName,questions,continuousIndex} = this.state;
     formData.append('answersheet_name',sheetName)
+    formData.append('num_chapter_continue',continuousIndex);
     questions.map((item,index)=>{
       formData.append('question_id',0);
       formData.append('question_sort',index+1);
@@ -325,7 +337,12 @@ const CreateAnswerSheetPage = React.createClass({
       const newHeight = Array.from({length: question.get('questionNum')},(v,i)=>h)
       this.setState({questions: questions.update(index, v => v.set('isCustomized',false).set('widthArr',fromJS(newWidth)).set('heightArr',fromJS(newHeight)))})
     }else if(question.get('questionType')==='jianda'){
-
+      const h = question.get('answerHeight')
+      const r = question.get('jiandaAnswerRow')
+      const c = question.get('jiandaAnswerCol')
+      const newHeight = Array.from({length: question.get('questionNum')},(v,i)=>[h,r,c])
+      const newTitle = Array.from({length: question.get('questionNum')}, (v,i)=>question.get('childQuestionTitle'))
+      this.setState({questions: questions.update(index, v => v.set('isCustomized',false).set('titleArr',fromJS(newTitle)).set('heightArr',fromJS(newHeight)))})
     }
   },
 
@@ -533,7 +550,7 @@ const CreateAnswerSheetPage = React.createClass({
             </div>
             <div className={styles.block}>
               <span>子标题</span>
-              <Input placeholder="输入少于30个字" style={{width: 240}} value={item.get('childQuestionTitle')} onChange={this.handleFieldChange.bind(null,index,'childQuestionTitle')} />
+              <Input placeholder="输入少于30个字" disabled={isCustomized&&questionType==='jianda'} style={{width: 240}} value={item.get('childQuestionTitle')} onChange={this.handleFieldChange.bind(null,index,'childQuestionTitle')} />
             </div>
             <div className={styles.block}>
               <span>题目个数</span>

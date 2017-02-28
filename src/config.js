@@ -1,7 +1,7 @@
 import _ from 'underscore'
 
 export const baseURL = "http://139.224.194.45:8080"
-// const baseURL = "http://127.0.0.1:8080"
+// export const baseURL = "http://127.0.0.1:8080"
 
 // App config the for development and deployment environment.
 const isProduction = process.env.NODE_ENV === "production"
@@ -234,23 +234,87 @@ const config = _.extend({
 				existHomework:(subjectId,type='1')=>`${baseURL}/homework/course/existHomework?subjectId=${subjectId}&type=${type}`,
 				searchHomework:(subjectId,startTime,endTime,knowledgeId='',type='1')=>`${baseURL}/homework/course/existHomework?subjectId=${subjectId}&startTime=${startTime}&endTime=${endTime}&knowledgeId=${knowledgeId}&type=${type}`,
 			},
-			getHomeworkDetail:(homeworkId)=>`${baseURL}/homework/getHomeworkDetail?homeworkId=${homeworkId}`,
-      getHomeworkDetail2:(homeworkId)=>`${baseURL}/homework/getHomeworkDetail2?homeworkId=${homeworkId}`,
-			getHomeworkClass: (homeworkId) => `${baseURL}/homework/getClasses?homeworkId=${homeworkId}`,
+      getHomeworkDetail: (homeworkId) => `${baseURL}/homework/getHomeworkDetail?homeworkId=${homeworkId}`,
+      getHomeworkDetail2: (homeworkId) => `${baseURL}/homework/getHomeworkDetail2?homeworkId=${homeworkId}`,
+      getHomeworkClass: (homeworkId) => `${baseURL}/homework/getClasses?homeworkId=${homeworkId}`,
       //公共作业
-      areaHomeworkPageUrl:`${baseURL}/homework/area/homeworkLibPage`,
+      areaHomeworkPageUrl: `${baseURL}/homework/area/homeworkLibPage`,
       //学校作业
-      schoolHomeworkPageUrl:`${baseURL}/homework/school/homeworkLibPage`,
+      schoolHomeworkPageUrl: `${baseURL}/homework/school/homeworkLibPage`,
       //教师个人作业
-      selfHomeworkPageUrl:`${baseURL}/homework/self/homeworkLibPage`,
+      selfHomeworkPageUrl: `${baseURL}/homework/self/homeworkLibPage`,
+			//布置作业
+            assignHomeworkUrl:`${baseURL}/homework/setHomework`,
       //已发布作业
-      publishedHomeworkPageUrl:`${baseURL}/homework/page`,
-			//教师获取未审核的作业
-      teaUnCheckHomeworkPageUrl:`${baseURL}/homework/getTeaUncheckedHomework`,
-      teaDeleteHomeworkUrl:`${baseURL}/homework/delete`,
-		  //待审核作业
-		  homeworkUncheckedUrl:`${baseURL}/homework/getUncheckedHomework`,
-		  checkHomeworkUrl:`${baseURL}/homework/checkHomework`,
+      publishedHomeworkPageUrl: `${baseURL}/homework/page`,
+			pubDeleteHomeworkUrl: `${baseURL}/homework/delHomeworkClass`,
+      //教师获取未审核的作业
+      teaUnCheckHomeworkPageUrl: `${baseURL}/homework/getTeaUncheckedHomework`,
+			//删除作业
+      teaDeleteHomeworkUrl: `${baseURL}/homework/delete`,
+			//创建作业
+			teaCreateHomeworkUrl:`${baseURL}/homework/add`,
+			//修改作业
+			teaEditHomeworkUrl:`${baseURL}/homework/edit`,
+
+      //待审核作业
+      homeworkUncheckedUrl: `${baseURL}/homework/getUncheckedHomework`,
+      checkHomeworkUrl: `${baseURL}/homework/checkHomework`,
+
+      //学生：我的作业
+      studentHomeworkPageUrl: `${baseURL}/homework/get/byStudentId`,
+      downloadAnswersheet: (homeworkId) => `${baseURL}/homework/downloadAnswersheetPdf?homeworkId=${homeworkId}`,
+			answerHomework: {
+				getPaperAndAnswer:(homeworkClassId) => `${baseURL}/homework/getPaperAndAnswer?homeworkClassId=${homeworkClassId}`,
+                getPaperAndAnswerWithKey:(homeworkClassId) => `${baseURL}/homework/getPaperAndAnswerWithKey?homeworkClassId=${homeworkClassId}`,
+        		uploadAnswer: `${baseURL}/exampaper/uploadAnswerNew`,
+				submitHomework:`${baseURL}/homework/submitExamPaperHomework`,
+			},
+			commentHomework: {
+				getExampaperAndStudentAnswer: (homeworkClassId,answerType) => `${baseURL}/homework/getPaperAndAnswerWithTea?homeworkClassId=${homeworkClassId}&answerType=${answerType}`,
+			},
+	  //查看答题卡答案
+	  lookupAnswerSheetAnwser:(anwsersheetId, homeworkId) => `${baseURL}/answersheet/answersheetkey?answersheetId=${anwsersheetId}&homeworkId=${homeworkId}`,
+	  //查看批改结果
+	  checkResultByQuestion:(homeworkClassId) => `${baseURL}/homework/getPaperAndAnswerTeaByQuestion?homeworkClassId=${homeworkClassId}`,
+	  checkResultByStudents:(homeworkClassId) => `${baseURL}/homework/getPaperAndAnswerTeaByStu?homeworkClassId=${homeworkClassId}`
+
+		},
+		notify:{
+            //收到的通知
+            receiveNotifyUrl:  `${baseURL}/notification/page`,
+            //发送的通知
+			myNotifyUrl: `${baseURL}/notification/my/page`,
+            //待处理通知
+			undoNotifyUrl:   `${baseURL}/notification/undo/page`,
+			//通知详情
+			showNotificationUrl:(notificationId , userId) => `${baseURL}/notification/detail?notificationId=${notificationId}&userId=${userId}`,
+
+			//已处理任务
+            receiveTaskUrl:  `${baseURL}/task/page`,
+            //发送的任务
+            myTaskUrl: `${baseURL}/task/my/page`,
+            //待处理任务
+            undoTaskUrl:   `${baseURL}/task/undo/page`,
+			//任务详情
+            showTaskUrl:(taskId , userId) => `${baseURL}/task/detail?taskId=${taskId}&userId=${userId}`,
+            getSubmitListUrl:(taskId) => `${baseURL}/task/listTaskSubmit?taskId=${taskId}`,
+            getNotSubmitListUrl:(taskId) => `${baseURL}/task/listTaskNotSubmit?taskId=${taskId}`,
+            showReturnDetailUrl:(taskId,userId) => `${baseURL}/task/showReturnDetail?taskId=${taskId}&userId=${userId}`,
+
+
+			//市直动态
+			cityEduInfoUrl: `${baseURL}/eduinfo/citypage`,
+			//校园采风
+			schoolEduInfoUrl:`${baseURL}/eduinfo/schoolpage`,
+			//班级剪影
+			classEduInfoUrl:`${baseURL}/eduinfo/classpage`,
+			//资讯详情
+            showEduInfoUrl:(eduinfoId, userId) => `${baseURL}/eduinfo/detail/${eduinfoId}?loginUserId=${userId}`,
+			//提交任务人数-下载回复
+            downloadResponse: (taskId) => `${baseURL}/task/downloadContent?taskId=${taskId}`,
+			//提交任务人数-下载附件
+            downloadAttachment: (taskId) => `${baseURL}/task/downloadAttachments?taskId=${taskId}`,
 
 		},
 		exampaper:{
@@ -266,12 +330,17 @@ const config = _.extend({
 		},
 		answersheet:{
 			getAll:`${baseURL}/answersheet/getAll`,
+			//获取答题卡的所有question（设置真确答案）
+			getQuestions:(anwsersheetId) =>`${baseURL}/answersheet/getAnswersheetQuestionDetail?answersheetId=${anwsersheetId}`,
 			getTableData: (type, search, currentPage) => `${baseURL}/${type}/page?search=${search}&currentPage=${currentPage}`,
 			create: `${baseURL}/answersheet/add`,
 			download: (id) => `${baseURL}/answersheet/answersheetview?answersheet_id=${id}`,
 			edit: `${baseURL}/answersheet/edit`,
 			getAnswerSheet: (id) => `${baseURL}/answersheet/getAnswersheetDetail?answersheetId=${id}`,
 			getAnswerSheetQuestion: (id) => `${baseURL}/answersheet/getAnswersheetQuestionDetail?answersheetId=${id}`,
+			editSheetQuestion: `${baseURL}/answersheet/editNew`,
+			getAdduction: `${baseURL}/answersheet/getAdduction`,
+			checkSheetName: (name) => `${baseURL}/answersheet/checkanswersheetname?answersheet_name=${name}`,
 		},
 		wordquestion:{
 			addChoose:`${baseURL}/wordquestion/addChoose`,
@@ -288,6 +357,14 @@ const config = _.extend({
 			uploadWord:`${baseURL}/wordquestion/uploadWord`,
 			addNest:`${baseURL}/wordquestion/addNest`,
 			addTitle:`${baseURL}/wordquestion/addTitle`,
+		},
+		//教学计划和总结
+		teachingPlan:{
+			teachingPlanPageUrl:`${baseURL}/teachingPlan/get/bykindergartenPage.json`,
+			teachingPlanDetailUrl:(teachingPlanId)=>`${baseURL}/teachingPlan/get/detail?teachingPlanId=${teachingPlanId}`,
+			teachingScheduleUrl:(teachingPlanId)=>`${baseURL}/teachingPlan/get/schedules?planId=${teachingPlanId}`,
+			ordedTextbookmenuUrl:(subjectId,gradeId,term,version)=>`${baseURL}/teachingPlan/get/ordedTextbookmenu?subjectId=${subjectId}&gradeId=${gradeId}&term=${term}&version=${version}`,
+			summaryDetailUrl:(textbookMenuId)=>`${baseURL}/teachingPlan/get/summarize?textbookMenuId=${textbookMenuId}`
 		}
 	}
 })

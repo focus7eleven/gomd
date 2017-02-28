@@ -1,0 +1,36 @@
+@import "~theme.scss";
+@import "~mixins.scss";
+
+:local(.loading){
+  @include loading;
+}
+
+:local(.dateSpan){
+  margin-right: 30px;
+}
+
+:local(.creatorSpan){
+  margin-left: 30px;
+}
+:local(.mainHeader) {
+  @include contentMainHeader
+}
+
+:local(.subHeader) {
+  @include contentSubHeader
+}
+
+:local(.rightActionItems) {
+  @include contentRightActionItems;
+}
+
+:local(.viewContent) {
+  border-left:1px solid $border-grey;
+  border-right:1px solid $border-grey;
+  border-bottom:1px solid $border-grey;
+  padding:40px;
+  color:black;
+}
+
+
+

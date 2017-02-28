@@ -40,29 +40,33 @@ const CourseFilterComponent = React.createClass({
   },
 
   handleGradeChange(value){
-    this.props.getFilteredTableData(this.props.pageType,'',1,value);
+    const {gradeOption,subjectOption,termOption} = this.props
+    this.props.getFilteredTableData(this.props.pageType,'',1,value,subjectOption,termOption);
   },
 
   handleTermChange(value){
-    this.props.getFilteredTableData(this.props.pageType,'',1,'','',value);
+    const {gradeOption,subjectOption,termOption} = this.props
+    this.props.getFilteredTableData(this.props.pageType,'',1,gradeOption,subjectOption,value);
   },
 
   handleVersionChange(value){
+    const {gradeOption,subjectOption,termOption} = this.props
     console.log(value);
   },
 
   handleSubjectChange(value){
-    this.props.getFilteredTableData(this.props.pageType,'',1,'',value);
+    const {gradeOption,subjectOption,termOption} = this.props
+    this.props.getFilteredTableData(this.props.pageType,'',1,gradeOption,value,termOption);
   },
 
   render(){
     const {version,subjects,grade} = this.state
-    const userInfo = this.props.userInfo
+    const {gradeOption,subjectOption,termOption,userInfo} = this.props
     const page = this.context.router.routes[3].path
 
     return (
       <div className={styles.container}>
-        <Select defaultValue="" style={{ width: 150 }} onChange={this.handleGradeChange}>
+        <Select defaultValue="" value={gradeOption} style={{ width: 150 }} onChange={this.handleGradeChange}>
           <Option value="">所有年级</Option>
           {
             grade.map((item,index)=>{
@@ -72,13 +76,13 @@ const CourseFilterComponent = React.createClass({
         </Select>
         {
           (userInfo.userStyleName==='学校资源审核员'&&page==='uncheckCourse')?null:
-          <Select defaultValue="" style={{ marginLeft:20,width: 150 }} onChange={this.handleTermChange}>
+          <Select defaultValue="" value={termOption} style={{ marginLeft:20,width: 150 }} onChange={this.handleTermChange}>
             <Option value="">所有学期</Option>
             <Option value="上学期">上学期</Option>
             <Option value="下学期">下学期</Option>
           </Select>
         }
-        <Select defaultValue="" style={{ marginLeft:20,width: 150 }} onChange={this.handleSubjectChange}>
+        <Select defaultValue="" value={subjectOption} style={{ marginLeft:20,width: 150 }} onChange={this.handleSubjectChange}>
           <Option value="">所有学科</Option>
           {
             subjects.map((item,index)=>{
@@ -107,6 +111,10 @@ function mapStateToProps(state){
   return{
     courseCenter: state.get('courseCenter'),
     userInfo: state.get('user').get('userInfo'),
+    gradeOption:state.getIn(['courseCenter','otherMsg','gradeOption']),
+    subjectOption:state.getIn(['courseCenter','otherMsg','subjectOption']),
+    termOption:state.getIn(['courseCenter','otherMsg','termOption']),
+    // versionOption:state.getIn(['courseCenter','otherMsg','versionOption']),
   }
 }
 

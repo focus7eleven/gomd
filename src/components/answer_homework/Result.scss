@@ -1,0 +1,105 @@
+@import "~theme.scss";
+@import "~mixins.scss";
+
+:local(.card) {
+	height:120px;
+	border:1px solid #E7F9F2;  
+	padding:0;
+	margin-top:10px;
+}
+
+:local(.unSubmit) {
+	height:120px;
+	border:1px solid #00CBFF;  
+	padding:0;
+	margin-top:10px;
+}
+
+:local(.right) {
+	height:120px;
+	border:1px solid #00D89F;  
+	padding:0;
+	margin-top:10px;
+}
+
+:local(.wrong) {
+	height:120px;
+	border:1px solid #FF5449;  
+	padding:0;
+	margin-top:10px;
+}
+:local(.unRevise) {
+	height:120px;
+	border:1px solid #C07EB2;	
+	padding:0;
+	margin-top:10px;
+}
+
+:local(.headerUnSumit) {
+  width: 100%;
+  height: 34%;
+  background-color: #E0F7FF;  
+  display:flex;
+  align-items:center;
+  justify-content: space-around;
+  font-weight: bold
+}
+:local(.headerRight) {
+  display:flex;
+  align-items:center;
+  justify-content: center;
+  width: 100%;
+  height: 34%;
+  background-color: #E0F9F2;
+  font-weight: bold
+}
+:local(.headerWrong) {
+  display:flex;
+  align-items:center;
+  justify-content: center;
+  width: 100%;
+  height: 34%;
+  background-color: #FFE1DF;
+  font-weight: bold
+}
+:local(.headerUnRevise) {
+  display:flex;
+  align-items:center;
+  justify-content: center;
+  width: 100%;
+  height: 34%;
+  background-color: #FFECFB;
+  font-weight: bold
+}
+:local(.body) {
+  width: 100%;
+  height: 66%;
+}
+:local(.anwser) { 
+  width: 100%;
+  height: 50%;
+  border-bottom: 1px solid #e9e9e9;
+  font-weight: bold;
+  
+  display:flex;
+  align-items:center;
+  justify-content: center;
+}
+
+
+:local(.score) {
+  width: 100%;
+  height: 50%;
+  display:flex;
+  align-items:center;
+  justify-content: space-around;
+  font-weight: bold
+}
+:local(.info) {
+
+}
+:local(.img) {
+  height: 100%;
+  height: 30%;
+
+}

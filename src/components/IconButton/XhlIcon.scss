@@ -1,0 +1,56 @@
+@font-face {
+  font-family: 'xhlIcon';  /* project id 238689 */
+  src: url('//at.alicdn.com/t/font_rzlkszs0x561or.eot');
+  src: url('//at.alicdn.com/t/font_rzlkszs0x561or.eot?#iefix') format('embedded-opentype'),
+  url('//at.alicdn.com/t/font_rzlkszs0x561or.woff') format('woff'),
+  url('//at.alicdn.com/t/font_rzlkszs0x561or.ttf') format('truetype'),
+  url('//at.alicdn.com/t/font_rzlkszs0x561or.svg#xhlIcon') format('svg');
+}
+
+
+:global(.xhlicon) {
+  display: inline-block;
+  font-style: normal;
+  vertical-align: baseline;
+  text-align: center;
+  text-transform: none;
+  line-height: 1;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  &:before {
+    display: block;
+    font-family: "xhlIcon" !important;
+  }
+}
+
+:global(.xhlicon-rotate-left) {
+  &:before {
+    content: "\e770";
+  }
+}
+
+:global(.xhlicon-rotate-right) {
+  &:before {
+    content: "\e76f";
+  }
+}
+
+@mixin pngIcon($name) {
+  &:before {
+    content: url("images/comment_homework/"+$name+".png");
+  }
+}
+
+:global(.xhlicon-dui-small) {
+  @include pngIcon("dui-small");
+}
+
+:global(.xhlicon-bandui-small) {
+  @include pngIcon("bandui-small");
+}
+
+:global(.xhlicon-cuo-small) {
+  @include pngIcon("cuo-small");
+}
+

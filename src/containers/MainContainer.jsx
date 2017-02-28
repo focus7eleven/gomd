@@ -27,7 +27,6 @@ const MainContainer = React.createClass({
     }
   },
   componentWillReceiveProps(nextProps){
-    console.log("--->:",nextProps.menu.toJS())
     let menuUrl = nextProps.location.pathname.split('/').slice(-1)[0]
     let path = !nextProps.menu.get('data').isEmpty()?findPath(nextProps.menu.get('data'),menuUrl):List()
     let temp = nextProps.location.pathname.split('/').slice(-2)[0]
@@ -43,6 +42,12 @@ const MainContainer = React.createClass({
       let path2 = !nextProps.menu.get('data').isEmpty()?findPath(nextProps.menu.get('data'),menuUrl2):List()
       this.setState({
         currentPath:path2.map(v => v.get('resourceName')).concat(['试卷内容'])
+      })
+    }else if(temp=='editAnswersheet'){
+      let menuUrl2 = nextProps.location.pathname.split('/').slice(-3)[0]
+      let path2 = !nextProps.menu.get('data').isEmpty()?findPath(nextProps.menu.get('data'),menuUrl2):List()
+      this.setState({
+        currentPath:path2.map(v => v.get('resourceName')).concat(['编辑答题卡'])
       })
     }else{
       this.setState({

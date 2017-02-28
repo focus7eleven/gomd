@@ -241,7 +241,7 @@ const StudentPage = React.createClass({
         'stuName':this._currentRow.get('stuName'),
         'stuSex':this._currentRow.get('stuSex'),
         'phone':this._currentRow.get('phone'),
-        'stuBirth':moment(this._currentRow.get('stuBirth')),
+        'stuBirth':this._currentRow.get('stuBirth')?moment(this._currentRow.get('stuBirth')):'',
         'address':this._currentRow.get('address'),
         'weChat':this._currentRow.get('weChat'),
         'qq':this._currentRow.get('qq'),

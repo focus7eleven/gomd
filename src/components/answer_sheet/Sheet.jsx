@@ -9,19 +9,20 @@ const Sheet = React.createClass({
   propTypes: {
     questions: PropTypes.object.isRequired,
     sheetName: PropTypes.string.isRequired,
+    continuedIndex: PropTypes.bool.isRequired,
   },
 
   getQuestionIndex(index){
-    // if(this.state.continuousIndex){
-    //   const zhangjieNum = this.state.questions.slice(0,index+1).filter((item)=>item.get('questionType')==='zhangjie').size
-    //   const childQuestionNum = this.state.questions.slice(0,index).filter((item)=>item.get('isChild')).size
-    //   return index + 1 - zhangjieNum - childQuestionNum
-    // }else{
+    if(this.props.continuedIndex){
+      const zhangjieNum = this.props.questions.slice(0,index+1).filter((item)=>item.get('questionType')==='zhangjie').size
+      const childQuestionNum = this.props.questions.slice(0,index).filter((item)=>item.get('isChild')).size
+      return index + 1 - zhangjieNum - childQuestionNum
+    }else{
       const lastZhangjieIndex = this.props.questions.slice(0,index+1).findLastIndex((item)=>item.get('questionType')==='zhangjie')
       const calcChildStartAt = lastZhangjieIndex === -1 ? 0 : lastZhangjieIndex
       const childQuestionNum = this.props.questions.slice(calcChildStartAt,index).filter((item)=>item.get('isChild')).size
       return index - lastZhangjieIndex - childQuestionNum
-    // }
+    }
   },
 
   getLastParentIndex(index){
@@ -216,7 +217,6 @@ const Sheet = React.createClass({
 
   render(){
     const {sheetName, questions} = this.props;
-    console.log(questions.toJS());
     return (
       <div className={styles.container}>
         <div className={styles.header}>
