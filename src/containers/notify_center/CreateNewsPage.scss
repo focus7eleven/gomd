@@ -3,12 +3,102 @@
 :local(.container){
   width: 100%;
   height: 100%;
+  padding: 0 15px 0 15px;
 
   :local(.header){
     @include headerWithoutFilter;
+    border-bottom: 1px solid #d9d9d9;
+    font-size: 16px;
+    :local(.pageType){
+      display: flex;
+      justify-content: center;
+      flex-direction: row;
+      align-items: center;
+      >svg{
+        margin-right: 5px;
+      }
+    }
+  }
+
+  :local(.footer){
+    border-top: 1px solid #d9d9d9;
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    height: 60px;
+    width: 100%;
+    align-items: center;
+    >button{
+      height: 32px;
+      width: 66px;
+    }
   }
 
   :local(.body){
-    @include body;
+    height: calc( 100% - 110px );
+    width: 100%;
+    margin-bottom: 10px;
+
+    :local(.noSplit){
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      >div:first-child{
+        height: 100%;
+        width: 100%;
+      }
+      :local(.newsTitle){
+        display: flex;
+        justify-content: flex-start;
+        flex-direction: row;
+        margin-bottom: 20px;
+        >div:first-child{
+          margin-right: 50px;
+        }
+      }
+    }
+
+    :local(.split){
+      display: flex;
+      flex-direction: row;
+      width: 100%;
+      height: 100%;
+      :local(.left){
+        width: 72%;
+        padding-right: 45px;
+        border-right: 1px solid #d9d9d9;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+      }
+
+      :local(.right){
+        width: 28%;
+        padding-left: 20px;
+      }
+    }
+
+    :local(.horizontalLayout){
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    :local(.verticalLayout){
+      >span:first-child{
+        padding-left: 5px;
+        margin-bottom: 3px;
+        &:after{
+          content:'*';
+          color: red;
+        }
+      }
+      display: flex;
+      justify-content: flex-start;
+      flex-direction: column;
+    }
   }
 }
