@@ -40,6 +40,16 @@ const MyExampaperPage = React.createClass({
   },
   getTableData(){
     const tableHeader = [{
+      title:'序号',
+      dataIndex:'num',
+      key:'num',
+      className:styles.tableColumn,
+    },{
+      title:'试卷名称',
+      dataIndex:'name',
+      key:'name',
+      className:styles.tableColumn,
+    },{
       title:'学科',
       dataIndex:'subject_name',
       key:'subject_name',
@@ -55,14 +65,14 @@ const MyExampaperPage = React.createClass({
       key:'term',
       className:styles.tableColumn,
     },{
-      title:'试卷名称',
-      dataIndex:'name',
-      key:'name',
-      className:styles.tableColumn,
-    },{
       title:'题数',
       dataIndex:'questionNumber',
       key:'questionNumber',
+      className:styles.tableColumn,
+    },{
+      title:'创建时间',
+      dataIndex:'createTime',
+      key:'createTime',
       className:styles.tableColumn,
     },{
       title:'操作',
@@ -81,6 +91,7 @@ const MyExampaperPage = React.createClass({
     const tableBody = this.props.exampaper.get('data').isEmpty()?List():this.props.exampaper.get('data').get('result').map((v,k)=>({
       key:k,
       ...v.toJS(),
+      num:k+1,
     }))
     return {
       tableHeader:tableHeader,
