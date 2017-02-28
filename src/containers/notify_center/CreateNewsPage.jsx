@@ -167,9 +167,10 @@ const CreateNewsPage = React.createClass({
       //新建资讯
       let formData = new FormData()
       formData.append('title',this.state.title)
+      formData.append('eduInfoStyle','03')
       formData.append('content',this.refs.news.getData())
-      formData.append('ueditor_textarea_editorValue',this.refs.notice.getData())
-      formData.append('available',1)
+      formData.append('draftFlag','')
+      formData.append('editorValue',this.refs.news.getData())
       fetch(config.api.news.add,{
         method:'post',
         headers:{
@@ -179,7 +180,7 @@ const CreateNewsPage = React.createClass({
         body:formData
       }).then(res => res.json()).then(res => {
         if(res.title=='Success'){
-          this.context.router.push(`/index/notify-mgr/notify_lib/schooleduinfo`)
+          this.context.router.push(`/index/notify-mgr/notify_lib/classeduinfo`)
         }else{
           notification.error({message:res.result})
         }
