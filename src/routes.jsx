@@ -68,6 +68,7 @@ import NotificationLibPage from './containers/notify_center/NotificationLibPage'
 import NotificationDetail from './containers/notify_center/NotificationDetail'
 import TaskDetail from './containers/notify_center/TaskDetail'
 import EduInfoDetail from './containers/notify_center/EduInfoDetail'
+import CreateNewsPage from './containers/notify_center/CreateNewsPage'
 
 import VideoComponent from './components/video/VideoComponent'
 import CourseTree from './components/tree/CourseTree'
@@ -201,6 +202,9 @@ const routes = (
 
                 {/*资讯中心*/}
                 <Route path=':second' component={NotifyContainer}>
+                    <Route path='setnotification' component={CreateNewsPage}></Route>
+                    <Route path='settask' component={CreateNewsPage}></Route>
+                    <Route path='neweduinfo' component={CreateNewsPage}></Route>
                     <Route path='notify_lib/:type' component={NotificationLibPage}></Route>
                     <Route path="showNotificationDetail/:notificationId" component={NotificationDetail}></Route>{/* 通知详情 */}
                     <Route path="showTaskDetail/:taskId" component={TaskDetail}></Route>{/* 任务详情 */}

@@ -350,7 +350,7 @@ const ClassPage = React.createClass({
         'className':this._currentRow.get('className'),
         'phaseCode':this._currentRow.get('phaseCode'),
         'gradeId':this._currentRow.get('gradeId'),
-        'enrolmentDate':moment(this._currentRow.get('enrolmentDate')),
+        'enrolmentDate':this._currentRow.get('enrolmentDate')?moment(this._currentRow.get('enrolmentDate')):'',
       })
       this.setState({modalVisibility: visibility,modalType: 'edit'});
     }
