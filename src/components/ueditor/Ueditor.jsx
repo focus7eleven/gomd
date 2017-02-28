@@ -1,5 +1,6 @@
 import React from 'react'
 import styles from './Ueditor.scss'
+import {addHttpPrefix} from '../answer_homework/util'
 
 const Ueditor = React.createClass({
   getDefaultProps(){
@@ -26,7 +27,7 @@ const Ueditor = React.createClass({
       if(!window.currentEditor){
         window.currentEditor = {}
       }
-      that.ue.setContent(that.props.initialContent)
+      that.ue.setContent(addHttpPrefix(that.props.initialContent))
       window.currentEditor[that.props.name] = that.ue
     //  editor.setContent( 'focus' ); //编辑器家在完成后，让编辑器拿到焦点
     });
