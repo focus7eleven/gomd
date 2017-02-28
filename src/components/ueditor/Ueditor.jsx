@@ -16,6 +16,7 @@ const Ueditor = React.createClass({
   			'fullscreen', 'source', '|',
   			'bold', 'italic', 'underline', '|', 'fontsize', '|', 'kityformula', 'preview'
   		]],
+      initialFrameHeight: 400,
   	});
     // this.ue.setContent(this.props.initialContent)
     // this.ue.destroy = ()=>{
