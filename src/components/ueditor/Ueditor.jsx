@@ -44,6 +44,9 @@ const Ueditor = React.createClass({
 
     this.ue.destroy()
   },
+  getData(){
+    return this.ue.getContent()
+  },
   render(){
     return (
       <div className={styles.container} onClick={(e)=>{e.stopPropagation()}}>
