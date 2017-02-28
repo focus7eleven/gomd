@@ -4,6 +4,7 @@ import {List,fromJS} from 'immutable'
 import {Table,Icon,Input,Radio,Select,Row,Col,Button,Rate,InputNumber,Checkbox} from 'antd'
 import Ueditor from '../../ueditor/Ueditor'
 import {updateOption,updateQuestion,deleteOption,addOption,QUESTION_TYPE} from './exampaper-utils'
+import {addHttpPrefix} from '../../answer_homework/util'
 
 const Option = Select.Option
 const MultipleChoiceQuestion = React.createClass({
@@ -79,7 +80,7 @@ const MultipleChoiceQuestion = React.createClass({
         return (
         <div className={styles.question} onClick={()=>{}}>
         {
-          this.state.editingAnswerItem[record.key]?<Ueditor name={this.props.questionInfo.getIn(['optionPojoList',record.key,'id'])} initialContent={text} onDestory={this.handleUpdateOption.bind(this,record.key)}/>:<span dangerouslySetInnerHTML={{__html: text||'请输入选项内容'}}></span>
+          this.state.editingAnswerItem[record.key]?<Ueditor name={this.props.questionInfo.getIn(['optionPojoList',record.key,'id'])} initialContent={text} onDestory={this.handleUpdateOption.bind(this,record.key)}/>:<span dangerouslySetInnerHTML={{__html: addHttpPrefix(text)||'请输入选项内容'}}></span>
         }
         {this.state.showScoreSetting?<div onClick={(e)=>{e.stopPropagation()}}><InputNumber min={0} defaultValue={0}
           value={this.props.questionInfo.getIn(['optionPojoList',record.key,'score'])}
@@ -241,7 +242,7 @@ const MultipleChoiceQuestion = React.createClass({
     return (
       <div className={styles.question} onClick={(e)=>{e.stopPropagation();this.setState({editingQuestion:!this.state.editingQuestion,showFooter:!this.state.showFooter})}}>
       {
-        this.state.editingQuestion?<Ueditor name={this.props.questionInfo.get('id')} initialContent={this.props.questionInfo.get('examination')||'请输入题目内容'} onDestory={this.handleUpdateQuestion}/>:<span dangerouslySetInnerHTML={{__html: this.props.questionInfo.get('examination')||'请输入题目内容'}}></span>
+        this.state.editingQuestion?<Ueditor name={this.props.questionInfo.get('id')} initialContent={this.props.questionInfo.get('examination')||'请输入题目内容'} onDestory={this.handleUpdateQuestion}/>:<span dangerouslySetInnerHTML={{__html: addHttpPrefix(this.props.questionInfo.get('examination'))||'请输入题目内容'}}></span>
       }
       </div>
     )

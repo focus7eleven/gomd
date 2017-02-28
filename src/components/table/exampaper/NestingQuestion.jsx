@@ -7,7 +7,7 @@ import NoteQuestion from './NoteQuestion'
 import ShortAnswerQuestion from './ShortAnswerQuestion'
 import Ueditor from '../../ueditor/Ueditor'
 import {updateQuestion,setScore,QUESTION_TYPE,changeQuestionPosition,deleteQuestion} from './exampaper-utils'
-
+import {addHttpPrefix} from '../../answer_homework/util'
 const NestingQuestion = React.createClass({
   getDefaultProps(){
     return {
@@ -135,7 +135,7 @@ const NestingQuestion = React.createClass({
           </div>
           <div className={styles.questionContent} onClick={this.handleEditQuestion}>
           {
-            this.state.editingQuestion?<div><Ueditor name={this.props.questionInfo.get('id')} initialContent={this.props.questionInfo.get('examination')||'请输入题目内容'} onDestory={this.handleUpdateQuestion}/></div>:<div dangerouslySetInnerHTML={{__html:this.props.questionInfo.get('examination')||'请输入题目内容'}}></div>
+            this.state.editingQuestion?<div><Ueditor name={this.props.questionInfo.get('id')} initialContent={this.props.questionInfo.get('examination')||'请输入题目内容'} onDestory={this.handleUpdateQuestion}/></div>:<div dangerouslySetInnerHTML={{__html:addHttpPrefix(this.props.questionInfo.get('examination'))||'请输入题目内容'}}></div>
           }
           {
             this.state.showScoreSetting?<div onClick={(e)=>{e.stopPropagation()}}><InputNumber min={0} defaultValue={0}

@@ -210,11 +210,6 @@ const config = _.extend({
 			detail:(lessonId) => `${baseURL}/lesson/get/detail_new?lesson_id=${lessonId}`,
 			checkCourse: (lessonId,result) => `${baseURL}/lesson/check?lessonId=${lessonId}&pass=${result}`,
 		},
-		teachingPlan:{
-			course:{
-				schedules:(subjectId,gradeId,term,version)=>`${baseURL}/teachingPlan/course/schedules?subjectId=${subjectId}&gradeId=${gradeId}&term=${term}&version=${version}`
-			}
-		},
 		lesson:{
 			lastChapterTime:(scheduleId,hourNo)=>`${baseURL}/lesson/lastChapterTime?teaching_schedule_id=${scheduleId}&hour_no=${hourNo}`,
 			create:`${baseURL}/lesson/create`,
@@ -364,7 +359,10 @@ const config = _.extend({
 			teachingPlanDetailUrl:(teachingPlanId)=>`${baseURL}/teachingPlan/get/detail?teachingPlanId=${teachingPlanId}`,
 			teachingScheduleUrl:(teachingPlanId)=>`${baseURL}/teachingPlan/get/schedules?planId=${teachingPlanId}`,
 			ordedTextbookmenuUrl:(subjectId,gradeId,term,version)=>`${baseURL}/teachingPlan/get/ordedTextbookmenu?subjectId=${subjectId}&gradeId=${gradeId}&term=${term}&version=${version}`,
-			summaryDetailUrl:(textbookMenuId)=>`${baseURL}/teachingPlan/get/summarize?textbookMenuId=${textbookMenuId}`
+			summaryDetailUrl:(textbookMenuId)=>`${baseURL}/teachingPlan/get/summarize?textbookMenuId=${textbookMenuId}`,
+			course:{
+				schedules:(subjectId,gradeId,term,version)=>`${baseURL}/teachingPlan/course/schedules?subjectId=${subjectId}&gradeId=${gradeId}&term=${term}&version=${version}`
+			}
 		}
 	}
 })
