@@ -5,6 +5,7 @@ import Ueditor from '../../ueditor/Ueditor'
 import _ from 'underscore'
 import {fromJS} from 'immutable'
 import {updateQuestion,updateOption,setScore,QUESTION_TYPE} from './exampaper-utils'
+import {addHttpPrefix} from '../../answer_homework/util'
 
 const Option = Select.Option
 const ShortAnswerQuestion = React.createClass({
@@ -135,7 +136,7 @@ const ShortAnswerQuestion = React.createClass({
     return (
       <div className={styles.question} onClick={(e)=>{e.stopPropagation();this.setState({editingQuestion:!this.state.editingQuestion,showFooter:!this.state.showFooter,showScoreSetting:false,})}}>
       {
-        this.state.editingQuestion?<Ueditor name={this.props.questionInfo.get('id')} initialContent={this.props.questionInfo.get('examination')||'请输入题目'} onDestory={this.handleUpdateQuestion.bind(this,'title')}/>:<span dangerouslySetInnerHTML={{__html:this.props.questionInfo.get('examination')||'请输入题目'}}></span>
+        this.state.editingQuestion?<Ueditor name={this.props.questionInfo.get('id')} initialContent={this.props.questionInfo.get('examination')||'请输入题目'} onDestory={this.handleUpdateQuestion.bind(this,'title')}/>:<span dangerouslySetInnerHTML={{__html:addHttpPrefix(this.props.questionInfo.get('examination'))||'请输入题目'}}></span>
       }
       {this.state.showScoreSetting?<div onClick={(e)=>{e.stopPropagation()}}><InputNumber min={0} defaultValue={0}
         value={this.props.questionInfo.get('optionPojoList').getIn([0,'score'])}
@@ -162,7 +163,7 @@ const ShortAnswerQuestion = React.createClass({
           return (
             <div className={styles.question}>
             {
-              this.state.editingAnswerItem?<Ueditor name={this.props.questionInfo.getIn(['optionPojoList',record.key,'id'])} initialContent={text||'输入选项内容'} onDestory={this.handleUpdateOption}/>:<span dangerouslySetInnerHTML={{__html:text||'输入选项内容'}}></span>
+              this.state.editingAnswerItem?<Ueditor name={this.props.questionInfo.getIn(['optionPojoList',record.key,'id'])} initialContent={text||'输入选项内容'} onDestory={this.handleUpdateOption}/>:<span dangerouslySetInnerHTML={{__html:addHttpPrefix(text)||'输入选项内容'}}></span>
             }
             </div>
           )
@@ -171,7 +172,7 @@ const ShortAnswerQuestion = React.createClass({
           return (
             <div className={styles.question}>
             {
-              this.state.editingDrawZone?<Ueditor name={this.props.questionInfo.get('id')+'drawZone'} onDestory={this.handleUpdateQuestion.bind(this,'drawZone')}/>:<span >{text||'作图区'}</span>
+              this.state.editingDrawZone?<Ueditor name={this.props.questionInfo.get('id')+'drawZone'} onDestory={this.handleUpdateQuestion.bind(this,'drawZone')}/>:<span dangerouslySetInnerHTML={{__html:addHttpPrefix(text)||'作图区'}}></span>
             }
             </div>
           )
