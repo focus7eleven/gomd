@@ -70,31 +70,31 @@ const CreateNewsPage = React.createClass({
       })
     })
 
-    fetch(config.api.user.role.getCurrentRole,{
-      method:'get',
-      headers:{
-        'from':'nodejs',
-        'token':sessionStorage.getItem('accessToken')
-      }
-    }).then(res => res.json()).then(res => {
-      let newsType
-      switch (res) {
-        case 5:
-          newsType = '班级剪影'
-          break;
-        case 7:
-          newsType = '市直动态'
-          break;
-        case 15:
-          newsType = '学校资讯'
-          break;
-        default:
-          newsType = '学校资讯'
-      }
-      this.setState({
-        newsType
-      })
-    })
+    // fetch(config.api.user.role.getCurrentRole,{
+    //   method:'get',
+    //   headers:{
+    //     'from':'nodejs',
+    //     'token':sessionStorage.getItem('accessToken')
+    //   }
+    // }).then(res => res.json()).then(res => {
+    //   let newsType
+    //   switch (res) {
+    //     case 5:
+    //       newsType = '班级剪影'
+    //       break;
+    //     case 7:
+    //       newsType = '市直动态'
+    //       break;
+    //     case 15:
+    //       newsType = '学校资讯'
+    //       break;
+    //     default:
+    //       newsType = '学校资讯'
+    //   }
+    //   this.setState({
+    //     newsType
+    //   })
+    // })
   },
   getPageName(){
     switch (this.state.pageType) {
@@ -231,12 +231,9 @@ const CreateNewsPage = React.createClass({
             <span className={styles.newsType}>{newsType}</span>
           </div>
         </div>
-        <div className={styles.verticalLayout} style={{width: '100%'}}>
+        <div className={styles.newsEditor} style={{width: '100%'}}>
           <span>正文</span>
-          {/* Insert UEditor Here */}
-          <div className={styles.ueditorContainer}>
-            <Ueditor name='news' ref='news'/>
-          </div>
+          <Ueditor name='news' ref='news'/>
         </div>
       </div>
     )
