@@ -4,7 +4,6 @@ import styles from './NoteQuestion.scss'
 import {fromJS} from 'immutable'
 import {Row,Col,Button,Select,Rate,Input,InputNumber,Icon} from 'antd'
 import {updateQuestion,setScore,QUESTION_TYPE} from './exampaper-utils'
-import {addHttpPrefix} from '../../answer_homework/util'
 
 const NoteQuestion = React.createClass({
   getDefaultProps(){
@@ -169,7 +168,7 @@ const NoteQuestion = React.createClass({
           </div>
           <div className={styles.questionContent} onClick={this.handleEditQuestion}>
           {
-            this.state.editingQuestion?<div><Ueditor name={this.props.questionInfo.get('id')} initialContent={this.props.questionInfo.get('examination')||'请输入题目内容'} onDestory={this.handleUpdateQuestion}/></div>:<div dangerouslySetInnerHTML={{__html:addHttpPrefix(this.props.questionInfo.get('examination'))||'请输入题目内容'}}></div>
+            this.state.editingQuestion?<div><Ueditor name={this.props.questionInfo.get('id')} initialContent={this.props.questionInfo.get('examination')||'请输入题目内容'} onDestory={this.handleUpdateQuestion}/></div>:<div dangerouslySetInnerHTML={{__html:this.props.questionInfo.get('examination')||'请输入题目内容'}}></div>
           }
           {
             this.state.showScoreSetting?<div onClick={(e)=>{e.stopPropagation()}}><InputNumber min={0} defaultValue={0}

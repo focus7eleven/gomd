@@ -1,7 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
 
-import {XhlIcon} from './XhlIcon';
+import {XhlIcon} from '../icon/XhlIcon';
 import styles from './XhlIconButton.scss';
 
 export const XhlIconButton = React.createClass({

@@ -10,6 +10,12 @@ export const QuestionModeContentComponent = React.createClass({
     propTypes:{
         question:React.PropTypes.object.isRequired,
         studentResults:React.PropTypes.array.isRequired,
+
+        commentDataChanged:React.PropTypes.func.isRequired,
+        saveCommentData:React.PropTypes.func.isRequired,
+        clearCommentData:React.PropTypes.func.isRequired,
+        setScore:React.PropTypes.func.isRequired,
+        setEvaluate:React.PropTypes.func.isRequired,
     },
     render() {
         const { question,studentResults } = this.props;
@@ -73,7 +79,7 @@ export const QuestionModeContentComponent = React.createClass({
             <div>
                 {studentResults.map(
                     (studentResult,index) => {
-                        const {studentNo, studentName, answer, right, score} = studentResult;
+                        const {studentNo, studentName, answer, right, score, studentId} = studentResult;
                         return (
                             <div key={index} className={styles.questionResultContainer}>
                                 {right == -1 ? (
@@ -83,6 +89,11 @@ export const QuestionModeContentComponent = React.createClass({
                                             answer={answer}
                                             totalScore={studentResult.totalScore}
                                             questionType={type}
+                                            commentDataChanged={(i,imgBase64)=>this.props.commentDataChanged(studentId,i,imgBase64)}
+                                            saveCommentData={(i)=>this.props.saveCommentData(studentId,i)}
+                                            clearCommentData={(i)=>this.props.clearCommentData(studentId,i)}
+                                            setScore={(score)=>this.props.clearCommentData(studentId,score)}
+                                            setEvaluate={(value)=>this.props.setEvaluate(studentId,value)}
                                         ></CommentQuestionComponent>
                                     ):(
                                         <ViewQuestionResultComponent type={type}

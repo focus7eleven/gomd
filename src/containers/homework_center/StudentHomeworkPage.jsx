@@ -10,9 +10,9 @@ import {fromJS} from 'immutable';
 import {CustomTable} from '../../components/table/CustomTable';
 import config from '../../config';
 import {getSubjectOptions} from '../../actions/homework_action/main'
-import {downloadAnswersheet} from '../../actions/answersheet_action/main';
 import {AssignHomeworkModal} from './AssignHomeworkModal';
 import styles from './StudentHomeworkPage.scss';
+import {XhlDownloadButton} from '../../components/button/XhlDownloadButton';
 
 const StudentHomeworkPage = React.createClass({
     contextTypes: {
@@ -90,7 +90,8 @@ const StudentHomeworkPage = React.createClass({
                     } else {
                         return (
                             <span className={styles.ButtonGroup}>
-                                <Button type="primary" onClick={() => this.props.downloadAnswersheet(record.homework_id)}>下载答题卡</Button>
+                                <XhlDownloadButton type="primary" url={config.api.homework.downloadAnswersheet(record.homework_id)}
+                                                   filename={"答题卡_"+record.homework_id+".pdf"}>下载答题卡</XhlDownloadButton>
                                 {record.enCompositionNum > 0 ? <Button type="primary">英语作文作答</Button> : null}
                             </span>
                         )
@@ -134,7 +135,6 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
     return {
         getSubjectOptions: bindActionCreators(getSubjectOptions, dispatch),
-        downloadAnswersheet: bindActionCreators(downloadAnswersheet, dispatch)
     }
 }
 

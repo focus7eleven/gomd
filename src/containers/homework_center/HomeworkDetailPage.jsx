@@ -3,14 +3,13 @@
  */
 import React from 'react';
 import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux'
 import {Row,Col,Input,Button,Modal,Card,Icon} from 'antd';
 
 import config from '../../config';
 import {ROLE_STUDENT} from '../../constant';
-import {downloadAnswersheet} from '../../actions/answersheet_action/main';
 import {baseURL} from '../../config';
 import styles from './HomeworkDetailPage.scss';
+import {httpFetchGetBlob} from '../../utils/http-utils';
 
 const AnswersheetAnswer = React.createClass({
 	
@@ -27,6 +26,7 @@ const AnswersheetAnswer = React.createClass({
 			listStyleType: "decimal",
 			paddingLeft: "25px"
 		};
+        var homeworkName = this.props.title;
 		this.props.questions.forEach(function(question) {
 			var title = question.question_title;
 			var optionType = question.option_type;
@@ -83,7 +83,7 @@ const AnswersheetAnswer = React.createClass({
 				question.answers.forEach(function(anwser){
 					rows.push(
 						<li style={{marginTop: "10px"}}>
-							<img style={{marginLeft:"10px"}} src={baseURL + anwser.key} />
+							<img style={{marginLeft:"10px"}} src={baseURL + anwser.key} width="100%" height=""/>
 						</li>
 					);
 				})
@@ -94,7 +94,9 @@ const AnswersheetAnswer = React.createClass({
 		});
 		
 		return (
-			<div>{ol}</div>
+			<div>
+                <div style={{textAlign:'center'}}> <span style={{fontSize:20}}>{homeworkName}</span></div>
+                {ol}</div>
 		);
 	}
 })
@@ -120,7 +122,10 @@ const HomeworkDetailPage = React.createClass({
       exampaperName:"",
       attachments:[],
 	  modalVisibility: false,
-	  answersheetQuestions:[]
+	  answersheetQuestions:[],
+
+        answersheetUrl:"",
+        answersheetFilename:"",
     }
   },
   getDefaultProps() {
@@ -133,17 +138,19 @@ const HomeworkDetailPage = React.createClass({
   renderAnwserModal() {
 	  return (
       <Modal 
-	  title={this.state.homeworkName} 
+	  title="作业答案"
+          //title={this.state.homeworkName}
 	  visible={this.state.modalVisibility}
 	  onOk={this.handleAnswerModalDisplay.bind(this,false)} 
 	  onCancel={this.handleAnswerModalDisplay.bind(this,false)}
+      width="50%"
 	  footer={[
         <Button key="submit" type="primary" size="large" onClick={this.handleAnswerModalDisplay.bind(this,false)}>
 			返回
         </Button>,
       ]}>
 		<div>
-		<AnswersheetAnswer  questions={this.state.answersheetQuestions} />
+		<AnswersheetAnswer title={this.state.homeworkName} questions={this.state.answersheetQuestions} />
 		</div>
       </Modal>
     )
@@ -179,12 +186,12 @@ const HomeworkDetailPage = React.createClass({
 
                 <Row type='flex' gutter={8} style={{marginBottom:'10px'}}>
                     <Col span={12}>
-                        <Card style={{height:'138px'}} title={<span><Icon type='appstore'/>附件</span>} bordered={true}>
+                        <Card style={{height:'100%'}} title={<span><Icon type='appstore'/>附件</span>} bordered={true}>
                             <div>
                                 {this.state.attachments&&this.state.attachments.length > 0 ?
                                     this.state.attachments.map(
                                         (attachment,index) => {
-                                            return <div>{index+1}.<a>{attachment}</a></div>
+                                            return <div>{index+1}.<a href={baseURL + '/media/homework/' + this.props.params.homeworkId + '/attach/'+ attachment}>{attachment}</a></div>
                                         }) : <label>无</label>
                                 }
                             </div>
@@ -192,14 +199,16 @@ const HomeworkDetailPage = React.createClass({
 
                     </Col>
                     <Col span={12}>
-                        <Card style={{height:'138px'}} title={<span><Icon type='appstore'/>电子试卷/答题卡</span>} bordered={true}>
+                        <Card style={{height:'100%'}} title={<span><Icon type='appstore'/>电子试卷/答题卡</span>} bordered={true}>
                             {this.state.homeworkKind==1?
                                 <div>
                                     <div>1.<a>{this.state.exampaperName}</a></div>
                                 </div>
                                 :
                                 <div>
-                                    <div>1.<a onClick={()=>this.props.downloadAnswersheet(this.props.params.homeworkId)}>查看答题卡</a></div>
+                                    <div>1.<a onClick={()=>this.downloadAnswersheet()}>查看答题卡</a></div>
+                                    <a ref="downloadAnswersheetA" href={this.state.answersheetUrl}
+                                       download={"答题卡_"+this.props.params.homeworkId+".pdf"} style={{display:'none'}}></a>
                                     {/* 学生不能查看答题卡答案 */}
                                     {this.props.userInfo && this.props.userInfo.userStyle != ROLE_STUDENT ?
                                         <div>2.<a onClick={this.handleAnswerModalDisplay.bind(this,true)}>查看答题卡答案</a></div>
@@ -261,7 +270,20 @@ const HomeworkDetailPage = React.createClass({
     }else {
 		this.setState({modalVisibility: false});
     }
-  }
+  },
+    downloadAnswersheet() {
+        httpFetchGetBlob(config.api.homework.downloadAnswersheet(this.props.params.homeworkId),{})
+            .then(blobData => {
+                let url = window.URL.createObjectURL(blobData);
+                this.setState({
+                    answersheetUrl:url
+                },() => {
+                    this.refs.downloadAnswersheetA.click();
+                })
+            })
+            .catch(()=>{})
+
+    }
 });
 
 function mapStateToProps(state) {
@@ -271,7 +293,6 @@ function mapStateToProps(state) {
 }
 function mapDispatchToProps(dispatch) {
   return {
-    downloadAnswersheet:bindActionCreators(downloadAnswersheet,dispatch)
   }
 }
 

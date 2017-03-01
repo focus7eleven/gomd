@@ -28,7 +28,7 @@ export const addHttpPrefix = function (content) {
 }
 
 export const addHttpPrefixToImageUrl = function (imageUrl) {
-    return imageUrl.startsWith("http://") ? imageUrl : baseURL + "/" + imageUrl;
+    return imageUrl.startsWith("http://") || imageUrl.startsWith("data:image/png;base64,") ? imageUrl : baseURL + "/" + imageUrl;
 }
 
 export const optionIndexName = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];

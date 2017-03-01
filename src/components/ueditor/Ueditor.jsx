@@ -28,7 +28,7 @@ const Ueditor = React.createClass({
       if(!window.currentEditor){
         window.currentEditor = {}
       }
-      that.ue.setContent(addHttpPrefix(that.props.initialContent))
+      that.ue.setContent(that.props.initialContent)
       window.currentEditor[that.props.name] = that.ue
     //  editor.setContent( 'focus' ); //编辑器家在完成后，让编辑器拿到焦点
     });

@@ -41,6 +41,7 @@ import SchoolCoursePage from './containers/course_center/SchoolCoursePage'
 import UncheckedCoursePage from './containers/course_center/UncheckedCoursePage'
 import MicroCourseContainer from './containers/micro_course/MicroCourseContainer'
 import PublicVideoPage from './containers/micro_course/PublicVideoPage'
+//import CreateMicroVideoPage from './containers/micro_course/CreateMicroVideoPage'
 import SchoolVideoPage from './containers/micro_course/SchoolVideoPage'
 import TeacherVideoPage from './containers/micro_course/TeacherVideoPage'
 import CollectionVideoPage from './containers/micro_course/CollectionVideoPage'
@@ -63,6 +64,8 @@ import StudentHomeworkPage from './containers/homework_center/StudentHomeworkPag
 import AnswerHomeworkPage from './containers/homework_center/AnswerHomeworkPage';
 import HomeworkAnswerResult from './containers/homework_center/HomeworkAnswerResultPage';
 import CommentHomeworkPage from './containers/homework_center/CommentHomeworkPage';
+import PigaiResultPage from './containers/homework_center/PigaiResultPage';
+
 import NotifyContainer from './containers/notify_center/NotifyContainer'
 import NotificationLibPage from './containers/notify_center/NotificationLibPage'
 import NotificationDetail from './containers/notify_center/NotificationDetail'
@@ -183,6 +186,7 @@ const routes = (
 					<Route path='(:type)/video_detail/(:videoId)' component={VideoDetailContainer}>
 						<IndexRoute component={VideoDetailPage} />
 					</Route>
+					{/*<Route path='createvideo' component={CreateMicroVideoPage}></Route>*/}
 				</Route>
 
 				{/* 作业中心 */}
@@ -198,6 +202,8 @@ const routes = (
 					<Route path="answer_homework" component={AnswerHomeworkPage}></Route>{/* 学生-答卷/订正 */}
 					<Route path="homework_answer_result" component={HomeworkAnswerResult}></Route>{/* 学生-查看结果 */}
 					<Route path="comment_homework" component={CommentHomeworkPage}></Route>{/* 老师-批改答题/批改订正 */}
+					<Route path="pigai_enarticle_results" component={PigaiResultPage}></Route>{/* 老师-查看英语作文批改结果 */}
+
 				</Route>
 
                 {/*资讯中心*/}

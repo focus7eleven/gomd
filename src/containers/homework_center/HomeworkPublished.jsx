@@ -15,7 +15,7 @@ import {ROLE_TEACHER} from '../../constant';
 import {getGradeOptions,getSubjectOptions,getVersionOptions} from '../../actions/homework_action/main'
 //import {findMenuInTree} from '../../reducer/menu';
 import styles from './HomeworkPublished.scss';
-import {downloadAnswersheet} from '../../actions/answersheet_action/main';
+import {XhlDownloadButton} from '../../components/button/XhlDownloadButton';
 
 const HomeworkPublished = React.createClass({
     contextTypes: {
@@ -51,6 +51,7 @@ const HomeworkPublished = React.createClass({
     },
 
     componentWillReceiveProps(nextProps){
+
         this.setState({
             gradeOptionList: nextProps.homeworkCenter.get('gradeOptions').map((grade) => {
                 return { key: grade.gradeId, value: grade.gradeName};
@@ -135,9 +136,12 @@ const HomeworkPublished = React.createClass({
                             {record.submitNum == 0 ?
                                 <Button type="primary" className={styles.editHomeworkButton} onClick={()=>this.showModal(record.homework_class_id,record.homework_name)}>删除作业</Button>: null}
                             {record.homeworkKind == 2?
-                                <Button type="primary" className={styles.editHomeworkButton}  onClick={()=>this.props.downloadAnswersheet(record.homework_id)}>下载答题卡</Button> : null}
+                                <XhlDownloadButton type="primary" className={styles.editHomeworkButton}
+                                                   url={config.api.homework.downloadAnswersheet(record.homework_id)}
+                                                   filename={"答题卡_"+record.homework_id+".pdf"}>下载答题卡</XhlDownloadButton>
+                                 : null}
                             {record.homeworkKind == 2 ?
-                                <Button type="primary" className={styles.editHomeworkButton}>查看英语作文</Button> : null}
+                                <Button type="primary" className={styles.editHomeworkButton} onClick={()=>this.gotoPigaiPage(record)}>查看英语作文</Button> : null}
                             {record.submitNum > 0 && record.homeworkKind == 1 ?
                                 <Button type="primary" className={styles.editHomeworkButton} onClick={()=>this.gotoCommentPage(record,0)}>批改作业</Button> : null }
                             {record.submitNum > 0 && record.homeworkKind == 1 ?
@@ -179,7 +183,7 @@ const HomeworkPublished = React.createClass({
         });
     },
     gotoCommentPage(homework, answerType) {
-        const {homework_class_id,homework_name} = homework;
+        const {homework_id, homework_class_id,homework_name} = homework;
 
         this.context.router.push({
             pathname: `/index/homework/comment_homework`,
@@ -190,7 +194,31 @@ const HomeworkPublished = React.createClass({
                 answerType: answerType
             }
         })
+    },
+    gotoPigaiPage(homework) {
+        const answersheet_id = homework.answersheet_id;
+        const homework_class_id = homework.homework_class_id;
+        const homework_id = homework.homework_id;
+        const homework_name = homework.homework_name;
+        const create_dt = homework.create_dt;
+        const finish_time = homework.finish_time;
+        const target_name = homework.target_name;
+
+        this.context.router.push({
+            pathname: `/index/homework/pigai_enarticle_results`,
+            state: {
+                homeworkClassId: homework_class_id,
+                homeworkId:homework_id,
+                answersheetId:answersheet_id,
+                homework_name:homework_name,
+                create_dt:create_dt,
+                finish_time:finish_time,
+                target_name:target_name,
+                // answerType: answerType
+            }
+        })
     }
+
 });
 
 function mapStateToProps(state) {
@@ -206,7 +234,6 @@ function mapDispatchToProps(dispatch) {
         getGradeOptions:bindActionCreators(getGradeOptions,dispatch),
         getSubjectOptions:bindActionCreators(getSubjectOptions,dispatch),
         getVersionOptions:bindActionCreators(getVersionOptions,dispatch),
-        downloadAnswersheet:bindActionCreators(downloadAnswersheet,dispatch)
     }
 }
 

@@ -78,7 +78,6 @@ const CreateClassPage = React.createClass({
       const gradeList = results[0].gradeList
       const subjectList = results[0].subjectList
       const versionList = results[1].versionList
-      console.log('我草草草:',config.api.teachingPlan)
       return fetch(config.api.teachingPlan.course.schedules(this.state.subjectOption||subjectList.get(0).get('subject_id'),
       this.state.gradeOption||gradeList.get(0).get('gradeId'),
       this.state.termOption||this.state.termList.get(0).get('text'),

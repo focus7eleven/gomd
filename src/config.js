@@ -50,6 +50,7 @@ const config = _.extend({
 				getUserId: `${baseURL}/getuserid`,
 				getInfo: `${baseURL}/session`,
 			},
+	   		edit:`${baseURL}/account/edit`,
 		},
 		menu:{
 			get:`${baseURL}/getMenuWithTreeFormat`
@@ -212,6 +213,11 @@ const config = _.extend({
 			detail:(lessonId) => `${baseURL}/lesson/get/detail_new?lesson_id=${lessonId}`,
 			checkCourse: (lessonId,result) => `${baseURL}/lesson/check?lessonId=${lessonId}&pass=${result}`,
 		},
+		teachingPlan:{
+			course:{
+				schedules:(subjectId,gradeId,term,version)=>`${baseURL}/teachingPlan/course/schedules?subjectId=${subjectId}&gradeId=${gradeId}&term=${term}&version=${version}`
+			}
+		},
 		lesson:{
 			lastChapterTime:(scheduleId,hourNo)=>`${baseURL}/lesson/lastChapterTime?teaching_schedule_id=${scheduleId}&hour_no=${hourNo}`,
 			create:`${baseURL}/lesson/create`,
@@ -234,7 +240,13 @@ const config = _.extend({
       getHomeworkDetail: (homeworkId) => `${baseURL}/homework/getHomeworkDetail?homeworkId=${homeworkId}`,
       getHomeworkDetail2: (homeworkId) => `${baseURL}/homework/getHomeworkDetail2?homeworkId=${homeworkId}`,
       getHomeworkClass: (homeworkId) => `${baseURL}/homework/getClasses?homeworkId=${homeworkId}`,
-      //公共作业
+
+     //   老师查看作文批改结果->获得answersheetQuestionID
+	  getAnswersheetQuestionId: `${baseURL}/answersheet/getEnCompositionQuestion`,
+			//   老师查看作文批改结果->根据作文key获得作文内容
+			getArticleContent: (articleKey) => `${baseURL}/pigai_api/get_analyze_result?key=${articleKey}`,
+
+			//公共作业
       areaHomeworkPageUrl: `${baseURL}/homework/area/homeworkLibPage`,
       //学校作业
       schoolHomeworkPageUrl: `${baseURL}/homework/school/homeworkLibPage`,
@@ -269,13 +281,14 @@ const config = _.extend({
 			},
 			commentHomework: {
 				getExampaperAndStudentAnswer: (homeworkClassId,answerType) => `${baseURL}/homework/getPaperAndAnswerWithTea?homeworkClassId=${homeworkClassId}&answerType=${answerType}`,
+                uploadCommentResult: `${baseURL}/exampaper/uploadCorrectResult`,
 			},
 	  //查看答题卡答案
 	  lookupAnswerSheetAnwser:(anwsersheetId, homeworkId) => `${baseURL}/answersheet/answersheetkey?answersheetId=${anwsersheetId}&homeworkId=${homeworkId}`,
 	  //查看批改结果
 	  checkResultByQuestion:(homeworkClassId) => `${baseURL}/homework/getPaperAndAnswerTeaByQuestion?homeworkClassId=${homeworkClassId}`,
-	  checkResultByStudents:(homeworkClassId) => `${baseURL}/homework/getPaperAndAnswerTeaByStu?homeworkClassId=${homeworkClassId}`
-
+	  checkResultByStudents:(homeworkClassId) => `${baseURL}/homework/getPaperAndAnswerTeaByStu?homeworkClassId=${homeworkClassId}`,
+			getStudentPigaiSummary: `${baseURL}/pigai_api/page_student_pigai_summary`,
 		},
 		notify:{
 			//添加通知
@@ -366,7 +379,8 @@ const config = _.extend({
 			summaryDetailUrl:(textbookMenuId)=>`${baseURL}/teachingPlan/get/summarize?textbookMenuId=${textbookMenuId}`,
 			course:{
 				schedules:(subjectId,gradeId,term,version)=>`${baseURL}/teachingPlan/course/schedules?subjectId=${subjectId}&gradeId=${gradeId}&term=${term}&version=${version}`
-			}
+			},
+			uploadSummaryUrl:(textbookMenuId,summaryStr)=>`${baseURL}/teachingPlan/upload/summarize?textbookMenuId=${textbookMenuId}&summarize=${summaryStr}`
 		},
 		task:{
 			add:`${baseURL}/task/add`,
