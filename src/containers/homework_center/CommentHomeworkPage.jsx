@@ -3,14 +3,14 @@
  */
 import React from 'react';
 import {connect} from 'react-redux';
-import {List,fromJS} from 'immutable';
-import {Icon,Button,Checkbox,Row,Col,Spin} from 'antd';
+import {List,fromJS,Map} from 'immutable';
+import {Icon,Button,Checkbox,Row,Col,Spin,notification} from 'antd';
 
 import {QuestionListComponent, StudentListComponent,QuestionModeContentComponent,StudentModeContentComponent} from '../../components/comment_homework/CommentHomeworkComponent';
 import styles from './CommentHomeworkPage.scss';
 import {httpFetchGet,httpFetchPost} from '../../utils/http-utils';
 import config from '../../config';
-import {isChoiceQuestion} from '../../components/answer_homework/util';
+import {isChoiceQuestion,QUESTION_TYPE_FILL_IN_BLANK} from '../../components/answer_homework/util';
 
 const MODE_QUESTION = 0;
 const MODE_STUDENT = 1;
@@ -88,8 +88,10 @@ const CommentHomeworkPage = React.createClass({
                     const questionAnswer = student.answers[selectedQuestion.index-1];
                     const answer = List(questionAnswer.answer.split("|"))
                         .mergeWith((prev,next)=> next.length>0?next:prev, questionAnswer.comment?questionAnswer.comment.split("|"):[""])
-                        .toJS().join("|");
+                        .mergeWith((prev,next)=> next.length>0?next:prev, questionAnswer.commentTemp?questionAnswer.commentTemp.split("|"):[""])
+                        .join("|");
                     return {
+                        studentId:student.studentId,
                         studentNo:student.studentNo,
                         studentName:student.studentName,
                         answer:answer,
@@ -112,7 +114,24 @@ const CommentHomeworkPage = React.createClass({
                             </Col>
                             <Col span={21} className={styles.rightContent}>
                                 <QuestionModeContentComponent question={selectedQuestion}
-                                                              studentResults={selectedQuestionStudentResults}/>
+                                                              studentResults={selectedQuestionStudentResults}
+                                                              commentDataChanged={
+                                                                  (studentId,i,imgBase64)=> this.commentDataChanged(studentId,selectedQuestion.questionId,i,imgBase64)
+                                                              }
+                                                              saveCommentData={
+                                                                  (studentId,i) => this.saveCommentData(studentId,selectedQuestion.questionId,i)
+                                                              }
+                                                              clearCommentData={
+                                                                  (studentId,i) => this.clearCommentData(studentId,selectedQuestion.questionId,i)
+                                                              }
+                                                              setScore={
+                                                                  (studentId,score) => this.setScore(studentId,selectedQuestion.questionId,score)
+                                                              }
+                                                              setEvaluate={
+                                                                  (studentId,value) => this.setEvaluate(studentId,selectedQuestion.questionId,value)
+                                                              }
+
+                                />
                                 <div className={styles.centerAction}>
                                     <Button onClick={() => this.nextQuestion()} type="primary">下一题</Button>
                                 </div>
@@ -134,9 +153,11 @@ const CommentHomeworkPage = React.createClass({
                     const questionAnswer = selectedStudent.answers[question.index-1];
                     const answer = List(questionAnswer.answer.split("|"))
                         .mergeWith((prev,next)=> next.length>0?next:prev, questionAnswer.comment?questionAnswer.comment.split("|"):[""])
-                        .toJS().join("|")
+                        .mergeWith((prev,next)=> next.length>0?next:prev, questionAnswer.commentTemp?questionAnswer.commentTemp.split("|"):[""])
+                        .join("|")
                     return {
                         ...question,
+                        studentId:selectedStudent.studentId,
                         answer:answer,
                         right:questionAnswer.right,
                         score:questionAnswer.score,
@@ -155,7 +176,23 @@ const CommentHomeworkPage = React.createClass({
                                                       }}/>
                             </Col>
                             <Col span={21} className={styles.rightContent}>
-                                <StudentModeContentComponent questionList={selectedQuestionList}/>
+                                <StudentModeContentComponent questionList={selectedQuestionList}
+                                                             commentDataChanged={
+                                                                 (questionId,i,imgBase64)=> this.commentDataChanged(selectedStudent.studentId,questionId,i,imgBase64)
+                                                             }
+                                                             saveCommentData={
+                                                                 (questionId,i) => this.saveCommentData(selectedStudent.studentId,questionId,i)
+                                                             }
+                                                             clearCommentData={
+                                                                 (questionId,i) => this.clearCommentData(selectedStudent.studentId,questionId,i)
+                                                             }
+                                                             setScore={
+                                                                 (questionId,score) => this.setScore(selectedStudent.studentId,questionId,score)
+                                                             }
+                                                             setEvaluate={
+                                                                 (questionId,value) => this.setEvaluate(selectedStudent.studentId,questionId,value)
+                                                             }
+                                />
                                 <div className={styles.centerAction}>
                                     <Button onClick={() => this.nextStudent()} type="primary">下一学生</Button>
                                 </div>
@@ -240,6 +277,7 @@ const CommentHomeworkPage = React.createClass({
                             const options = question.optionPojoList.map((option)=>option.content);
                             return {
                                 index:question.questionNo,
+                                questionId:question.id,
                                 type:question.kind,
                                 content:question.examination,
                                 drawZone:question.drawZone,
@@ -327,7 +365,182 @@ const CommentHomeworkPage = React.createClass({
                 return true;
             }
         );
+    },
+    commentDataChanged(studentId,questionId,index,imgBase64){
+        const studentAnswers = this.state.studentAnswers.map(
+            (studentAnswer) => {
+                if( studentAnswer.get("studentId") == studentId ) {
+                    const answers = studentAnswer.get("answers").map(
+                        (answer) => {
+                            if( answer.get("questionId") == questionId ) {
+                                let commentTempArray = (answer.get("commentTemp") || "").split("|");
+                                commentTempArray[index] = imgBase64;
+                                return answer.merge({commentTemp: commentTempArray.join("|")})
+                            } else {
+                                return answer;
+                            }
+                        }
+                    );
+                    return studentAnswer.merge({answers:answers});
+                } else {
+                    return studentAnswer;
+                }
+            }
+        );
+
+        this.setState({
+            studentAnswers:studentAnswers
+        })
+    },
+    saveCommentData(studentId,questionId,commentIndex){
+        const {studentIndex, questionIndex} = this.findStudentAndQuestionIndex(studentId,questionId);
+
+        this.uploadCommentResult(studentIndex,
+            questionIndex,
+            {comment:this.state.studentAnswers.getIn([studentIndex, "answers", questionIndex,"commentTemp"],"")},
+            (commentUrl)=>{
+                const commentTemp = this.state.studentAnswers
+                    .getIn([studentIndex, "answers", questionIndex,"commentTemp"],"")
+                    .split("|")
+                    .map((v,i)=>{i==commentIndex?"":v})
+                    .join("|");
+                const studentAnswers = this.state.studentAnswers
+                    .setIn([studentIndex,"answers",questionIndex,"comment"],commentUrl)
+                    .setIn([studentIndex,"answers",questionIndex,"commentTemp"],commentTemp);
+                this.setState({
+                    studentAnswers:studentAnswers
+                });
+            }
+        );
+    },
+    clearCommentData(studentId,questionId,commentIndex){
+        const {studentIndex, questionIndex} = this.findStudentAndQuestionIndex(studentId,questionId);
+
+        const comment = this.state.studentAnswers
+            .getIn([studentIndex, "answers", questionIndex,"commentTemp"],"")
+            .split("|").map((v,i)=>{i==commentIndex?"":v}).join("|");
+        this.uploadCommentResult(studentIndex,
+            questionIndex,
+            {comment:comment},
+            (commentUrl)=>{
+                const studentAnswers = this.state.studentAnswers
+                    .setIn([studentIndex,"answers",questionIndex,"comment"],commentUrl)
+                    .setIn([studentIndex,"answers",questionIndex,"commentTemp"],comment);
+                this.setState({
+                    studentAnswers:studentAnswers
+                });
+            }
+        );
+    },
+    setScore(studentId,questionId,score){
+
+    },
+    setEvaluate(studentId,questionId,value){
+
+    },
+    uploadCommentResult(studentIndex,questionIndex,additonalParam,callback) {
+        const { homeworkClassId, answerType, homeworkId } = this.props.location.state;
+
+        let questionIds = [];
+        const questionType = this.state.questionList.getIn([questionIndex,"type"]);
+        if( questionType == QUESTION_TYPE_FILL_IN_BLANK ) {
+            questionIds = this.state.questionList
+                .filter((question) => question.get("type") == QUESTION_TYPE_FILL_IN_BLANK)
+                .map((question)=>question.get("questionId"))
+                .toJS();
+        } else {
+            questionIds.push(this.state.questionList.getIn([questionIndex,"questionId"]));
+        }
+        const studentId = this.state.studentAnswers.getIn([studentIndex,"studentId"]);
+        const studentAnswer = this.state.studentAnswers.getIn([studentIndex,"answers",questionIndex]);
+
+        let formData = new FormData();
+        formData.append("homeworkClassId", homeworkClassId);
+        formData.append("homeworkId", homeworkId);
+        formData.append("answerType", answerType);
+        questionIds.forEach(
+            (id)=> { formData.append("questionIds",id) }
+        );
+        formData.append("studentId", studentId);
+        formData.append("score", additonalParam.score?additonalParam.score:studentAnswer.get("score"));
+        formData.append("right", additonalParam.right?additonalParam.right:studentAnswer.get("right"));
+        //String[] correctFiles
+        const commentArray = this.mergeComment(studentAnswer.get("comment"), additonalParam.comment)
+            .split("|");
+        commentArray.forEach(
+            (comment) => {
+                if( comment.startsWith("data:image/png;base64,")) {
+                    formData.append("correctFiles", "base64:"+comment.replace(/^(data).+base64,/,""));
+                } else {
+                    formData.append("correctFiles", "url"+comment);
+                }
+
+            }
+        );
+
+        httpFetchPost(config.api.homework.commentHomework.uploadCommentResult,formData)
+            .then(
+                (result) => {
+                    if( result.title == "TITLE_FAILURE" ) {
+                        const message = "批改学生:"+this.state.studentAnswers.getIn([studentIndex,"studentName"])+
+                            "的第"+this.state.questionList.getIn([questionIndex,"index"])+"题失败:" +
+                                result.result;
+                        notification.error({
+                            message:"失败",
+                            description:message,
+                            duration:10,
+                        });
+                    } else {
+                        const studentAnswers = this.state.studentAnswers
+                            .setIn([studentIndex, "answers", questionIndex], studentAnswer.merge(Map(additonalParam)));
+                        this.setState({
+                            studentAnswers: studentAnswers
+                        }, () => {
+                            if (callback) {
+                                callback(result.resultData);
+                            }
+                        });
+
+                    }
+                }
+            )
+            .catch(()=>{})
+    },
+    findStudentAndQuestionIndex(studentId, questionId) {
+        let studentIndex = undefined;
+        let questionIndex = undefined;
+        this.state.studentAnswers.forEach(
+            (studentAnswer, stuI) => {
+                if( studentAnswer.get("studentId") == studentId) {
+                    studentIndex = stuI;
+                    studentAnswer.get("answers").forEach(
+                        (answer, queI) => {
+                            if( answer.get("questionId") == questionId ) {
+                                questionIndex = queI;
+                                return false;
+                            }
+                        }
+                    );
+                    return false;
+                }
+            }
+        )
+        return {studentIndex:studentIndex, questionIndex:questionIndex};
+    },
+    mergeComment(p,n) {
+        if( p == null && n == null ) {
+            return "";
+        }else if( p == null ) {
+            return n;
+        } else if( n == null ) {
+            return p;
+        } else {
+            return List((p || "").split("|"))
+                .mergeWith((prev,next)=> next.length>0?next:prev, List((n||"").split("|")))
+                .join("|");
+        }
     }
+
 });
 
 function mapStateToProps(state) {

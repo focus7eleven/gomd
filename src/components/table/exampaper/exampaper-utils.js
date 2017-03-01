@@ -4,14 +4,14 @@ export const QUESTION_TYPE = [{
   id:'01',
   text:'单选题',
 },{
-  id:'02',
-  text:'判断题',
-},{
   id:'03',
   text:'多选题',
 },{
-  id:'04',
+  id:'02',
   text:'判断题',
+},{
+  id:'04',
+  text:'填空',
 },{
   id:'05',
   text:'简答（计算题）',

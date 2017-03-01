@@ -1,0 +1,17 @@
+@import '~mixins.scss';
+
+:local(.loading){
+  @include loading;
+}
+
+:local(.ButtonGroup) {
+  :local(Button:not(:first-child)) {
+    margin-left: 5px;
+  }
+}
+
+:local(.header){
+  @include headerWithoutFilter;
+  justify-content: flex-start;
+  font-size: 16px;
+}

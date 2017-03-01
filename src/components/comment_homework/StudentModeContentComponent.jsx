@@ -68,7 +68,13 @@ export const StudentModeContentComponent = React.createClass({
                         if( editable ) {
                             return <CommentQuestionComponent totalScore={question.totalScore}
                                                              questionType={question.type}
-                                                             answer={question.answer} />
+                                                             answer={question.answer}
+                                                             commentDataChanged={(i,imgBase64)=>this.props.commentDataChanged(question.questionId,i,imgBase64)}
+                                                             saveCommentData={(i)=>this.props.saveCommentData(question.questionId,i)}
+                                                             clearCommentData={(i)=>this.props.clearCommentData(question.questionId,i)}
+                                                             setScore={(score)=>this.props.clearCommentData(question.questionId,score)}
+                                                             setEvaluate={(value)=>this.props.setEvaluate(question.questionId,value)}
+                            />
                         } else {
                             const imageList = r.answer.split("|").map((image, i) => {
                                 return {

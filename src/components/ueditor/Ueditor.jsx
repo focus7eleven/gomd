@@ -8,6 +8,7 @@ const Ueditor = React.createClass({
       onDestory:()=>{},
       initialContent:'',
       name:'editor',
+      initialHeight:100,
     }
   },
   componentDidMount(){
@@ -16,7 +17,8 @@ const Ueditor = React.createClass({
   			'fullscreen', 'source', '|',
   			'bold', 'italic', 'underline', '|', 'fontsize', '|', 'kityformula', 'preview'
   		]],
-      wordCountMsg:''
+      wordCountMsg:'',
+      initialFrameHeight: this.props.initialHeight,
   	});
     // this.ue.setContent(this.props.initialContent)
     // this.ue.destroy = ()=>{
@@ -28,7 +30,7 @@ const Ueditor = React.createClass({
       if(!window.currentEditor){
         window.currentEditor = {}
       }
-      that.ue.setContent(addHttpPrefix(that.props.initialContent))
+      that.ue.setContent(that.props.initialContent)
       window.currentEditor[that.props.name] = that.ue
     //  editor.setContent( 'focus' ); //编辑器家在完成后，让编辑器拿到焦点
     });

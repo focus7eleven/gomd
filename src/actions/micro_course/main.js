@@ -29,6 +29,9 @@ export function getTableData(type,search,currentPage){
         }
       }).then(res => res.json())
     },
+  shouldCallAPI:()=>{
+    return type!='createvideo' && isNaN(type)
+  }
   }
 }
 

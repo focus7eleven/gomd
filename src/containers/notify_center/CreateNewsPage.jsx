@@ -42,7 +42,8 @@ const CreateNewsPage = React.createClass({
       pageType: 'setnotification',
       title: '',
       deadline: moment(),
-      treeData:fromJS({})
+      treeData:fromJS({}),
+      newsType: '班级剪影',
     }
   },
 
@@ -55,6 +56,7 @@ const CreateNewsPage = React.createClass({
     const pageType = nextProps.location.pathname.split('/').slice(-1)[0];
     this.setState({pageType})
   },
+
   componentDidMount(){
     fetch(config.api.group.getAllGroupByType,{
       method:'get',
@@ -67,6 +69,32 @@ const CreateNewsPage = React.createClass({
         treeData:fromJS(res)
       })
     })
+
+    // fetch(config.api.user.role.getCurrentRole,{
+    //   method:'get',
+    //   headers:{
+    //     'from':'nodejs',
+    //     'token':sessionStorage.getItem('accessToken')
+    //   }
+    // }).then(res => res.json()).then(res => {
+    //   let newsType
+    //   switch (res) {
+    //     case 5:
+    //       newsType = '班级剪影'
+    //       break;
+    //     case 7:
+    //       newsType = '市直动态'
+    //       break;
+    //     case 15:
+    //       newsType = '学校资讯'
+    //       break;
+    //     default:
+    //       newsType = '学校资讯'
+    //   }
+    //   this.setState({
+    //     newsType
+    //   })
+    // })
   },
   getPageName(){
     switch (this.state.pageType) {
@@ -190,7 +218,7 @@ const CreateNewsPage = React.createClass({
   },
 
   renderNoSplit(){
-    const {pageType,deadline,title} = this.state
+    const {pageType,deadline,title,newsType} = this.state
     return (
       <div>
         <div className={styles.newsTitle}>
@@ -200,17 +228,12 @@ const CreateNewsPage = React.createClass({
           </div>
           <div className={styles.verticalLayout}>
             <span>类别</span>
-            <Select style={{ width: 210 }}>
-              <Option value="1/4">1/4</Option>
-              <Option value="1/3">1/3</Option>
-              <Option value="1/2">1/2</Option>
-            </Select>
+            <span className={styles.newsType}>{newsType}</span>
           </div>
         </div>
-        <div className={styles.verticalLayout}>
+        <div className={styles.newsEditor} style={{width: '100%'}}>
           <span>正文</span>
-          {/* Insert UEditor Here */}
-          <Ueditor name='news' ref='news'/>
+          <Ueditor name='news' initialHeight={400} ref='news'/>
         </div>
       </div>
     )
@@ -255,11 +278,11 @@ const CreateNewsPage = React.createClass({
                     </div>:null
                   }
                 </div>
-                <div className={styles.verticalLayout}>
+                <div className={styles.verticalLayout} style={{width: '100%'}}>
                   <span>正文</span>
                   {/* Insert UEditor Here */}
                   <div className={styles.ueditorContainer}>
-                    <Ueditor name='notice' ref='notice'/>
+                    <Ueditor name='notice' initialHeight={400} ref='notice'/>
                   </div>
                 </div>
               </div>

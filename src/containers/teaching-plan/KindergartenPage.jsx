@@ -6,6 +6,7 @@ import {Icon,Input,Table,Button,Modal,Form,Spin,Select,Row,Col} from 'antd'
 import {CustomTable} from '../../components/table/CustomTable';
 import config from '../../config';
 import menuRoutePath from '../../routeConfig';
+const Option = Select.Option
 
 const KindergartenPage = React.createClass({
     contextTypes: {
@@ -15,10 +16,10 @@ const KindergartenPage = React.createClass({
         authList:List()
     }),
     componentWillMount(){
-        if(!this.props.menu.get('data').isEmpty()){
-            this._currentMenu = findMenuInTree(this.props.menu.get('data'),'teaching_plan')
-            console.log('componentWillMount');
-        }
+        // if(!this.props.menu.get('data').isEmpty()){
+        //     this._currentMenu = findMenuInTree(this.props.menu.get('data'),'teaching_plan')
+        //     console.log('componentWillMount');
+        // }
     },
     getDefaultProps(){
         return {}
@@ -35,17 +36,33 @@ const KindergartenPage = React.createClass({
             courseOptions:[],
             textBookMenus:[],
             summaryStr:'',
+            currentUnit:'',
+            pageUrl:'',
+            additionParams:'',
 
         }
     },
-    componentWillMount(){
-      this.state.type = this.props.params.type;
-
+    componentDidMount(){
+        console.log('componentDidMount type:'+this.props.params.type);
+        let additionParams = this.getParamByType(this.props.params.type);
+        this.setState({
+            type:this.props.params.type,
+            pageUrl:config.api.teachingPlan.teachingPlanPageUrl,
+            additionParams:additionParams,
+        })
+    },
+    componentWillReceiveProps(nextProps){
+        console.log('componentWillReceiveProps');
+        let additionParams = this.getParamByType(nextProps.params.type);
+        this.setState({
+            type:nextProps.params.type,
+            pageUrl:config.api.teachingPlan.teachingPlanPageUrl,
+            additionParams:additionParams,
+        })
     },
 
-    getParamByType(){
+    getParamByType(type){
       let url = '';
-      let type = this.state.type;
       let additionParams = {isPublic:'yes',phaseCode:11};
       if (type == 'kindergarten'){
           additionParams.phaseCode = 11;
@@ -61,16 +78,17 @@ const KindergartenPage = React.createClass({
     },
 
     render(){
-        let additionParams = this.getParamByType();
+        let defaultCourse ='';
+        if (this.state.modalVisiable) {
+            defaultCourse = this.state.courseOptions[0].course;
+        }
+        console.log('additionParams='+this.state.additionParams);
         let columns = this.getTableHeader();
-        let units = this.state.textBookMenus.map(value =>{
-            <Option key={value.unit}>{value.unit}</Option>
-        });
         let filters = [
             {key:'subject',type:'select',placeholder:'所有学科',options:this.state.subjectOptionList},
             {key:'version',type:'select',placeholder:'所有版本',options:this.state.versionOptionList},
             {key:'year',type:'select',placeholder:'所有年份',options:this.state.yearOptionList},
-        ]
+        ];
 
         return (
             <div className={styles.container}>
@@ -80,25 +98,32 @@ const KindergartenPage = React.createClass({
                     <CustomTable columns={columns}
                                  showIndex={true}
                                  filters={filters}
-                                 additionalParam={additionParams}
-                                 pageUrl={config.api.teachingPlan.teachingPlanPageUrl}></CustomTable>
+                                 additionalParam={this.state.additionParams}
+                                 pageUrl={this.state.pageUrl}></CustomTable>
                 </div>
                 <Modal
                     title='总结详情'
                 visible ={this.state.modalVisiable}
-                onCancel={this.handleClose.bind(this)}
+                    onCancel={()=>this.handleClose()}
                 footer={[
-                    <Button  type='primary' size='large' onClick={()=>{this.handleClose()}}>返回</Button>
+                    <Button  type='primary' size='large' onClick={()=>{this.handleSaveSummary()}}>保存</Button>
                 ]}
                 >
                     <div>
                         <Row gutter={8}>
                             <Col span={12}>
+                                <Select defaultValue={this.state.unitOptions[0]} style={{width:'100%'}} onChange={(value)=>this.handleSelectChange(value)}>
+                                    {this.state.unitOptions.map(v=>(<Option key={v} value={v}>{v}</Option>))}
+                                </Select>
                             </Col>
                             <Col span={12}>
+                                <Select value={defaultCourse} style={{width:'100%'}} onChange={(value)=>this.handleCourseSelect(value)}>
+                                    {this.state.courseOptions.map(v=>(<Option key={v.course} value={v}>{v.course}</Option>))}
+                                </Select>
                             </Col>
                         </Row>
-                        <Row>
+                        <Row style={{marginTop:'10px'}}>
+                            <Input type='textarea' value={this.state.summaryStr}   ref='summaryInput' rows={5}></Input>
                         </Row>
                     </div>
 
@@ -106,6 +131,13 @@ const KindergartenPage = React.createClass({
             </div>
         )
 
+    },
+
+    handleSelectChange(value){
+        if (this.state.textbookMenu) {
+            console.log("handleSelectChange to")
+            this.getSummaryDetail(value, this.state.textbookMenu, this.state.unitOptions);
+        }
     },
 
     handleClickSummary(record){
@@ -118,15 +150,18 @@ const KindergartenPage = React.createClass({
                 }
             }).then(res => res.json()).then(textbookMenu =>{
                 console.log(textbookMenu);
+                let units = [];
                 for (var key in textbookMenu){
+                    units.push(key);
                     console.log(key+":"+textbookMenu[key].unit);
                 }
-
-
+                console.log("handleClickSummary to")
+                this.getSummaryDetail(units[0],textbookMenu,units);
         })
     },
-    getSummaryDetail(textbookMenuId){
-        fetch(config.api.teachingPlan.summaryDetailUrl(textbookMenuId),
+    getSummaryDetail(unit,textbookMenu,units){
+        let firstTextbookMenuId = textbookMenu[unit][0].textbook_menu_id;
+        fetch(config.api.teachingPlan.summaryDetailUrl(firstTextbookMenuId),
             {
                 method:'get',
                 headers:{
@@ -134,10 +169,32 @@ const KindergartenPage = React.createClass({
                     'token':sessionStorage.getItem('accessToken')
                 }
             }
-        ).then(res => res.json()).then(detail =>{
+        ).then(detail=>detail.json()).then(detail =>{
+            console.log("result1="+detail.summarize);
+                this.setState({
+                    summaryStr: detail.summarize,
+                    unitOptions: units,
+                    textbookMenu: textbookMenu,
+                    courseOptions: textbookMenu[unit],
+                    currentUnit: unit,
+                    modalVisiable:true,
+                })
+        })
+    },
+    handleCourseSelect(textbookMenu){
+        let firstTextbookMenuId = textbookMenu.textbook_menu_id;
+        fetch(config.api.teachingPlan.summaryDetailUrl(firstTextbookMenuId),
+            {
+                method:'get',
+                headers:{
+                    'from':'nodejs',
+                    'token':sessionStorage.getItem('accessToken')
+                }
+            }
+        ).then(detail=>detail.json()).then(detail =>{
+            console.log("result1="+detail.summarize);
             this.setState({
-                summaryStr:detail,
-
+                summaryStr: detail.summarize,
             })
         })
     },
@@ -146,6 +203,22 @@ const KindergartenPage = React.createClass({
       this.setState({
           modalVisiable:false,
       })
+    },
+    handleSaveSummary(){
+        let summary = this.refs.summaryInput.refs.input.value;
+        let textbookMenuId = this.state.textbookMenu[this.state.currentUnit][0].textbook_menu_id;
+        fetch(config.api.teachingPlan.uploadSummaryUrl(textbookMenuId,summary),{
+            method:'get',
+                headers:{
+                'from':'nodejs',
+                    'token':sessionStorage.getItem('accessToken')
+            }
+        }).then(res =>res.json()).then(res =>{
+            if (res.title == 'Success'){
+                this.handleClose();
+            }
+        })
+
     },
 
     gotoPlanDetail(record){

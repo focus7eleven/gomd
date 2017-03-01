@@ -109,6 +109,29 @@ export function getUserInfo(){
 export function changeRole(data){
   return dispatch => {
     return fetch(config.api.user.role.roleType,{
+          method:'post',
+          headers:{
+            'from':'nodejs',
+            'token':sessionStorage.getItem('accessToken'),
+          },
+          body: data
+        }).then(res => res.json()).then(res => {
+      if(res.title == 'Success'){
+      sessionStorage.setItem('accessToken',res.resultData)
+      notification.success({message:'切换成功'})
+      return res
+    }else{
+      notification.error({message:'切换失败',description: res.result});
+      return "error";
+    }
+  })
+  }
+}
+
+
+export function editUser(data){
+  return dispatch => {
+    return fetch(config.api.user.edit.post,{
       method:'post',
       headers:{
         'from':'nodejs',
@@ -118,10 +141,10 @@ export function changeRole(data){
     }).then(res => res.json()).then(res => {
       if(res.title == 'Success'){
         sessionStorage.setItem('accessToken',res.resultData)
-        notification.success({message:'切换成功'})
+        notification.success({message:'修改成功'})
         return res
       }else{
-        notification.error({message:'切换失败',description: res.result});
+        notification.error({message:'修改失败',description: res.result});
         return "error";
       }
     })

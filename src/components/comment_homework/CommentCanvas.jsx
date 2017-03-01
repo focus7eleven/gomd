@@ -6,7 +6,7 @@ import {Button} from 'antd';
 import classNames  from 'classnames';
 
 import styles from './CommentCanvas.scss';
-import {XhlIconButton} from '../IconButton/XhlIconButton';
+import {XhlIconButton} from '../button/XhlIconButton';
 
 import duiMiddleImgSrc from 'images/comment_homework/dui-middle.png';
 import duiImgSrc from 'images/comment_homework/dui.png';
@@ -27,6 +27,10 @@ export const CommentCanvas = React.createClass({
         width:React.PropTypes.number,
         className:React.PropTypes.string,
         questionType:React.PropTypes.string.isRequired,
+
+        commentDataChanged:React.PropTypes.func.isRequired,
+        saveCommentData:React.PropTypes.func.isRequired,
+        clearCommentData:React.PropTypes.func.isRequired
     },
     getDefaultProps() {
         return {
@@ -69,28 +73,26 @@ export const CommentCanvas = React.createClass({
               <div className={styles.buttonGroupVertical}>
                   <Button className={styles.button} icon="edit"
                           type={currentMode=='draw'?'primary':null}
-                          onClick={()=>this.changeDrawType("draw")}
-                  ></Button>
+                          onClick={()=>this.changeDrawType("draw")} />
                   <XhlIconButton className={styles.button} icon="dui-small"
                                  type={currentMode=='dui'?'primary':null}
-                                 onClick={()=>this.changeDrawType("dui")}
-                  ></XhlIconButton>
+                                 onClick={()=>this.changeDrawType("dui")} />
                   <XhlIconButton className={styles.button} icon="bandui-small"
                                  type={currentMode=='bandui'?'primary':null}
-                                 onClick={()=>this.changeDrawType("bandui")}
-                  ></XhlIconButton>
+                                 onClick={()=>this.changeDrawType("bandui")} />
                   <XhlIconButton className={styles.button} icon="cuo-small"
                                  type={currentMode=='cuo'?'primary':null}
-                                 onClick={()=>this.changeDrawType("cuo")}
-                  ></XhlIconButton>
+                                 onClick={()=>this.changeDrawType("cuo")} />
                   <XhlIconButton className={styles.button} icon="rotate-left"
-                                 onClick={()=>{this.rotateImage("left")}}
-                  ></XhlIconButton>
+                                 onClick={()=>{this.rotateImage("left")}} />
                   <XhlIconButton className={styles.button} icon="rotate-right"
-                                 onClick={()=>{this.rotateImage("right")}}
-                  ></XhlIconButton>
-                  <Button className={styles.button} icon="save" disabled={dataChanged?"":"disabled"}></Button>
-                  <Button className={styles.button} icon="delete" disabled={dataChanged?"":"disabled"}></Button>
+                                 onClick={()=>{this.rotateImage("right")}} />
+                  <Button className={styles.button} icon="save"
+                          onClick={()=>{this.saveCanvasData()}}
+                          disabled={dataChanged?"":"disabled"} />
+                  <Button className={styles.button} icon="delete"
+                          onClick={()=>{this.clearCanvasData()}}
+                          disabled={dataChanged?"":"disabled"}/>
               </div>
           </div>
         );
@@ -129,9 +131,15 @@ export const CommentCanvas = React.createClass({
         }
     },
     mouseUp(e){
+        if( this._contextData.mousePressed ) {
+            this.drawDataChanged();
+        }
         this._contextData.mousePressed = false;
     },
     mouseLeave(e){
+        if( this._contextData.mousePressed ) {
+            this.drawDataChanged();
+        }
         this._contextData.mousePressed = false;
     },
     changeDrawType(mode) {
@@ -150,20 +158,14 @@ export const CommentCanvas = React.createClass({
                 this._canvasContext.lineTo(position.x,position.y);
                 this._canvasContext.closePath();
                 this._canvasContext.stroke();
-                this.setState({
-                    dataChanged:true,
-                });
-                //this._drawDataChanged();
+                //this.drawDataChanged();
             } else {
                 let image = new Image();
                 image.onload = () => {
                     let drawX = position.x > image.width/2 ? position.x - image.width/2 : 0;
                     let dwarY = position.y > image.height/2 ? position.y - image.height/2 : 0;
                     this._canvasContext.drawImage(image, drawX, dwarY);
-                    this.setState({
-                        dataChanged:true,
-                    });
-                    //this._drawDataChanged();
+                    this.drawDataChanged();
                 };
                 image.src= this.getTagImageSrc();
             }
@@ -227,8 +229,29 @@ export const CommentCanvas = React.createClass({
             this._canvasContext.drawImage(image, -y, -x, imageWidth, imageHeight);
             this._canvasContext.restore();
             //this._canvasContext.save();
+            this.drawDataChanged();
 
         }
         image.src = imgSaveData;
     },
+    drawDataChanged() {
+        let imgSaveData = this._canvas.toDataURL("image/png");
+        this.props.commentDataChanged(imgSaveData);
+        this.setState({
+            dataChanged:true,
+        });
+    },
+    saveCanvasData() {
+        this.props.saveCommentData();
+        this.setState({
+            dataChanged:false,
+        });
+
+    },
+    clearCanvasData() {
+        this.props.clearCommentData()
+        this.setState({
+            dataChanged:false,
+        });
+    }
 })

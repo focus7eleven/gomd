@@ -12,17 +12,13 @@ export const CommentQuestionComponent = React.createClass({
         studentName:React.PropTypes.string,
         answer:React.PropTypes.string.isRequired,
         totalScore:React.PropTypes.number.isRequired,
-
         questionType:React.PropTypes.string.isRequired,
-        //setScore:React.PropTypes.func.isRequired,
-        //setEvaluation:React.PropTypes.func.isRequired,
-        //saveComment:React.PropTypes.func.isRequired
-    },
-    getInitialState() {
-        return {
-            url:"",
-            index:0
-        }
+
+        commentDataChanged:React.PropTypes.func.isRequired,
+        saveCommentData:React.PropTypes.func.isRequired,
+        clearCommentData:React.PropTypes.func.isRequired,
+        setScore:React.PropTypes.func.isRequired,
+        setEvaluate:React.PropTypes.func.isRequired,
     },
     render() {
         const {studentNumber, studentName, answer, totalScore, questionType} = this.props;
@@ -42,24 +38,30 @@ export const CommentQuestionComponent = React.createClass({
                     <div className={styles.commentItems}>
                         {answer.split("|").map(
                             (v, i) => {
-                                return <CommentCanvas className={styles.commentItem} key={i}
-                                                      questionType={questionType}
-                                                      imageSrc={addHttpPrefixToImageUrl(v)}/>
+                                return (
+                                    <CommentCanvas className={styles.commentItem} key={i}
+                                                   questionType={questionType}
+                                                   imageSrc={addHttpPrefixToImageUrl(v)}
+                                                   commentDataChanged={(imgBaseData) => this.props.commentDataChanged(i,imgBaseData)}
+                                                   saveCommentData={() => this.props.saveCommentData(i)}
+                                                   clearCommentData={() => this.props.clearCommentData(i)}
+                                    />
+                                )
                             }
                         )}
                     </div>
                 </div>
                 <div className={styles.scoreView}>
                     <span>得分</span>
-                    <Select className={styles.scoreSelect}>
+                    <Select className={styles.scoreSelect} onChange={(value)=>{this.props.setScore(value)}}>
                         {scoreList.map((s,i)=><Option key={i} value={s}>{s}</Option>)}
                     </Select>
                     <span className={styles.evaluteSpan}>评价</span>
-                    <Button className={styles.correctButton}>全对</Button>
-                    <Button className={styles.halfCorrectButton}>半对</Button>
-                    <Button className={styles.wrongButton}>全错</Button>
+                    <Button className={styles.correctButton} onChange={()=>{this.props.setEvaluate("quandui")}}>全对</Button>
+                    <Button className={styles.halfCorrectButton} onChange={()=>{this.props.setEvaluate("bandui")}}>半对</Button>
+                    <Button className={styles.wrongButton} onChange={()=>{this.props.setEvaluate("quancuo")}}>全错</Button>
                 </div>
             </div>
         )
-    }
+    },
 });

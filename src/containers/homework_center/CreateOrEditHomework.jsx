@@ -280,6 +280,8 @@ const AnswersheetQuestion = React.createClass({
 
 })
 
+var chars = ['0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
+
 const CreateOrEditHomeworkPage = React.createClass({
     contextTypes: {
         router: React.PropTypes.object
@@ -304,6 +306,7 @@ const CreateOrEditHomeworkPage = React.createClass({
       //获取学科列表
       this.setState({
         subjectList:fromJS(res),
+        subjectName:res[0]['subject_name'],
       })
       setFieldsValue({
         subjectOption:res[0]['subject_id']
@@ -369,6 +372,7 @@ const CreateOrEditHomeworkPage = React.createClass({
         }).then(res => res.json()).then(res =>{
           this.setState({
             courseList:fromJS(res),
+              courseName:res[0]['course']
             // courseOption:''
           })
           setFieldsValue({
@@ -410,6 +414,28 @@ const CreateOrEditHomeworkPage = React.createClass({
       })
     })
   },
+    getCreateTime() {
+        var date = new Date();
+        var seperator = "";
+        var month = date.getMonth() + 1;
+        var strDate = date.getDate();
+        if (month >= 1 && month <= 9) {
+            month = "0" + month;
+        }
+        if (strDate >= 0 && strDate <= 9) {
+            strDate = "0" + strDate;
+        }
+        var currentdate = date.getFullYear() + seperator + month + seperator + strDate;
+        return currentdate;
+    },
+    generateMixed(n) {
+        var res = "";
+        for(var i = 0; i < n ; i ++) {
+            var id = Math.ceil(Math.random()*35);
+            res += chars[id];
+        }
+        return res;
+    },
     getHomeworkDetail(homeworkId){
         fetch(config.api.homework.getHomeworkDetail2(homeworkId),{
             method:'get',
@@ -462,6 +488,8 @@ const CreateOrEditHomeworkPage = React.createClass({
         //附件
         fileList:List(),
 
+        subjectName:'',
+        courseName:'',
       homeworkName:'',
         //描述
       demand:'',
@@ -492,6 +520,22 @@ const CreateOrEditHomeworkPage = React.createClass({
     const {getFieldsValue,setFieldsValue} = this.props.form
     const {subjectOption,termOption,versionOption} = getFieldsValue(['subjectOption','termOption','versionOption'])
     console.log("--->:",subjectOption,termOption,versionOption)
+      this.state.subjectList.map((v,k) => {
+          if (v.get('subject_id') == value) {
+              this.setState({
+                  subjectName: v.get('subject_name'),
+              });
+          }
+      }
+      )
+
+      //for(var i = 0; i < this.state.subjectList.size; i++ ) {
+      //    if (this.state.subjectList.get[i]['subject_id'] == value)
+      //      this.setSate({
+      //          subjectName:this.state.subjectList[i]['subject_name'],
+      //      });
+      //};
+
     //根据学科获取年级列表
     fetch(config.api.grade.getBySubject.get(subjectOption),{
       method:'get',
@@ -532,10 +576,11 @@ const CreateOrEditHomeworkPage = React.createClass({
           }
         }).then(res => res.json()).then(res => {
           this.setState({
-            courseList:fromJS(res)
+            courseList:fromJS(res),
+              courseName:res[0]['course'],
           })
           setFieldsValue({
-            courseOption:''
+            courseOption:res[0]['textbook_menu_id']
           })
           //获取电子试卷
           fetch(config.api.exampaper.showExamSelectList(subjectOption,gradeOption,termOption),{
@@ -565,7 +610,16 @@ const CreateOrEditHomeworkPage = React.createClass({
       })
     })
   },
-
+    handleSelectCourse(value){
+        this.state.courseList.map((v,k) => {
+                if (v.get('textbook_menu_id') == value) {
+                    this.setState({
+                        courseName: v.get('course'),
+                    });
+                }
+            }
+        )
+    },
     handleCreateFormData:function(isSchool){
 
         console.log("create begin");
@@ -666,11 +720,11 @@ const CreateOrEditHomeworkPage = React.createClass({
       let data = [];
       if (this.state.homeworkType){
           data =   this.state.testpaperList.map((v,k) => (
-            {key:v.get('examPaperId'),name:v.get('examPaperName')}
+            {index:k + 1,key:v.get('examPaperId'),name:v.get('examPaperName')}
         ));
       }else {
           data = this.state.answersheetList.map((v,k) => (
-            {key:v.get('answersheet_id'),name:v.get('answersheet_name') }
+            {index:k + 1,key:v.get('answersheet_id'),name:v.get('answersheet_name') }
         ));
       }
       return data.toJS();
@@ -748,9 +802,18 @@ const CreateOrEditHomeworkPage = React.createClass({
   render(){
        console.log("homeworkname="+this.state.homeworkName);
     const {getFieldDecorator} = this.props.form;
-    const columns = [{title:'答题卡名称',dataIndex:'name'}];
+    const columns = [{title:(<div style={{textAlign:'center'}}><span>序号</span></div>),dataIndex:'index',width:'10%',className:styles.tdCenter},{title:(<div style={{textAlign:'center'}}><span>答题卡名称</span></div>),dataIndex:'name',width:'60%',className:styles.tdCenter}
+        ,{title:(<div style={{textAlign:'center'}}><span>创建时间</span></div>),dataIndex:'createTime',width:'30%',className:styles.tdCenter}];
     const dataSource = this.getTableData();
     const footer = () => (<Button type="primary" onClick={this.handleSetRightAnswerClick}>设置标准答案</Button>);
+      const formItemLayout = {
+          labelCol: { span: 5 , style:{textAlign:'left'}},
+          wrapperCol: { span: 19 },
+      };
+      const formItemLayoutFive = {
+          labelCol: { span: 4, style:{textAlign:'left'}},
+          wrapperCol: { span: 20 },
+      };
     return (
       <div className={styles.container} >
         <div className={styles.body}>
@@ -761,10 +824,24 @@ const CreateOrEditHomeworkPage = React.createClass({
           <Form >
           <Row type='flex' gutter={16} className={styles.topRow}>
             <Col span={12} className={styles.leftCol}>
-              <Row type='flex' gutter={16}>
+                <Row type='flex' gutter={8}>
+                    <Col span={24} style={{textAlign: 'left'}}>
+                        <FormItem {...formItemLayoutFive} label="作业名称">
+                            {getFieldDecorator('homework_name', {
+                                rules: [{ required: true, message: '请填写名字' },{max:30,message:'输入不超过30个字'}],
+                                initialValue:this.state.homeworkName =='' ? '('+this.state.subjectName+')' + this.state.courseName + '家庭作业'+ this.generateMixed(2) + this.getCreateTime() :this.state.homeworkName ,
+                            })(
+                                <Input type='textarea' placeholder='输入不超过30个字'rows={1} size="large"/>
+                            )}
+                        </FormItem>
+                    </Col>
+                    <Col span={12} style={{textAlign: 'left'}}>
+
+                    </Col>
+                </Row>
+              <Row type='flex' gutter={8}>
                 <Col span={12}>
-                  <span>学科</span>
-                  <FormItem>
+                  <FormItem {...formItemLayout} label="学科">
                       {getFieldDecorator('subjectOption', {
                           rules: [{ required: true, message: '请选择学科' }],
                           initialValue:this.state.subjectId,
@@ -779,28 +856,43 @@ const CreateOrEditHomeworkPage = React.createClass({
                       )}
                   </FormItem>
                 </Col>
-                <Col span={12}>
-                  <span>年级</span>
-                  <FormItem>
-                      {getFieldDecorator('gradeOption', {
-                          rules: [{ required: true, message: '请选择年级' }],
-                          initialValue:this.state.gradeId,
-                      })(
-                          <Select style={selectStyle} >
-                              {
-                                  this.state.gradeList.map((v,k) => (
-                                      <Option value={v.get('gradeId')} key={k} title={v.get('gradeName')}>{v.get('gradeName')}</Option>
-                                  ))
-                              }
-                          </Select>
-                      )}
-                  </FormItem>
-                </Col>
+                  <Col span={12}>
+                      <FormItem {...formItemLayout} label="版本">
+                          {getFieldDecorator('versionOption', {
+                              rules: [{ required: true, message: '请选择版本',initialValue: this.state.version}],
+                              initialValue:this.state.version,
+                          })(
+                              <Select style={selectStyle} >
+                                  {
+                                      this.state.versionList.map((v,k) => (
+                                          <Option value={v.get('id')} key={k} title={v.get('text')}>{v.get('text')}</Option>
+                                      ))
+                                  }
+
+                              </Select>
+                          )}
+                      </FormItem>
+                  </Col>
               </Row>
               <Row type='flex' gutter={8}>
+                  <Col span={12} >
+                      <FormItem {...formItemLayout} label="年级">
+                          {getFieldDecorator('gradeOption', {
+                              rules: [{ required: true, message: '请选择年级' }],
+                              initialValue:this.state.gradeId,
+                          })(
+                              <Select style={selectStyle} >
+                                  {
+                                      this.state.gradeList.map((v,k) => (
+                                          <Option value={v.get('gradeId')} key={k} title={v.get('gradeName')}>{v.get('gradeName')}</Option>
+                                      ))
+                                  }
+                              </Select>
+                          )}
+                      </FormItem>
+                  </Col>
                 <Col span={12}>
-                  <span>学期</span>
-                  <FormItem>
+                  <FormItem {...formItemLayout} label="学期">
                       {getFieldDecorator('termOption', {
                           rules: [{ required: true, message: '请选择学期' }],
                           initialValue:this.state.term,
@@ -815,72 +907,47 @@ const CreateOrEditHomeworkPage = React.createClass({
                       )}
                   </FormItem>
                 </Col>
-                <Col span={12}>
-                  <span>版本</span>
-                  <FormItem>
-                      {getFieldDecorator('versionOption', {
-                          rules: [{ required: true, message: '请选择版本',initialValue: this.state.version}],
-                          initialValue:this.state.version,
-                      })(
-                          <Select style={selectStyle} >
-                              {
-                                  this.state.versionList.map((v,k) => (
-                                      <Option value={v.get('id')} key={k} title={v.get('text')}>{v.get('text')}</Option>
-                                  ))
-                              }
 
-                          </Select>
-                      )}
-                  </FormItem>
-                </Col>
               </Row>
+
+                <Row type='flex' gutter={8}>
+                    <Col span={12} >
+                        <FormItem {...formItemLayout} label="章节">
+                            {getFieldDecorator('charpterOption', {
+                                rules: [{ required: true, message: '请选择' }],
+                                initialValue:this.state.textbookUnit,
+                            })(
+                                <Select style={selectStyle}>
+                                    {
+                                        this.state.charpterList.map((v,k) => (
+                                            <Option value={k.toString()} key={k} title={v}>{v}</Option>
+                                        ))
+                                    }
+                                </Select>
+                            )}
+                        </FormItem>
+                    </Col>
+                    <Col span={12}>
+                        <FormItem {...formItemLayout} label="课程">
+                            {getFieldDecorator('courseOption', {
+                                rules: [{ required: true, message: '请选择课程' }],
+                                initialValue:this.state.textbookCourse,
+                            })(
+                                <Select style={selectStyle} onChange={this.handleSelectCourse}>
+                                    {
+                                        this.state.courseList.map((v,k) => (
+                                            <Option value={v.get('textbook_menu_id')} key={k} title={v.get('course')}>{v.get('course')}</Option>
+                                        ))
+                                    }
+                                </Select>
+                            )}
+                        </FormItem>
+                    </Col>
+
+                </Row>
+
               <div className={styles.itemBox}>
-                <span>作业名称</span>
-                <FormItem>
-                    {getFieldDecorator('homework_name', {
-                        rules: [{ required: true, message: '请填写名字' },{max:30,message:'输入不超过30个字'}],
-                        initialValue:this.state.homeworkName,
-                    })(
-                        <Input type='textarea' placeholder='输入不超过30个字'rows={1}/>
-                    )}
-                </FormItem>
-              </div>
-              <div className={styles.itemBox}>
-                <span>章节</span>
-                <FormItem>
-                    {getFieldDecorator('charpterOption', {
-                        rules: [{ required: true, message: '请选择章节' }],
-                        initialValue:this.state.textbookUnit,
-                    })(
-                        <Select style={selectStyle}>
-                            {
-                                this.state.charpterList.map((v,k) => (
-                                    <Option value={k.toString()} key={k} title={v}>{v}</Option>
-                                ))
-                            }
-                        </Select>
-                    )}
-                </FormItem>
-              </div>
-              <div className={styles.itemBox}>
-                <span>课程</span>
-                <FormItem>
-                    {getFieldDecorator('courseOption', {
-                        rules: [{ required: true, message: '请选择课程' }],
-                        initialValue:this.state.textbookCourse,
-                    })(
-                        <Select style={selectStyle}>
-                            {
-                                this.state.courseList.map((v,k) => (
-                                    <Option value={v.get('textbook_menu_id')} key={k} title={v.get('course')}>{v.get('course')}</Option>
-                                ))
-                            }
-                        </Select>
-                    )}
-                </FormItem>
-              </div>
-              <div className={styles.itemBox}>
-                <span>要求</span>
+                <span style={{fontSize:15}}>要求</span>
                 <FormItem>
                     {getFieldDecorator('demand', {
                         rules: [{ required: true, message: '请填写要求' },{max:200,message:'输入不超过200个字'}],
@@ -897,26 +964,29 @@ const CreateOrEditHomeworkPage = React.createClass({
               <div>
                   { this.state.fileList.size > 0 ?
                       this.state.fileList.toJS().map((file,index)=>{
-                          return (<div key={index}>{index+1}.<span style={{fontSize:'14px'}}>{file.name}</span><Icon onClick={() => this.handleRemoveFile(file.name,index)}type="close-circle" style={{float:'right',textAlign:'center'}}/></div>)
+                          return (<div key={index}>&nbsp;&nbsp;&nbsp;{index+1}. <span style={{fontSize:'14px'}}>{file.name}</span><Icon onClick={() => this.handleRemoveFile(file.name,index)}type="close-circle" style={{float:'right',textAlign:'center'}}/></div>)
                       }):""}
 
               </div>
             </Col>
-            <Col span={12} >
-              <div className={styles.itemBox}>
-                <span><Icon type='appstore'/>作业类型</span>
-                <div>
-                  <RadioGroup onChange={this.onChangeHomeworkType} value={this.state.homeworkType}>
-                    <Radio value={1}>电子试卷</Radio>
-                    <Radio value={0}>答题卡</Radio>
-                  </RadioGroup>
-                </div>
-                <Table rowClassName={(record, index) =>this.getRowStyle(record) }
-                    columns={columns} dataSource={dataSource} pagination={{ pageSize: 50 }} scroll={{ y: 240 }} onRowClick={this.handleTableRowClick}
-                footer={this.state.homeworkType?'':footer}/>
 
-              </div>
-            </Col>
+              <Col span={12} >
+                  <div className={styles.itemBox}>
+                      <span style={{fontSize:15}}><Icon type='appstore'/>作业类型</span>
+                      <div>
+                          <RadioGroup onChange={this.onChangeHomeworkType} value={this.state.homeworkType}>
+                              <Radio value={1}>电子试卷</Radio>
+                              <Radio value={0}>答题卡</Radio>
+                          </RadioGroup>
+                      </div>
+                      <Table rowClassName={(record, index) =>this.getRowStyle(record) }
+                             columns={columns} dataSource={dataSource} pagination={{ pageSize: 10 }} scroll={{ y: 360 }} onRowClick={this.handleTableRowClick}
+                             footer={this.state.homeworkType?'':footer}
+                             bordered
+                      />
+
+                  </div>
+              </Col>
           </Row>
             <Row type='flex' style={{marginTop:'10px'}}>
 
@@ -934,7 +1004,7 @@ const CreateOrEditHomeworkPage = React.createClass({
           onOk={this.handleModalDisplay.bind(this,false)}
           onCancel={this.handleModalDisplay.bind(this,false)}
           footer={[
-            <Button key="submit" type='primary' size='large' onClick={()=>{this.handleSaveBtnClick()}}>确定</Button>
+            <Button key="submit" type='primary' size='large' onClick={this.handleSaveBtnClick}>确定</Button>
           ]}
 
         >
