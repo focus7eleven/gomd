@@ -166,7 +166,7 @@ const NoteQuestion = React.createClass({
             this.props.questionInfo.get('questionNo')
           }
           </div>
-          <div className={styles.questionContent} onClick={this.handleEditQuestion}>
+          <div className={styles.questionContent} onClick={this.handleEditQuestion} style={{padding:'20px',width:'90%'}}>
           {
             this.state.editingQuestion?<div><Ueditor name={this.props.questionInfo.get('id')} initialContent={this.props.questionInfo.get('examination')||'请输入题目内容'} onDestory={this.handleUpdateQuestion}/></div>:<div dangerouslySetInnerHTML={{__html:this.props.questionInfo.get('examination')||'请输入题目内容'}}></div>
           }

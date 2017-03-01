@@ -8,6 +8,7 @@ const Ueditor = React.createClass({
       onDestory:()=>{},
       initialContent:'',
       name:'editor',
+      initialHeight:100,
     }
   },
   componentDidMount(){
@@ -16,7 +17,7 @@ const Ueditor = React.createClass({
   			'fullscreen', 'source', '|',
   			'bold', 'italic', 'underline', '|', 'fontsize', '|', 'kityformula', 'preview'
   		]],
-      initialFrameHeight: 400,
+      initialFrameHeight: this.props.initialHeight,
   	});
     // this.ue.setContent(this.props.initialContent)
     // this.ue.destroy = ()=>{

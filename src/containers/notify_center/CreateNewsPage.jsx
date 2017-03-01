@@ -233,7 +233,7 @@ const CreateNewsPage = React.createClass({
         </div>
         <div className={styles.newsEditor} style={{width: '100%'}}>
           <span>正文</span>
-          <Ueditor name='news' ref='news'/>
+          <Ueditor name='news' initialHeight={400} ref='news'/>
         </div>
       </div>
     )
@@ -282,7 +282,7 @@ const CreateNewsPage = React.createClass({
                   <span>正文</span>
                   {/* Insert UEditor Here */}
                   <div className={styles.ueditorContainer}>
-                    <Ueditor name='notice' ref='notice'/>
+                    <Ueditor name='notice' initialHeight={400} ref='notice'/>
                   </div>
                 </div>
               </div>
