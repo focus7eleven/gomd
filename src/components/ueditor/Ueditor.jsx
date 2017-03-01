@@ -16,6 +16,7 @@ const Ueditor = React.createClass({
   			'fullscreen', 'source', '|',
   			'bold', 'italic', 'underline', '|', 'fontsize', '|', 'kityformula', 'preview'
   		]],
+      wordCountMsg:''
   	});
     // this.ue.setContent(this.props.initialContent)
     // this.ue.destroy = ()=>{
