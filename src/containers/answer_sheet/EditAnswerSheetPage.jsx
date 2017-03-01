@@ -299,12 +299,12 @@ const EditAnswerSheetPage = React.createClass({
       case 'answerWidth':
         value = e;
         const newWidth = Array.from({length: questions.get(index).get('questionNum')},(v,i)=>e);
-        questions = questions.update(index, v => v.set('widthArr',newWidth));
+        questions = questions.update(index, v => v.set('widthArr',fromJS(newWidth)));
         break;
       case 'answerHeight':
         value = e;
         const newHeight = Array.from({length: questions.get(index).get('questionNum')},(v,i)=>e);
-        questions = questions.update(index, v => v.set('heightArr',newHeight));
+        questions = questions.update(index, v => v.set('heightArr',fromJS(newHeight)));
         break;
       default:
         value = e
