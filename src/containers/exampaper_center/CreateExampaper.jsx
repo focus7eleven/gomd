@@ -213,7 +213,7 @@ const CreateExampaper = React.createClass({
       score:1,
     }).then(res => {
       console.log("adfasdfasdf",res)
-      res.resultData.optionPojoList = []
+      res.resultData.optionPojoList = res.resultData.optionPojoList || []
       this.setState({
         exerciseList:this.state.exerciseList.set(index,fromJS(res.resultData))
       })
