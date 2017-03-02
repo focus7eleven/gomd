@@ -172,7 +172,7 @@ const CreateNewsPage = React.createClass({
       //新建任务
       let formData = new FormData()
       formData.append('title',this.state.title)
-      formData.append('finish_time',this.state.deadlineString)
+      formData.append('finish_time',this.state.deadlineString||moment().format('YYYY-MM-DD HH:mm'))
       formData.append('content',this.refs.notice.getData())
       formData.append('group_ids',this.refs.treeData.getCheckedData().filter(v => !isNaN(v.get('id'))).map(v => v.get('id')).toJS().join())
       formData.append('ueditor_textarea_editorValue',this.refs.notice.getData())
