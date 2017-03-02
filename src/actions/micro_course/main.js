@@ -4,7 +4,7 @@ import config from '../../config.js'
 import {notification} from 'antd'
 
 //获取表格数据
-export const GET_TABLEDATA = actionNames('GET_TABLEDATA')
+export const GET_VIDEO_DATA = actionNames('GET_VIDEO_DATA')
 export function getTableData(type,search,currentPage){
   let realType = type;
   if(type === 'areavideo'){
@@ -21,7 +21,7 @@ export function getTableData(type,search,currentPage){
     realType = 'private'
   }
   return {
-    types:GET_TABLEDATA,
+    types:GET_VIDEO_DATA,
     callAPI:()=>{
       return fetch(config.api.microvideo.getTableData(realType,search,currentPage),{
         method:'GET',
@@ -37,10 +37,10 @@ export function getTableData(type,search,currentPage){
   }
 }
 
-export const GET_FILTERED_TABLEDATA = actionNames('GET_FILTERED_TABLEDATA')
+export const GET_FILTERED_VIDEO = actionNames('GET_FILTERED_VIDEO')
 export function getFilteredTableData(type,currentPage,subjectId,gradeId,textbookId,search,term,version){
   return {
-    types:GET_FILTERED_TABLEDATA,
+    types:GET_FILTERED_VIDEO,
     callAPI:()=>{
       return fetch(config.api.microvideo.get(type,currentPage,subjectId,gradeId,textbookId,search,term,version),{
         method:'GET',
