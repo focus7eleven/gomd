@@ -86,6 +86,7 @@ import AnswerSheetPage from './containers/answer_sheet/AnswerSheetPage'
 import EditSheetContainer from './containers/answer_sheet/EditSheetContainer'
 import EditAnswerSheetPage from './containers/answer_sheet/EditAnswerSheetPage'
 import WelcomPageContainer from './containers/index_homepage/WelcomePageContainer'
+import StudentCoursePage from './containers/course_center/StudentCoursePage'
 
 import TeachingPlanContainer from './containers/teaching-plan/TeachingPlanContainer'
 import KindergartenPage from './containers/teaching-plan/KindergartenPage'
@@ -164,6 +165,7 @@ const routes = (
 						<IndexRoute component={DetailPage}/>
 					</Route>
 					<Route path='courseInfo' component={TeacherCoursePage} />
+					<Route path='courseInfoStu' component={StudentCoursePage} />
 					<Route path='schoolCourse' component={SchoolCoursePage} />
 					<Route path='uncheckCourse' component={UncheckedCoursePage} />
 				</Route>

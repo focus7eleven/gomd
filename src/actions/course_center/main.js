@@ -11,7 +11,7 @@ export function getTableData(type,search,currentPage){
     realType = 'publicPage'
   }else if(type=='publishedCourse'){
     realType = 'publishedPage'
-  }else if(type=='courseInfo'){
+  }else if(type=='courseInfo'||type=='courseInfoStu'){
     realType = 'teacherPage'
   }else if(type=='schoolCourse'){
     realType = 'schoolPage'
