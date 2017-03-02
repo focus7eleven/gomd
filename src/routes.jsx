@@ -1,7 +1,6 @@
 import React from 'react'
 import {Router, Route, browserHistory, IndexRoute, IndexRedirect} from 'react-router'
 import AppContainer from './containers/AppContainer'
-import AnnouncementEditor from './containers/editor/AnnouncementEditor'
 import BaseInfoContainer from './containers/base_info/BaseInfoContainer'
 import MainContainer from './containers/MainContainer'
 import Navigation from './containers/navigation/Navigation'
@@ -97,7 +96,6 @@ const routes = (
 		<Route path="/" component={AppContainer}>
 			<Route path="test">
 				<Route path="cf" component={CourseFilterComponent}></Route>
-				<Route path="editor" component={AnnouncementEditor}></Route>
 				<Route path='navigation' component={Navigation}></Route>
 				<Route path='navigation-mini' component={NavigationMini}></Route>
 				<Route path='edu-outline' component={EduOutlinePage}></Route>

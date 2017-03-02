@@ -140,6 +140,9 @@ const config = _.extend({
 			getStudentClass: (studentId) => `${baseURL}/student/getStuClassByStudentId?studentId=${studentId}`,
 			// 设置教师角色
 			setTeacherRole: `${baseURL}/user/role/setting`,
+			// 获取学生家长
+			getPatriarch: (studentId) => `${baseURL}/patriarch/listPatriarchsByStudent?studentId=${studentId}`,
+			findPatriarch: (name) => `${baseURL}/patriarch/find?name=${name}`,
 		},
 		department: {
 			post:`${baseURL}/cityDepartment/add`,

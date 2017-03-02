@@ -10,6 +10,8 @@ import {findMenuInTree} from '../../../reducer/menu'
 import TableComponent from '../../../components/table/TableComponent'
 import moment from 'moment'
 import config from '../../../config.js'
+import relations from '../../../utils/relation'
+import _ from 'lodash'
 
 const FormItem = Form.Item
 const Search = Input.Search
@@ -34,6 +36,8 @@ const StudentPage = React.createClass({
       studentClassList: [],
       classModalVisibility: false,
       // 设置家长
+      studentPatriarchList: [], // 有关系的家长
+      patriarchList: [], // 所有家长
       patriarchModalVisibility: false,
     }
   },
@@ -85,7 +89,7 @@ const StudentPage = React.createClass({
       key: 'patriarchCount',
       className:styles.tableColumn,
       render: (text,record) => {
-        return <a onClick={this.handlePatriarchModalDisplay.bind(null,true,record.key)}><Icon type="edit"/>家长个数：{text}</a>
+        return <a onClick={this.handlePatriarchModalDisplay.bind(null,true,record.key)}>{this.props.userStyle=='15'?<Icon type="edit"/>:null}家长个数：{text}</a>
       }
     }])
     tableHeader = tableHeader.concat(authList.filter(v => (v.get('authUrl').split('/')[2] != 'import')&&(v.get('authUrl').split('/')[2] != 'view')&&(v.get('authUrl').split('/')[2] != 'add')).map( v => {
@@ -117,8 +121,40 @@ const StudentPage = React.createClass({
   },
 
   handlePatriarchModalDisplay(visibility,key){
+    const editMode = this.props.userStyle == '15'
     if(visibility){
-
+      this._studentId = this.props.workspace.get('data').get('result').get(key).get('studentId');
+      if(!editMode){
+        fetch(config.api.staff.getPatriarch(this._studentId),{
+          method:'GET',
+          headers:{
+            'from':'nodejs',
+            'token':sessionStorage.getItem('accessToken'),
+          }
+        }).then(res => res.json()).then((json)=>{
+          this.setState({patriarchModalVisibility: visibility,studentPatriarchList: json})
+        })
+      }else{
+        fetch(config.api.staff.getPatriarch(this._studentId),{
+          method:'GET',
+          headers:{
+            'from':'nodejs',
+            'token':sessionStorage.getItem('accessToken'),
+          }
+        }).then(res => res.json()).then((json)=>{
+          fetch(config.api.staff.findPatriarch(""),{
+            method:'GET',
+            headers:{
+              'from':'nodejs',
+              'token':sessionStorage.getItem('accessToken'),
+            }
+          }).then(res => res.json()).then((list)=>{
+            const xor = _.xorBy(list,json,'userId')
+            const studentPatriarchList = json.concat(xor)
+            this.setState({patriarchModalVisibility: visibility,studentPatriarchList})
+          })
+        })
+      }
     }else{
       this.setState({patriarchModalVisibility: visibility});
     }
@@ -278,8 +314,12 @@ const StudentPage = React.createClass({
     })
   },
 
+  handleLoadPatriarch(value){
+    console.log(value);
+  },
+
   handleSetPatriarch(){
-    
+
   },
 
   renderImportModal(){
@@ -482,35 +522,53 @@ const StudentPage = React.createClass({
   },
 
   renderPatriarchModal(){
-    const {patriarchModalVisibility} = this.state
-    const editMode = this.props.user.get('userInfo').userStyle == '15'
-    console.log(editMode);
-    const columns = [{
+    const {patriarchModalVisibility, studentPatriarchList,patriarchList} = this.state
+    const editMode = this.props.userStyle == '15'
+    const columns = editMode?[{
       title: '姓名',
       dataIndex: 'name',
     },{
       title: '电话',
-      dataIndex: 'phone',
+      dataIndex: 'phone1',
     },{
       title: '常住地址',
       dataIndex: 'address',
     },{
       title: '关系',
       dataIndex: 'relation',
-      render:(text,record) => {
+      render: (text,record) => {
         return (
-          <Select>
+          <Select style={{'width':80}} value={text} onChange={this.handleLoadPatriarch}>
+            {
+              relations.map((item,index)=>{
+                return <Option key={item.code} value={item.name}>{item.name}</Option>
+              })
+            }
           </Select>
         )
       }
+    }]
+    :
+    [{
+      title: '姓名',
+      dataIndex: 'name',
+    },{
+      title: '电话',
+      dataIndex: 'phone1',
+    },{
+      title: '常住地址',
+      dataIndex: 'address',
+    },{
+      title: '关系',
+      dataIndex: 'relation',
     }];
-    const data = patriarchList.length>=0?patriarchList.map((v,key) => {
+    const data = studentPatriarchList.length>=0?studentPatriarchList.map((v,key) => {
       return {
-        key: v.userId,
+        key: key,
         name: v.name,
-        phone: v.schoolName,
+        phone1: v.phone1,
         address: v.address,
-        relation: v.relation,
+        relation: v.relation||'无关系',
       }
     }):[];
     return (
@@ -584,6 +642,7 @@ const StudentPage = React.createClass({
         {this.renderModal()}
         {this.renderImportModal()}
         {this.renderClassModal()}
+        {this.renderPatriarchModal()}
       </div>
     )
   }
@@ -593,7 +652,7 @@ function mapStateToProps(state){
   return{
     menu: state.get('menu'),
     workspace: state.get('workspace'),
-    user: state.get('user')
+    userStyle: state.get('user').get('userInfo').userStyle,
   }
 }
 function mapDispatchToProps(dispatch){
