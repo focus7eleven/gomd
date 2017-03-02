@@ -42,6 +42,7 @@ import UncheckedCoursePage from './containers/course_center/UncheckedCoursePage'
 import MicroCourseContainer from './containers/micro_course/MicroCourseContainer'
 import PublicVideoPage from './containers/micro_course/PublicVideoPage'
 //import CreateMicroVideoPage from './containers/micro_course/CreateMicroVideoPage'
+import MyVideoPage from './containers/micro_course/MyVideoPage'
 import SchoolVideoPage from './containers/micro_course/SchoolVideoPage'
 import TeacherVideoPage from './containers/micro_course/TeacherVideoPage'
 import CollectionVideoPage from './containers/micro_course/CollectionVideoPage'
@@ -178,6 +179,7 @@ const routes = (
 
 				{/* 微课中心 */}
 				<Route path=':second' component={MicroCourseContainer}>
+					<Route path='myvideo' component={MyVideoPage}></Route>
 					<Route path='areavideo' component={PublicVideoPage}></Route>
 					<Route path='publicvideo' component={SchoolVideoPage}></Route>
 					<Route path='teachervideo' component={TeacherVideoPage}></Route>

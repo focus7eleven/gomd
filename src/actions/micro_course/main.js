@@ -17,6 +17,8 @@ export function getTableData(type,search,currentPage){
     realType = 'collection'
   }else if(type=='uncheckedvideo'){
     realType = 'unchecked'
+  }else if(type=='myvideo'){
+    realType = 'private'
   }
   return {
     types:GET_TABLEDATA,
