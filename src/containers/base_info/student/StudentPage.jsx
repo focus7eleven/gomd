@@ -278,6 +278,10 @@ const StudentPage = React.createClass({
     })
   },
 
+  handleSetPatriarch(){
+    
+  },
+
   renderImportModal(){
     const {importModalVisibility} = this.state;
     return (
@@ -479,6 +483,8 @@ const StudentPage = React.createClass({
 
   renderPatriarchModal(){
     const {patriarchModalVisibility} = this.state
+    const editMode = this.props.user.get('userInfo').userStyle == '15'
+    console.log(editMode);
     const columns = [{
       title: '姓名',
       dataIndex: 'name',
@@ -508,7 +514,7 @@ const StudentPage = React.createClass({
       }
     }):[];
     return (
-      <Modal title="设置学生家长" visible={patriarchModalVisibility}
+      <Modal title={editMode?"设置学生家长":"学生家长"} visible={patriarchModalVisibility}
         onOk={this.handleSetPatriarch} onCancel={this.handlePatriarchModalDisplay.bind(null,false,"")}
       >
         <div>
@@ -585,8 +591,9 @@ const StudentPage = React.createClass({
 
 function mapStateToProps(state){
   return{
-    menu:state.get('menu'),
-    workspace:state.get('workspace')
+    menu: state.get('menu'),
+    workspace: state.get('workspace'),
+    user: state.get('user')
   }
 }
 function mapDispatchToProps(dispatch){

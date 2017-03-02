@@ -1,9 +1,9 @@
 import {
-  GET_TABLEDATA,
+  GET_VIDEO_DATA,
   GET_GRADE_OPTIONS,
   GET_SUBJECT_OPTIONS,
   GET_VERSION_OPTIONS,
-  GET_FILTERED_TABLEDATA,
+  GET_FILTERED_VIDEO,
   LIKE_VIDEO,
   COLLECT_VIDEO,
   SET_DETAIL,
@@ -25,11 +25,11 @@ const initialState = fromJS({
 export default (state = initialState,action)=>{
   let videoId, result, type
   switch (action.type) {
-    case GET_TABLEDATA[0]:
+    case GET_VIDEO_DATA[0]:
       return state.set('loading',true)
-    case GET_TABLEDATA[1]:
+    case GET_VIDEO_DATA[1]:
       return state.set('data',fromJS(action.data)).set('loading',false)
-    case GET_FILTERED_TABLEDATA[1]:
+    case GET_FILTERED_VIDEO[1]:
       return state.set('data',fromJS(action.data))
     case GET_GRADE_OPTIONS[1]:
       return state.set('gradeOptions',action.data)
