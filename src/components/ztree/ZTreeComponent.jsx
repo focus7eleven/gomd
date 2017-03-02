@@ -20,6 +20,7 @@ const ZTreeComponent = React.createClass({
     return {
       treeData:fromJS(zNodes),
       checkedData:[],
+      allOpen:false,
     }
   },
   componentDidMount(){
@@ -42,6 +43,12 @@ const ZTreeComponent = React.createClass({
         return v.set('checked',true)
       }else{
         return v
+      }
+    }).map(v => {
+      if(that.props.allOpen){
+        return v.set('open',true)
+      }else{
+        return v.set('open',false)
       }
     }).toJS());
   },

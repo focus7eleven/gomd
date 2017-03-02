@@ -291,7 +291,7 @@ const CreateNewsPage = React.createClass({
                   <span>选择群组</span>
                   {/* Insert Ztree Here */}
                   <div>
-                    {!this.state.treeData.isEmpty()?<ZTreeComponent ref='treeData' treeData={this.state.treeData}/>:null}
+                    {!this.state.treeData.isEmpty()?<ZTreeComponent allOpen={true} ref='treeData' treeData={this.state.treeData}/>:null}
                   </div>
                 </div>
               </div>

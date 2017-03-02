@@ -238,12 +238,13 @@ const CreateAnswerSheetPage = React.createClass({
       case 'answerWidth':
         value = e;
         const newWidth = Array.from({length: questions.get(index).get('questionNum')},(v,i)=>e);
-        questions = questions.update(index, v => v.set('widthArr',newWidth));
+        questions = questions.update(index, v => v.set('widthArr',fromJS(newWidth)));
         break;
       case 'answerHeight':
         value = e;
         const newHeight = Array.from({length: questions.get(index).get('questionNum')},(v,i)=>e);
-        questions = questions.update(index, v => v.set('heightArr',newHeight));
+        questions = questions.update(index, v => v.set('heightArr',fromJS(newHeight)));
+        console.log("debug:",questions.toJS());
         break;
       default:
         value = e
@@ -389,6 +390,8 @@ const CreateAnswerSheetPage = React.createClass({
 
   renderCustomizeBlankModal(){
     const {showCustomizeBlankModal,currentWidthArr,currentHeightArr} = this.state;
+    console.log(currentWidthArr.toJS());
+    console.log(currentHeightArr.toJS());
     const currentQuestion = this.state.questions.get(this.state.currentQuestionIndex)
     return (
       <Modal title="定制填空题答题区" visible={showCustomizeBlankModal}
