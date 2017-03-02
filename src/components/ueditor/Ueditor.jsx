@@ -18,6 +18,8 @@ const Ueditor = React.createClass({
   			'bold', 'italic', 'underline', '|', 'fontsize', '|', 'kityformula', 'preview'
   		]],
       wordCountMsg:'',
+      wordCount:false,
+      elementPathEnabled:false,
       initialFrameHeight: this.props.initialHeight,
   	});
     // this.ue.setContent(this.props.initialContent)

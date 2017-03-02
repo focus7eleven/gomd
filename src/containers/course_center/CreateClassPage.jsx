@@ -41,6 +41,7 @@ const CreateClassPage = React.createClass({
   getFilter(){
     return Promise.all([
       fetch(config.api.courseCenter.getDistinctSubject,{
+        //获取学科
         method:'get',
         headers:{
           'from':'nodejs',
@@ -63,6 +64,7 @@ const CreateClassPage = React.createClass({
         })
       }),
       fetch(config.api.select.json.get('','','','JKS',''),{
+        //获取版本
         method:'get',
         headers:{
           'from':'nodejs',
@@ -88,6 +90,7 @@ const CreateClassPage = React.createClass({
           'token':sessionStorage.getItem('accessToken')
         }
       }).then(res => res.json()).then(res => {
+        //获取章节课程
         return {
           charpterList:fromJS(res),
           gradeList,
@@ -109,6 +112,7 @@ const CreateClassPage = React.createClass({
             'token':sessionStorage.getItem('accessToken')
           }
         }).then(res => res.text()).then(res => {
+          //获取上课时间
           this.setState({
             chapterTime:res,
             charpterList,
