@@ -8,13 +8,15 @@ import {getTableData} from '../../actions/course_center/main'
 const CourseCenterContainer = React.createClass({
   componentDidMount(){
     const pathname = this.props.location.pathname.split('/').slice(-1)[0];
-    pathname==='newCourse'?null:this.props.getTableData(pathname,'',1)
+    const isDetail = this.props.location.pathname.split('/').slice(-2)[0] == 'detail';
+    (pathname==='newCourse'||isDetail)?null:this.props.getTableData(pathname,'',1)
   },
 
   componentWillReceiveProps(nextProps){
     const pathname = nextProps.location.pathname.split('/').slice(-1)[0];
+    const isDetail = nextProps.location.pathname.split('/').slice(-2)[0] == 'detail';
     if(!this.props.courseCenter.get('loading') && (nextProps.courseCenter.get('data').isEmpty() || (this.props.location.pathname != nextProps.location.pathname))){
-      pathname==='newCourse'?null:this.props.getTableData(nextProps.location.pathname.split('/').slice(-1)[0],'',1)
+      (pathname==='newCourse'||isDetail)?null:this.props.getTableData(nextProps.location.pathname.split('/').slice(-1)[0],'',1)
     }
   },
 
