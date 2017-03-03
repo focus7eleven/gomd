@@ -283,9 +283,11 @@ const EduOutlinePage = React.createClass({
   },
   handleFileChange(e){
     //上传文件
+    console.log("-->:",e.target)
+    let file = e.target.files[0]
     let formData = new FormData()
-    formData.append('textbookId',this._currentRow.get('id'))
-    formData.append('file',e.target.files[0])
+    formData.append('textbookId',this._currentRow.get('textbook_id'))
+    formData.append('file',file)
     fetch(config.api.textbook.import,{
       method:'post',
       headers:{
