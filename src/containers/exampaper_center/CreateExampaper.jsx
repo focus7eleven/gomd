@@ -421,6 +421,7 @@ const CreateExampaper = React.createClass({
             uploadingExampaper: true
         })
         let file = e.target.files[0]
+        let fileName = file.name
         let fileReader = new FileReader()
         let formData = new FormData()
         formData.append('examId', this.state.examPaperId)
@@ -437,6 +438,7 @@ const CreateExampaper = React.createClass({
             this.setState({
                 exerciseList: this.state.exerciseList.concat(fromJS(res)),
                 uploadingExampaper: false,
+                examPaperName:fileName.split('.').slice(0,-1).join('')+Date.now()
             })
         })
     },
@@ -532,12 +534,12 @@ const CreateExampaper = React.createClass({
     render(){
         return (
             <div className={styles.container} onClick={() => {
-                ueEventEmitter.emitEvent('closeUE')
+                // ueEventEmitter.emitEvent('closeUE')
             }}>
                 <div className={styles.header}>
                     <Input
                         placeholder="试卷名称"
-                        style={{width: 200}}
+                        style={{width: 300}}
                         onBlur={this.handleUpdateExampaperName}
                         onChange={(e)=>{this.setState({examPaperName:e.target.value})}}
                         value={this.state.examPaperName}

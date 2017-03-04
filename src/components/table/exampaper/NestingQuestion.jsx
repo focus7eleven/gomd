@@ -128,7 +128,7 @@ const NestingQuestion = React.createClass({
   // },
   render(){
     return (
-      <div className={styles.noteQuestion} >
+      <div className={styles.noteQuestion} onClick={(e)=>{e.stopPropagation()}}>
         <div className={styles.tag}>
           <span className={styles.text}>嵌套题</span>
         </div>
@@ -153,7 +153,7 @@ const NestingQuestion = React.createClass({
           }
           </div>
           <div className={styles.questionNo}>
-            <Icon type='close' onClick={(e)=>{e.stopPropagation();this.props.onDelete(this.props.questionInfo.get('id'))}}/>
+            <Icon style={{cursor:'pointer'}} type='close' onClick={(e)=>{e.stopPropagation();this.props.onDelete(this.props.questionInfo.get('id'))}}/>
           </div>
         </div>
         <div className={styles.subQuestionContainer}>
@@ -178,8 +178,8 @@ const NestingQuestion = React.createClass({
         }
         </div>
         <div className={styles.moveButton}>
-            <Button onClick={(e)=>{this.props.moveUp(this.props.questionInfo.get('id'))}}><Icon type="caret-up" /></Button>
-            <Button onClick={(e)=>{this.props.moveDown(this.props.questionInfo.get('id'))}}><Icon type="caret-down" /></Button>
+            <Button onClick={(e)=>{this.props.moveUp(this.props.questionInfo.get('id'))}}><Icon style={{cursor:'pointer'}} type="caret-up" /></Button>
+            <Button onClick={(e)=>{this.props.moveDown(this.props.questionInfo.get('id'))}}><Icon style={{cursor:'pointer'}} type="caret-down" /></Button>
         </div>
         {
           // this.state.showFooter?this.renderFooter():null

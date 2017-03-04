@@ -10,6 +10,7 @@ import teacherLogo from 'images/teacher.png'
 import studentLogo from 'images/student.png'
 import {List,fromJS} from 'immutable'
 import {findPath} from '../reducer/menu'
+import {ueEventEmitter} from '../components/ueditor/UeEventEmitter'
 const MainContainer = React.createClass({
   getInitialState(){
     return {
@@ -69,7 +70,7 @@ const MainContainer = React.createClass({
         {
           this.props.children ?this.props.location.pathname=='/index/welcome'?(
             this.props.children
-          ):(<div className={styles.workspace}>
+          ):(<div className={styles.workspace} onClick={()=>{ueEventEmitter.emitEvent('closeUE')}}>
               <div className={styles.mainPanel}>
                 { /* 顶部的学校信息 */}
                 <div className={styles.header}>
