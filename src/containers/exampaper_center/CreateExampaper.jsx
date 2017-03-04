@@ -597,7 +597,7 @@ const CreateExampaper = React.createClass({
                             </Row>
                         </div>
                         <div className={styles.paperContent} onClick={(e) => {
-                            e.stopPropagation()
+                            // e.stopPropagation()
                         }}>
                             {
                                 this.state.uploadingExampaper ? <div className={styles.loading}>

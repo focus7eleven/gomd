@@ -89,10 +89,6 @@ const AddHomeworkModal = React.createClass({
       dataIndex:'create_user_name',
       key:'create_user_name',
     },{
-      title:'完成期限',
-      dataIndex:'finish_time',
-      key:'finish_time'
-    },{
       title:'学科',
       dataIndex:'subject',
       key:'subject'

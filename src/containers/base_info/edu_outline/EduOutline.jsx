@@ -48,6 +48,7 @@ const EduOutlinePage = React.createClass({
       searchStr:'',
       loading:true,
 
+      gradeList:List(),
       phaseOption:this.props.workspace.get('otherMsg').get('phaseOption')||'',
       gradeOption:this.props.workspace.get('otherMsg').get('gradeOption')||'',
       subjectOption:this.props.workspace.get('otherMsg').get('subjectOption')||'',
@@ -148,7 +149,7 @@ const EduOutlinePage = React.createClass({
     tableBody = !this.props.workspace.get('data').isEmpty()?this.props.workspace.get('data').get('result').map( (v,key) => {
       return {
         key:key,
-        id:key,
+        id:key+1,
         ...(v.toJS())
       }
     }):List()
@@ -298,7 +299,7 @@ const EduOutlinePage = React.createClass({
       notification.success({message:'上传成功'})
     })
   },
-  renderSelectBar(optionList,type){
+  renderSelectBar(optionList,type,onSelect=()=>{}){
     return (
       <Select
         showSearch
@@ -307,6 +308,7 @@ const EduOutlinePage = React.createClass({
         filterOption={(input,option)=>{return option.props.title.indexOf(input)>=0}}
         optionFilterProp="children"
         showSearch
+        onSelect={onSelect}
       >
       {
         optionList.map((v,k) => (
@@ -316,10 +318,23 @@ const EduOutlinePage = React.createClass({
       </Select>
     )
   },
+  filterGrade(value,option){
+    fetch(config.api.grade.getGradeList(value),{
+      method:'get',
+      headers:{
+        'from':'nodejs',
+        'token':sessionStorage.getItem('accessToken')
+      }
+    }).then(res => res.json()).then(res => {
+      this.setState({
+        gradeList:res.map(v => ({id:v.gradeId,text:v.gradeName}))
+      })
+    })
+  },
   renderAddTextbookModal(type){
     const {getFieldDecorator,getFieldValue} = this.props.form
     return (
-      <Modal title='添加角色' visible={true} onCancel={this.handleCloseAddTextbookModal.bind(this,type)}
+      <Modal title='添加教学大纲' visible={true} onCancel={this.handleCloseAddTextbookModal.bind(this,type)} maskClosable={false}
       footer={[
         <Button key='cancel' type='ghost' onClick={this.handleCloseAddTextbookModal.bind(this,type)}>取消</Button>,
         <Button key='ok' type='primary'
@@ -337,7 +352,7 @@ const EduOutlinePage = React.createClass({
             {getFieldDecorator('phase', {
               rules: [{ required: true, message: '输入学段' }],
             })(
-              this.renderSelectBar(this._phaseList,'学段')
+              this.renderSelectBar(this._phaseList,'学段',this.filterGrade)
             )}
             </FormItem>
             <FormItem
@@ -348,7 +363,7 @@ const EduOutlinePage = React.createClass({
             {getFieldDecorator('grade', {
               rules: [{ required: true, message: '输入年级' }],
             })(
-              this.renderSelectBar(this._gradeList,'年级')
+              this.renderSelectBar(this.state.gradeList,'年级')
             )}
             </FormItem>
             <FormItem
@@ -381,7 +396,7 @@ const EduOutlinePage = React.createClass({
             {getFieldDecorator('year', {
               rules: [{ required: true, message: '输入发布年份' }],
             })(
-              <Input style={{width:200}} placeholder="输入发布年份"/>
+              <InputNumber style={{width:200}} placeholder="输入发布年份"/>
             )}
             </FormItem>
             <FormItem
@@ -412,6 +427,18 @@ const EduOutlinePage = React.createClass({
     )
   },
 
+  renderDeleteRecorder(record){
+    Modal.confirm({
+      title: '删除详情',
+      content: '确认删除？',
+      onOk:()=>{
+        this.handleDeleteDetailRecord.call(this,record)
+      },
+      onCancel() {
+
+      },
+    });
+  },
   renderTextbookDetailModal(){
     const tableHeader = [{
       title: '学期',
@@ -436,7 +463,7 @@ const EduOutlinePage = React.createClass({
       key: 'delete',
       className:styles.tableColumn,
       width: 60,
-      render:(text,record) => <Icon type='delete' onClick={this.handleDeleteDetailRecord.bind(this,record)}/>
+      render:(text,record) => <Icon type='delete' onClick={this.renderDeleteRecorder.bind(this,record)}/>
     }]
     return (
       <Modal title='教科书目录' visible={true} onCancel={()=>{this.setState({showTextbookDetailModal:false})}}

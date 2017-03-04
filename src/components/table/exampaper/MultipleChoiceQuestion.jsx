@@ -374,7 +374,7 @@ const MultipleChoiceQuestion = React.createClass({
                     }}><Icon type="caret-down"/></Button>
                 </div>
                 {
-                    this.state.showFooter ? this.renderFooter() : null
+                    this.renderFooter()
                 }
             </div>
         )

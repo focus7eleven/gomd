@@ -195,7 +195,7 @@ const NoteQuestion = React.createClass({
             <Button onClick={(e)=>{this.props.moveDown(this.props.questionInfo.get('id'))}}><Icon type="caret-down" /></Button>
         </div>
         {
-          this.state.showFooter?this.renderFooter():null
+          this.renderFooter()
         }
       </div>
     )
