@@ -105,27 +105,38 @@ const CreateClassPage = React.createClass({
           subjectList,
           versionList,
         } = result
-        return fetch(config.api.lesson.lastChapterTime(this.state.charpterOption[0]||charpterList.isEmpty()?'':charpterList.get(0).get('teaching_schedule_id'),
-        this.state.charpterOption[1]||charpterList.isEmpty()?'':charpterList.get(0).get('hours')),{
-          method:'get',
-          headers:{
-            'from':'nodejs',
-            'token':sessionStorage.getItem('accessToken')
-          }
-        }).then(res => res.text()).then(res => {
-          //获取上课时间
-          this.setState({
-            chapterTime:res,
-            charpterList,
-            gradeList,
-            versionList,
-            subjectList,
-          })
-          return {
-            ...result,
-            chapterTime:res
-          }
+        this.setState({
+          chapterTime:'',
+          charpterList,
+          gradeList,
+          versionList,
+          subjectList,
         })
+        return {
+          ...result,
+          // chapterTime:res
+        }
+        // return fetch(config.api.lesson.lastChapterTime(this.state.charpterOption[0]||charpterList.isEmpty()?'':charpterList.get(0).get('teaching_schedule_id'),
+        // this.state.charpterOption[1]||charpterList.isEmpty()?'':charpterList.get(0).get('hours')),{
+        //   method:'get',
+        //   headers:{
+        //     'from':'nodejs',
+        //     'token':sessionStorage.getItem('accessToken')
+        //   }
+        // }).then(res => res.text()).then(res => {
+        //   //获取上课时间
+        //   this.setState({
+        //     chapterTime:res,
+        //     charpterList,
+        //     gradeList,
+        //     versionList,
+        //     subjectList,
+        //   })
+        //   return {
+        //     ...result,
+        //     chapterTime:res
+        //   }
+        // })
       })
     })
   },

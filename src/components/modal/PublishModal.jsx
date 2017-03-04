@@ -56,6 +56,9 @@ const PublishModal = React.createClass({
   render(){
     return (
       <Modal title='发布课程' visible={true} onCancel={this.props.onCancel} onOk={this.handlePublish} width={300}>
+        <div style={{marginBottom: '10px',
+                    fontSize: '12px',
+                    paddingLeft: '6px'}}>选择发布对象：</div>
         <div className={styles.content}>
           <span>班级：</span>
           <Select multiple style={{width:'200px'}} onChange={this.selectClass}>
