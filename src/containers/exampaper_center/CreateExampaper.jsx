@@ -102,6 +102,7 @@ const CreateExampaper = React.createClass({
                 this.setState({
                     exerciseList: this.state.exerciseList.push(fromJS(res))
                 })
+
             } else {
                 //正在编辑嵌套题
                 this.handleAddSubQuestion(res)
