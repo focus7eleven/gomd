@@ -32,4 +32,10 @@
   color:black;
 }
 
+:local(.tableColumn){
+  @include tableColumn;
+}
+
+
+
 

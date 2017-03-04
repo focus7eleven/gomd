@@ -133,23 +133,25 @@ const HomeworkPublished = React.createClass({
                 render: (text, record) => {
                     return (
                         <span className={styles.ButtonGroup}>
-                            {record.submitNum == 0 ?
-                                <Button type="primary" className={styles.editHomeworkButton} onClick={()=>this.showModal(record.homework_class_id,record.homework_name)}>删除作业</Button>: null}
                             {record.homeworkKind == 2?
                                 <XhlDownloadButton type="primary" className={styles.editHomeworkButton}
                                                    url={config.api.homework.downloadAnswersheet(record.homework_id)}
-                                                   filename={"答题卡_"+record.homework_id+".pdf"}>下载答题卡</XhlDownloadButton>
+                                                   filename={"答题卡_"+record.homework_id+".pdf"}>答题卡</XhlDownloadButton>
                                  : null}
-                            {record.homeworkKind == 2 ?
-                                <Button type="primary" className={styles.editHomeworkButton} onClick={()=>this.gotoPigaiPage(record)}>查看英语作文</Button> : null}
+                            {record.homeworkKind == 2 && record.enCompositionNum > 0?
+                                <Button type="primary" className={styles.editHomeworkButton} onClick={()=>this.gotoPigaiPage(record)}>英语作文</Button> : null}
                             {record.submitNum > 0 && record.homeworkKind == 1 ?
                                 <Button type="primary" className={styles.editHomeworkButton} onClick={()=>this.gotoCommentPage(record,0)}>批改作业</Button> : null }
                             {record.submitNum > 0 && record.homeworkKind == 1 ?
-                                <Button type="primary" className={styles.editHomeworkButton} onClick={() => {this.context.router.push(`/index/homework/check_results/`+record.homework_class_id)}}>查看批改</Button> : null }
+                                <Button type="primary" className={styles.editHomeworkButton}
+                                        onClick={() => {this.context.router.push(`/index/homework/check_results/`+record.homework_class_id)}}>查看批改</Button> : null }
                             {record.submitNum > 0 && record.homeworkKind == 1 && record.needCorrectStuNum > 0 ?
-                                <Button type="primary" className={styles.editHomeworkButton} onClick={()=>this.gotoCommentPage(record,1)}>批改订正</Button> : null }
+                                <Button type="primary" className={styles.editHomeworkButton}
+                                        onClick={()=>this.gotoCommentPage(record,1)}>批改订正</Button> : null }
                             {record.submitNum > 0 && record.homeworkKind == 1 && record.needCorrectStuNum > 0 && record.reviseCorrectStuNum > 0 ?
                                 <Button type="primary" className={styles.editHomeworkButton}>查看订正</Button> : null }
+                            {record.submitNum == 0 ?
+                                <Button className={styles.deleteHomeworkButton} onClick={()=>this.showModal(record.homework_class_id,record.homework_name)}>删除</Button>: null}
                         </span>
                     );
                 }

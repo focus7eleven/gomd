@@ -1,5 +1,5 @@
 import React,{PropTypes} from 'react'
-import styles from './CreateHomework.scss'
+import styles from './CreateOrEditHomework.scss'
 import {Row,Col,Select,Icon,Input,Radio,Form,Upload,Button,Table,Modal,notification} from 'antd'
 import {fromJS,List,Map} from 'immutable'
 import {FileInput} from '../../components/file_upload/FileInput'
@@ -16,6 +16,8 @@ const AnswersheetQuestion = React.createClass({
     propTypes:{
         onChange: PropTypes.func.isRequired,
     },
+    _lastQuestion:[],
+    _lastFiles:List(),
     getDefaultProps(){
         return{
             questions: [],
@@ -29,7 +31,6 @@ const AnswersheetQuestion = React.createClass({
       }
     },
     componentWillReceiveProps(nextProps){
-      console.log("componentWillReceiveProps") ;
       if (nextProps.type == 'create') {
           let tmpQuestions = nextProps.questions.map((question) => {
               var questionType = question.question_type;
@@ -51,12 +52,12 @@ const AnswersheetQuestion = React.createClass({
 
               };
           })
-          nextProps.onChange(tmpQuestions, this.state.answerFiles);
+          // nextProps.onChange(tmpQuestions, this.state.answerFiles);
           this.setState({
               localQuestions: tmpQuestions
           })
       }else {
-          nextProps.onChange(nextProps.questions, this.state.answerFiles);
+          // nextProps.onChange(nextProps.questions, this.state.answerFiles);
           let nfileList = List();
           nextProps.questions.map(question=>{
 
@@ -80,7 +81,6 @@ const AnswersheetQuestion = React.createClass({
       }
     },
     componentWillMount(){
-      console.log("will");
         if (this.props.type == 'create') {
             let tmpQuestions = this.props.questions.map((question) => {
                 var questionType = question.question_type;
@@ -102,12 +102,16 @@ const AnswersheetQuestion = React.createClass({
 
                 };
             })
-            this.props.onChange(tmpQuestions, this.state.answerFiles);
+            // this.props.onChange(tmpQuestions, this.state.answerFiles);
+            this._lastQuestion = tmpQuestions;
+            this._lastFiles = this.state.answerFiles;
             this.setState({
                 localQuestions: tmpQuestions
             })
         }else {
-            this.props.onChange(this.props.questions, this.state.answerFiles);
+            // this.props.onChange(this.props.questions, this.state.answerFiles);
+            this._lastQuestion = this.props.questions;
+            this._lastFiles = this.state.answerFiles;
             let nfileList = List();
             this.props.questions.map(question=>{
                 if (question.question_type == "xuanze" ||question.question_type == "duoxuan"||question.question_type == "panduan" ){
@@ -136,7 +140,8 @@ const AnswersheetQuestion = React.createClass({
         this.setState({
             answerFiles:this.state.answerFiles.remove(index)
         })
-        this.props.onChange(this.state.localQuestions,this.state.answerFiles);
+        this._lastFiles.remove(index) ;
+        // this.props.onChange(this.state.localQuestions,this.state.answerFiles);
 
     },
     handleUploadChange(event){
@@ -152,10 +157,11 @@ const AnswersheetQuestion = React.createClass({
                 //fileList = fileList.set(files[i].name, files[i]);
             }
         }
-        this.props.onChange(this.state.localQuestions,fileList);
+        // this.props.onChange(this.state.localQuestions,fileList);
         this.setState({
             answerFiles:fileList
         });
+        this._lastFiles = fileList;
     },
     handleOptionBtnClick(question,questionIndex,answerIndex,answer){
         let tmp = this.state.localQuestions;
@@ -170,11 +176,12 @@ const AnswersheetQuestion = React.createClass({
         }else {
             tmp[questionIndex].answers[answerIndex] = answer;
         }
-        this.props.onChange(tmp,this.state.answerFiles);
+        // this.props.onChange(tmp,this.state.answerFiles);
 
         this.setState({
             localQuestions:tmp
         })
+        this._lastQuestion = tmp;
     },
 
     render(){
@@ -287,7 +294,6 @@ const CreateOrEditHomeworkPage = React.createClass({
         router: React.PropTypes.object
     },
     componentWillMount(){
-        console.log("componentWillMount:"+this.props.params.type);
       this.setState({
           type:this.props.params.type
       });
@@ -382,7 +388,7 @@ const CreateOrEditHomeworkPage = React.createClass({
           })
         })
         //获取试卷列表
-        fetch(config.api.exampaper.showExamSelectList(subjectId,gradeId,'上学期'),{
+        fetch(config.api.exampaper.showExamSelectList(subjectId,gradeId,'上学期',versionId),{
           method:'get',
           headers:{
             'from':'nodejs',
@@ -407,7 +413,6 @@ const CreateOrEditHomeworkPage = React.createClass({
         })
           //获取作业详情
           if (this.props.params.type == 'edit'){
-              console.log('homeworkId='+this.props.params.homeworkId)
               this.getHomeworkDetail(this.props.params.homeworkId);
           }
 
@@ -444,11 +449,10 @@ const CreateOrEditHomeworkPage = React.createClass({
                 'token':sessionStorage.getItem('accessToken')
             }
         }).then(res =>res.json()).then(res =>{
-            console.log("homework:"+res);
-            let type = res.homeworkKind;
-            if (type == 2){
+            //let type = res.homeworkKind;
+            //if (type == 2){
                 type = 0;
-            }
+            //}
             let nfileList = List();
             if (res.attachments && res.attachments.length > 0){
                 nfileList = fromJS(res.attachments.map(attach =>{
@@ -466,7 +470,8 @@ const CreateOrEditHomeworkPage = React.createClass({
                 textbookCourse:res.textbook_menu_id,
                 fileList:nfileList,
                 homeworkDesc:res.homework_desc,
-                homeworkType:type,
+                homeworkType:res.type,
+                homeworkKind:res.homeworkKind,
                 homeworkName:res.homework_name,
                 examePaperId:res.examPaperId,
                 answerSheetId:res.answersheet_id,
@@ -494,6 +499,7 @@ const CreateOrEditHomeworkPage = React.createClass({
         //描述
       demand:'',
       homeworkType:1,
+        homeworkKind:1,
         examePaperId:'',
         modalVisiability:false,
         answerSheetId:'',
@@ -518,8 +524,7 @@ const CreateOrEditHomeworkPage = React.createClass({
   },
   handleChangeSubject(value){
     const {getFieldsValue,setFieldsValue} = this.props.form
-    const {subjectOption,termOption,versionOption} = getFieldsValue(['subjectOption','termOption','versionOption'])
-    console.log("--->:",subjectOption,termOption,versionOption)
+    const {subjectOption,termOption,versionOption,gradeOption} = getFieldsValue(['subjectOption','termOption','versionOption','gradeOption'])
       this.state.subjectList.map((v,k) => {
           if (v.get('subject_id') == value) {
               this.setState({
@@ -575,25 +580,32 @@ const CreateOrEditHomeworkPage = React.createClass({
             'token':sessionStorage.getItem('accessToken')
           }
         }).then(res => res.json()).then(res => {
-          this.setState({
-            courseList:fromJS(res),
-              courseName:res[0]['course'],
-          })
-          setFieldsValue({
-            courseOption:res[0]['textbook_menu_id']
-          })
-          //获取电子试卷
-          fetch(config.api.exampaper.showExamSelectList(subjectOption,gradeOption,termOption),{
-            method:'get',
-            headers:{
-              'from':'nodejs',
-              'token':sessionStorage.getItem('accessToken')
+            if (res && res.length > 0) {
+                this.setState({
+                    courseList: fromJS(res),
+                    courseName: res[0]['course'],
+                })
+                setFieldsValue({
+                    courseOption: res[0]['textbook_menu_id']
+                })
+                //获取电子试卷
+                fetch(config.api.exampaper.showExamSelectList(subjectOption, gradeOption, termOption,versionOption), {
+                    method: 'get',
+                    headers: {
+                        'from': 'nodejs',
+                        'token': sessionStorage.getItem('accessToken')
+                    }
+                }).then(res => res.json()).then(res => {
+                    this.setState({
+                        testpaperList: fromJS(res)
+                    })
+                })
+            }else {
+                console.log("not result")
+                this.setState({
+                    testpaperList: List()
+                })
             }
-          }).then(res => res.json()).then(res => {
-            this.setState({
-              testpaperList:fromJS(res)
-            })
-          })
           //获取答题卡
           fetch(config.api.answersheet.getAll,{
             method:'get',
@@ -621,16 +633,15 @@ const CreateOrEditHomeworkPage = React.createClass({
         )
     },
     handleCreateFormData:function(isSchool){
-
-        console.log("create begin");
         const {getFieldsValue,getFieldValue,getFieldError,validateFields} = this.props.form
         const homeworkType = this.state.homeworkType;
+        const homeworkKind = this.state.homeworkKind;
         const fileList = this.state.fileList.toJS();
         const subjectFiles = this.state.subjectAnswerFiles.toJS();
         const answersheetQuestions = this.state.answersheetQuestions;
         const paperId = this.state.examePaperId;
 
-        if (!homeworkType){
+        if (homeworkKind == 2 ){ //答题卡
             if (!this.state.answersheetQuestions || this.state.answersheetQuestions.length <= 0){
                 notification.open({
                     message:"错误提示",
@@ -656,14 +667,18 @@ const CreateOrEditHomeworkPage = React.createClass({
                     formData.append("attach", fileList[i]);
                 }
             }
-            if (!homeworkType) {
+            if (homeworkKind == 2) {//答题卡
                 let answersheetObjectiveAnswer = [];
-                answersheetQuestions.map((question, index) => {
-                    answersheetObjectiveAnswer.push({
-                        questinoId: question.answersheet_question_id,
-                        answer: question.answers,
+                answersheetQuestions
+                    .filter((question) => {
+                        return this.isAnswersheetObjectiveQuestion(question.question_type);
                     })
-                })
+                    .map((question, index) => {
+                        answersheetObjectiveAnswer.push({
+                            questionId: question.answersheet_question_id,
+                            answer: question.answers,
+                        })
+                    })
                 formData.append("answersheetObjectiveAnswer", JSON.stringify(answersheetObjectiveAnswer));
                 if (subjectFiles && subjectFiles.length > 0) {
                     for (let i = 0; i < subjectFiles.length; i++) {
@@ -673,9 +688,11 @@ const CreateOrEditHomeworkPage = React.createClass({
 
 
             }
-            formData.append("homeworkKind", this.state.homeworkType);
-            if (homeworkType) {
+            formData.append("homeworkKind", homeworkKind);
+            if (homeworkKind == 1) {//电子试卷
                 formData.append("examPaperId", paperId);
+            } else { //答题卡
+                formData.append("answerSheetId", this.state.answerSheetId);
             }
             var url = config.api.homework.teaCreateHomeworkUrl;
             if (this.state.type == 'edit') {
@@ -695,7 +712,6 @@ const CreateOrEditHomeworkPage = React.createClass({
 
             }).then(res => res.json()).then(res =>{
                 if(res.title == 'Success'){
-                    console.log('create success!')
                     this.context.router.push(menuRoutePath['homework_self'].path)
                 }
             })
@@ -704,10 +720,10 @@ const CreateOrEditHomeworkPage = React.createClass({
 
 
     },
-  onChangeHomeworkType(e){
+    onChangeHomeworkKind(e){
 
     this.setState({
-      homeworkType: e.target.value,
+      homeworkKind: e.target.value,
     });
   },
     onChange(files){
@@ -717,12 +733,13 @@ const CreateOrEditHomeworkPage = React.createClass({
     },
 
     getTableData(){
+        console.log("getTableData");
       let data = [];
-      if (this.state.homeworkType){
+      if (this.state.homeworkKind == 1){//电子试卷
           data =   this.state.testpaperList.map((v,k) => (
             {index:k + 1,key:v.get('examPaperId'),name:v.get('examPaperName')}
         ));
-      }else {
+      }else { //答题卡
           data = this.state.answersheetList.map((v,k) => (
             {index:k + 1,key:v.get('answersheet_id'),name:v.get('answersheet_name') }
         ));
@@ -731,13 +748,13 @@ const CreateOrEditHomeworkPage = React.createClass({
     },
 
     getRowStyle(record){
-      if (this.state.homeworkType){
+      if (this.state.homeworkKind == 1){//电子试卷
           if (this.state.examePaperId == record.key){
               return styles.tableDarkRow;
           }else {
               return styles.tableLightRow;
           }
-      }else {
+      }else {//答题卡
           if (this.state.answerSheetId == record.key){
               return styles.tableDarkRow;
           }else {
@@ -747,11 +764,11 @@ const CreateOrEditHomeworkPage = React.createClass({
     },
 
     handleTableRowClick(recond,index){
-        if(this.state.homeworkType) {
+        if(this.state.homeworkKind == 1){//电子试卷
             this.setState({
                 examePaperId:recond.key
             })
-        }else {
+        }else {//答题卡
             this.setState({
                 answerSheetId:recond.key
             })
@@ -800,7 +817,6 @@ const CreateOrEditHomeworkPage = React.createClass({
    },
 
   render(){
-       console.log("homeworkname="+this.state.homeworkName);
     const {getFieldDecorator} = this.props.form;
     const columns = [{title:(<div style={{textAlign:'center'}}><span>序号</span></div>),dataIndex:'index',width:'10%',className:styles.tdCenter},{title:(<div style={{textAlign:'center'}}><span>答题卡名称</span></div>),dataIndex:'name',width:'60%',className:styles.tdCenter}
         ,{title:(<div style={{textAlign:'center'}}><span>创建时间</span></div>),dataIndex:'createTime',width:'30%',className:styles.tdCenter}];
@@ -829,7 +845,7 @@ const CreateOrEditHomeworkPage = React.createClass({
                         <FormItem {...formItemLayoutFive} label="作业名称">
                             {getFieldDecorator('homework_name', {
                                 rules: [{ required: true, message: '请填写名字' },{max:30,message:'输入不超过30个字'}],
-                                initialValue:this.state.homeworkName =='' ? '('+this.state.subjectName+')' + this.state.courseName + '家庭作业'+ this.generateMixed(2) + this.getCreateTime() :this.state.homeworkName ,
+                                initialValue:this.state.homeworkName =='' ? '('+this.state.subjectName+')' + this.state.courseName + ' ' +this.getCreateTime() + '家庭作业'+ this.generateMixed(2)  :this.state.homeworkName ,
                             })(
                                 <Input type='textarea' placeholder='输入不超过30个字'rows={1} size="large"/>
                             )}
@@ -862,7 +878,7 @@ const CreateOrEditHomeworkPage = React.createClass({
                               rules: [{ required: true, message: '请选择版本',initialValue: this.state.version}],
                               initialValue:this.state.version,
                           })(
-                              <Select style={selectStyle} >
+                              <Select style={selectStyle} onChange={this.handleChangeSubject} >
                                   {
                                       this.state.versionList.map((v,k) => (
                                           <Option value={v.get('id')} key={k} title={v.get('text')}>{v.get('text')}</Option>
@@ -881,7 +897,7 @@ const CreateOrEditHomeworkPage = React.createClass({
                               rules: [{ required: true, message: '请选择年级' }],
                               initialValue:this.state.gradeId,
                           })(
-                              <Select style={selectStyle} >
+                              <Select style={selectStyle} onChange={this.handleChangeSubject}>
                                   {
                                       this.state.gradeList.map((v,k) => (
                                           <Option value={v.get('gradeId')} key={k} title={v.get('gradeName')}>{v.get('gradeName')}</Option>
@@ -897,7 +913,7 @@ const CreateOrEditHomeworkPage = React.createClass({
                           rules: [{ required: true, message: '请选择学期' }],
                           initialValue:this.state.term,
                       })(
-                          <Select style={selectStyle}>
+                          <Select style={selectStyle} onChange={this.handleChangeSubject}>
                               {
                                   this.state.termList.map((v,k) => (
                                       <Option value={v.get('id')} key={k} title={v.get('text')}>{v.get('text')}</Option>
@@ -974,14 +990,14 @@ const CreateOrEditHomeworkPage = React.createClass({
                   <div className={styles.itemBox}>
                       <span style={{fontSize:15}}><Icon type='appstore'/>作业类型</span>
                       <div>
-                          <RadioGroup onChange={this.onChangeHomeworkType} value={this.state.homeworkType}>
+                          <RadioGroup onChange={this.onChangeHomeworkKind} value={this.state.homeworkKind}>
                               <Radio value={1}>电子试卷</Radio>
-                              <Radio value={0}>答题卡</Radio>
+                              <Radio value={2}>答题卡</Radio>
                           </RadioGroup>
                       </div>
                       <Table rowClassName={(record, index) =>this.getRowStyle(record) }
                              columns={columns} dataSource={dataSource} pagination={{ pageSize: 10 }} scroll={{ y: 360 }} onRowClick={this.handleTableRowClick}
-                             footer={this.state.homeworkType?'':footer}
+                             footer={this.state.homeworkKind==1?'':footer}
                              bordered
                       />
 
@@ -1009,7 +1025,7 @@ const CreateOrEditHomeworkPage = React.createClass({
 
         >
           <div>
-            <AnswersheetQuestion  questions={this.state.answersheetQuestions} type={this.state.type} onChange={(questions,files)=>{this.handleOptionOnChange(questions,files)}}/>
+            <AnswersheetQuestion  ref='answerSheetPage' questions={this.state.answersheetQuestions} type={this.state.type} onChange={(questions,files)=>{this.handleOptionOnChange(questions,files)}}/>
           </div>
         </Modal>
       </div>
@@ -1017,7 +1033,6 @@ const CreateOrEditHomeworkPage = React.createClass({
   },
     handleModalDisplay(visibility){
       if (visibility){
-          console.log("answerSheetId:"+this.state.answerSheetId);
         fetch(config.api.answersheet.getQuestions(this.state.answerSheetId),{
           method:'GET',
             headers:{
@@ -1038,7 +1053,7 @@ const CreateOrEditHomeworkPage = React.createClass({
                         let answers = value.answers;
                         let newAnswers = [];
                         answers.map(answer =>{
-                            if (answer.question_type == "xuanze" ||answer.question_type == "duoxuan"||answer.question_type == "panduan" ){
+                            if (this.isAnswersheetObjectiveQuestion(answer.question_type)) {
                                 newAnswers.push(parseInt(answer.key));
 
                             }else {
@@ -1073,21 +1088,22 @@ const CreateOrEditHomeworkPage = React.createClass({
     },
 
     handleSaveBtnClick(){
+        console.log(this.refs.answerSheetPage._p);
         let isObjectiveFinish = true;
         let isSubjectFinish = true;
-        for (var i = 0; i < this.state.answersheetQuestions.length;i++){
-            var question = this.state.answersheetQuestions[i];
+        for (var i = 0; i < this.refs.answerSheetPage._lastQuestion.length;i++){
+            var question = this.refs.answerSheetPage._lastQuestion[i];
             var questionType = question.question_type;
             var num = question.question_num;
             if (questionType == "xuanze" || questionType == "panduan" || questionType == "duoxuan"){
-                for (var i = 0;i< num;i++){
-                    if (question.answers[i] == 0){
+                for (var j = 0;j< num;j++){
+                    if (question.answers[j] == 0){
                         isObjectiveFinish = false;
                         break;
                     }
                 }
             }else {
-                if (!this.state.subjectAnswerFiles || this.state.subjectAnswerFiles.size == 0){
+                if (!this.refs.answerSheetPage._lastFiles || this.refs.answerSheetPage._lastFiles.size == 0){
                     isSubjectFinish = false;
                 }
             }
@@ -1111,16 +1127,24 @@ const CreateOrEditHomeworkPage = React.createClass({
             });
             return;
         }
+
         this.setState({
-            modalVisiability:false
+            modalVisiability:false,
+            answersheetQuestions:this.refs.answerSheetPage._lastQuestion,
+            subjectAnswerFiles : this.refs.answerSheetPage._lastFiles,
+
         })
 
 
     },
     handleOptionOnChange(questions,files){
-        console.log('onChange');
-        this.state.subjectAnswerFiles = files;
-        this.state.answersheetQuestions = questions;
+        // this.setState({
+        //     subjectAnswerFiles : files,
+        //     answersheetQuestions : questions,
+        // })
+    },
+    isAnswersheetObjectiveQuestion(questionType) {
+        return questionType == "xuanze" || questionType == "duoxuan"|| questionType == "panduan";
     }
 
 })

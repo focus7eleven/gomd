@@ -186,7 +186,7 @@ export const AssignHomeworkModal = React.createClass({
                 }
             });
             checkResult = false;
-        } else if (this.state.finishTimeDF.millisecond() <= new Date().getMilliseconds()) {
+        } else if ( this.state.finishTimeDF.diff(new Date()) <= 0 ) {
             this.setState({
                 finishTime: {
                     value: finishTime,

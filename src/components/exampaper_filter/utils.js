@@ -23,6 +23,17 @@ export function getGrade(data){
   }).then(res => res.json())
 }
 
+//获取版本
+export function getVersion(){
+  return fetch(config.api.select.json.get('','','','JKS',''),{
+      method:'get',
+      headers:{
+          'from':'nodejs',
+          'token':sessionStorage.getItem('accessToken')
+      }
+  }).then(res => res.json());
+}
+
 //修改试卷信息
 export function setExamInfo(data){
   let formData = new FormData()
@@ -33,6 +44,7 @@ export function setExamInfo(data){
   formData.append('gradeId',data.gradeId)
   formData.append('oneAnswer',data.oneAnswer)
   formData.append('oneAnswerContent',data.oneAnswerContent)
+    formData.append('version',data.version)
   return fetch(config.api.exampaper.editExamInfo,{
     method:'post',
     headers:{

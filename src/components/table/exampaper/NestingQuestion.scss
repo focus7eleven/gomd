@@ -7,9 +7,7 @@
     border-top-right-radius: 4px;
     display: flex;
     :local(.questionNo){
-      display:flex;
-      justify-content: center;
-      align-items: center;
+      @include centric;
       font-size: 14px;
       padding:33px 40px;
       border-right: 1px solid $border-grey;

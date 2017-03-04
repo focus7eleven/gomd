@@ -11,10 +11,15 @@ import {httpFetchGet} from '../../utils/http-utils';
 const Option = Select.Option;
 const Search = Input.Search;
 
-export class CustomTable extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
+export const CustomTable = React.createClass({
+    propTypes:{
+        columns:React.PropTypes.array.isRequired,
+        showIndex:React.PropTypes.bool,
+        pageUrl:React.PropTypes.string.isRequired,
+        filters:React.PropTypes.array,
+    },
+    getInitialState() {
+        return {
             loading: false,
 
             currentPage: 1,
@@ -26,9 +31,14 @@ export class CustomTable extends React.Component {
             nowPage: 0,
             start: 0,
             result: []
-        };
-    }
-
+        }
+    },
+    getDefaultProps() {
+        return {
+            showIndex:true,
+            filters:[],
+        }
+    },
     componentDidMount() {
         if (this.state.result.length == 0) {
             const {filters} = this.props;
@@ -40,10 +50,9 @@ export class CustomTable extends React.Component {
             );
 
         }
-    }
-
+    },
     componentWillReceiveProps(nextProps) {
-        if (this.props.pageUrl != nextProps.pageUrl) {
+        if (this.props.pageUrl != nextProps.pageUrl || nextProps.additionalParam != this.props.additionalParam ) {
             //url不一样了，需要重新获取数据
             this.setState(
                 {filters: this.getDefaultFilters(nextProps.filters), currentPage: 1, result: []},
@@ -63,8 +72,7 @@ export class CustomTable extends React.Component {
                 }
             );
         }
-    }
-
+    },
     getDefaultFilters(filters) {
         let obj = {};
         if (filters) {
@@ -77,8 +85,7 @@ export class CustomTable extends React.Component {
             );
         }
         return obj;
-    }
-
+    },
     render() {
         let columns = List(this.props.columns);
         let filters = this.props.filters;
@@ -167,22 +174,19 @@ export class CustomTable extends React.Component {
                 </div>
             </div>
         );
-    }
-
+    },
     handlePageChanged(page) {
         this.setState(
             {currentPage: page},
             () => this.searchTableData()
         );
-    }
-
+    },
     handlePageSizeChanged(size) {
         this.setState(
             {pageShow: size},
             () => this.searchTableData()
         );
-    }
-
+    },
     handleFilterChange(key, value) {
         let obj = {};
         obj[key] = value;
@@ -197,16 +201,14 @@ export class CustomTable extends React.Component {
                 this.searchTableData2(this.props.pageUrl, param);
             });
 
-    }
-
+    },
     searchTableData() {
         const param = Map(this.state.filters).concat({
             currentPage: this.state.currentPage,
             pageShow: this.state.pageShow
         }).toObject();
         this.searchTableData2(this.props.pageUrl, param);
-    }
-
+    },
     searchTableData2(pageUrl, param) {
         //const url = pageUrl + "?" + getUrlParams(param);
         this.setState({loading: true});
@@ -231,12 +233,10 @@ export class CustomTable extends React.Component {
                 })
             }
         )
-    }
-
+    },
     refreshTableData() {
         this.searchTableData();
-    }
-
+    },
     needUpdateFilter(filter1, filter2) {
         if( filter1.length != filter2.length ) {
             return true;
@@ -252,4 +252,4 @@ export class CustomTable extends React.Component {
 
         return result;
     }
-}
+});

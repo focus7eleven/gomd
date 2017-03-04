@@ -13,11 +13,11 @@ const CourseCenterContainer = React.createClass({
   },
 
   componentWillReceiveProps(nextProps){
-    const pathname = nextProps.location.pathname.split('/').slice(-1)[0];
-    const isDetail = nextProps.location.pathname.split('/').slice(-2)[0] == 'detail';
-    if(!this.props.courseCenter.get('loading') && (nextProps.courseCenter.get('data').isEmpty() || (this.props.location.pathname != nextProps.location.pathname))){
-      (pathname==='newCourse'||isDetail)?null:this.props.getTableData(nextProps.location.pathname.split('/').slice(-1)[0],'',1)
-    }
+      const pathname = nextProps.location.pathname.split('/').slice(-1)[0];
+      const isDetail = nextProps.location.pathname.split('/').slice(-2)[0] == 'detail';
+      if(!this.props.courseCenter.get('loading') && (nextProps.courseCenter.get('data').isEmpty() || (this.props.location.pathname != nextProps.location.pathname))){
+          (pathname==='newCourse'||isDetail)?null:this.props.getTableData(nextProps.location.pathname.split('/').slice(-1)[0],'',1)
+      }
   },
 
   render(){

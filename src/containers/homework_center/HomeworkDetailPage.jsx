@@ -155,6 +155,9 @@ const HomeworkDetailPage = React.createClass({
       </Modal>
     )
   },
+    handleWatchPaper(examId){
+        this.context.router.push(`/index/answersheet_exam_make/selfexampapercenter/displayExampaper/${examId}`)
+    },
   render() {
     return (
         <div className={styles.container}>
@@ -202,7 +205,7 @@ const HomeworkDetailPage = React.createClass({
                         <Card style={{height:'100%'}} title={<span><Icon type='appstore'/>电子试卷/答题卡</span>} bordered={true}>
                             {this.state.homeworkKind==1?
                                 <div>
-                                    <div>1.<a>{this.state.exampaperName}</a></div>
+                                    <div>1.<a onClick={this.handleWatchPaper.bind(this,this.state.exampaperId)} >{this.state.exampaperName}</a></div>
                                 </div>
                                 :
                                 <div>

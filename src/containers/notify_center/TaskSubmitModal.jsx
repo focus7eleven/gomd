@@ -42,50 +42,58 @@ export const TaskSubmitModal = React.createClass({
 
     },
     render(){
-        const submitcolumns = [
+        let submitcolumns = [
             {
                 title: '序号',
                 dataIndex: 'index',
                 key: 'index',
+                className: styles.tableColumn ,
             },
             {
             title: '员工号',
             dataIndex: 'worknum',
             key: 'worknum',
+                className: styles.tableColumn,
         }, {
             title: '姓名',
             dataIndex: 'username',
             key: 'username',
+                className: styles.tableColumn,
         }, {
             title: '提交时间',
             dataIndex: 'submittime',
             key: 'submittime',
+                className: styles.tableColumn,
         }, {
             title: '回复内容',
             dataIndex: 'content',
             key: 'content',
-
+                className: styles.tableColumn,
         },
             {
                 title: '任务结果附件',
                 dataIndex: 'attachment',
                 key: 'attachment',
+                className: styles.tableColumn,
             }, ];
 
-        const notsubmitcolumns = [
+        let notsubmitcolumns = [
             {
                 title: '序号',
                 dataIndex: 'index',
                 key: 'index',
+                className: styles.tableColumn,
             },
             {
             title: '员工号',
             dataIndex: 'worknum',
             key: 'worknum',
+                className: styles.tableColumn,
         }, {
             title: '姓名',
             dataIndex: 'username',
             key: 'username',
+                className: styles.tableColumn,
         },  ];
 
         var submitdata = [];
@@ -101,10 +109,12 @@ export const TaskSubmitModal = React.createClass({
                     submittime:this.state.returnDate,
                     content:this.state.content,
                     attachment:this.state.attachementUrls,
+
                 }
             )
 
         }
+
 
 
         var notsubmitdata = [];
@@ -117,6 +127,7 @@ export const TaskSubmitModal = React.createClass({
                     key: (i + 1),
                     worknum: this.state.notsubmitlist[i].workNum,
                     username: this.state.notsubmitlist[i].userName,
+
                 }
             );
         }

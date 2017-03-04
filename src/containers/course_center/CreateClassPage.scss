@@ -1,20 +1,29 @@
 @import "~mixins.scss";
-@import "~theme.scss";
-:local(.container){
-  width: 100%;
-  height: 100%;
-  border:1px solid $border-grey;
-  padding:20px 15px;
 
+:local(.container){
+  border:1px solid #cccccc;
+  width: 100%;
+  :local(.title1){
+		margin:20px;
+		border-bottom:1px solid #cccccc;
+		:local(.text1){
+			font-size:20px;
+		}
+  }
   :local(.header){
+	margin:20px;
     @include headerWithoutFilter;
     justify-content: flex-start;
   }
+  
   :local(.body){
+    margin:20px;
+	border-bottom:1px solid #cccccc;
     :local(.title){
       font-size:20px;
       margin-bottom: 10px;
     }
+
     :local(.filterItem){
       margin-bottom: 20px;
       display: flex;
@@ -23,12 +32,12 @@
       align-items: center;
     }
   }
+  
   :local(.footer){
+	margin-bottom: 20px;
     display: flex;
     width: 100%;
     justify-content: flex-end;
-    border-top: 1px solid $border-grey;
-    padding-top: 5px;
   }
 }
 :local(.deleteButton){

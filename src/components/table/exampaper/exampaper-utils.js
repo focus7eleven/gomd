@@ -11,7 +11,7 @@ export const QUESTION_TYPE = [{
   text:'判断题',
 },{
   id:'04',
-  text:'填空',
+  text:'填空题',
 },{
   id:'05',
   text:'简答（计算题）',

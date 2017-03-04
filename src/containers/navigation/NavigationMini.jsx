@@ -46,25 +46,35 @@ const NavigationMini = React.createClass({
   },
   render(){
     return (
-      <div className={styles.navigationMini}>
-        {this.state.openMenu?<div className={styles.mask} onClick={()=>{this.setState({openMenu:false})}}></div>:null}
-        <div className={styles.navigationToggle} >
-          <Icon type="bars" onClick={()=>{this.setState({openMenu:true})}}/><div className={styles.decoration}><div className={styles.logo}><img src={logo}/></div>
-          <div className={styles.avatar} onClick={(e)=>{this.setState({showChangeUser:this.state.showChangeUser?false:true});e.stopPropagation()}}>
-            <img src='https://unsplash.it/25/25' /><span className={styles.nameDesc}>曹老师（任课老师）</span>{this.state.showChangeUser?<ChangeUserDropDown/>:null}
+        <div className={styles.navigationMini}>
+            {this.state.openMenu ? <div className={styles.mask} onClick={() => {
+                    this.setState({openMenu: false})
+                }}></div> : null}
+          <div className={styles.navigationToggle}>
+            <Icon type="bars" onClick={() => {
+                this.setState({openMenu: true})
+            }}/>
+            <div className={styles.decoration}>
+              <div className={styles.logo} onClick={()=>{this.context.router.push('/index/welcome')}}><img src={logo}/></div>
+              <div className={styles.avatar} onClick={(e) => {
+                  this.setState({showChangeUser: this.state.showChangeUser ? false : true});
+                  e.stopPropagation()
+              }}>
+                <img src='https://unsplash.it/25/25'/><span
+                  className={styles.nameDesc}>曹老师（任课老师）</span>{this.state.showChangeUser ? <ChangeUserDropDown/> : null}
+              </div>
+            </div>
           </div>
+          <Motion defaultStyle={{x: -240}} style={this.state.openMenu ? {x: spring(0)} : {x: spring(-240)}}>
+              {interpolatingStyle => (
+                  <div style={{left: interpolatingStyle.x + 'px'}} className={styles.leftNavigation}>
+                    <Menu style={{width: 240, height: '100%'}} mode="horizontal">
+                        {!this.props.menu.get('data').isEmpty() ? this.renderNavigate(this.props.menu.get('data')) : null}
+                    </Menu>
+                  </div>
+              )}
+          </Motion>
         </div>
-        </div>
-        <Motion defaultStyle={{x: -240}} style={this.state.openMenu?{x:spring(0)}:{x:spring(-240)}}>
-        {interpolatingStyle => (
-          <div style={{left:interpolatingStyle.x+'px'}} className={styles.leftNavigation}>
-            <Menu style={{ width: 240 ,height: '100%'}} mode="inline">
-              {!this.props.menu.get('data').isEmpty()?this.renderNavigate(this.props.menu.get('data')):null}
-            </Menu>
-          </div>
-        )}
-        </Motion>
-      </div>
     )
   }
 })

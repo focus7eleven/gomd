@@ -7,6 +7,8 @@ import NoteQuestion from './NoteQuestion'
 import ShortAnswerQuestion from './ShortAnswerQuestion'
 import Ueditor from '../../ueditor/Ueditor'
 import {updateQuestion,setScore,QUESTION_TYPE,changeQuestionPosition,deleteQuestion} from './exampaper-utils'
+import {addHttpPrefix} from '../../answer_homework/util';
+import {QUESTION_HEIGHT,OPTION_HEIGHT} from './constant';
 
 const NestingQuestion = React.createClass({
   getDefaultProps(){
@@ -34,17 +36,20 @@ const NestingQuestion = React.createClass({
   },
   //修改题目
   handleUpdateQuestion(value){
-    updateQuestion({
-      qid:this.props.questionInfo.get('id'),
-      examination:value,
-      comment:this.props.questionInfo.get('comment'),
-      description:this.props.questionInfo.get('description'),
-      difficulty:this.props.questionInfo.get('difficulty'),
-      kind:this.props.questionInfo.get('kind'),
-      drawZone:'',
-      score:this.props.questionInfo.get('score'),
-    })
-    this.props.onUpdate(this.props.questionInfo.get('id'),['examination'],value)
+      updateQuestion({
+          qid: this.props.questionInfo.get('id'),
+          examination: value,
+          comment: this.props.questionInfo.get('comment'),
+          description: this.props.questionInfo.get('description'),
+          difficulty: this.props.questionInfo.get('difficulty'),
+          kind: this.props.questionInfo.get('kind'),
+          drawZone: '',
+          score: this.props.questionInfo.get('score'),
+      })
+      this.props.onUpdate(this.props.questionInfo.get('id'), ['examination'], value)
+      this.setState({
+          editingQuestion: false,
+      })
   },
   //更新子题目
   handleUpdateSubQuestion(questionId,path,value){
@@ -83,44 +88,44 @@ const NestingQuestion = React.createClass({
     let newSubQuestion = this.props.questionInfo.get('subQuestion').set(subQuestionIndex,nextSubQuestion).set(subQuestionIndex+1,subQuestion)
     this.props.onUpdate(this.props.questionInfo.get('id'),['subQuestion'],newSubQuestion)
   },
-  renderFooter(){
-    return (
-      <div className={styles.footer} >
-        <Row>
-          <Col span={6}>
-            <Button onClick={this.handleAddBlank}>添加填空</Button>
-          </Col>
-          <Col span={6}>
-            <Select style={{width:'200px'}} defaultValue={this.props.questionInfo.get('kind')} onFocus={()=>{
-              window.removeEventListener('click',this.handleWindowEvent)
-            }} onBlur={()=>{
-              window.addEventListener('click',this.handleWindowEvent)
-            }} onChange={this.props.onChangeQuestionType}>
-            {
-              QUESTION_TYPE.map(v => (
-                <Option value={v.id} title={v.text} key={v.id}>{v.text}</Option>
-              ))
-            }
-            </Select>
-          </Col>
-          <Col span={6}>
-            难度：<Rate value={this.props.questionInfo.get('difficulty')} onChange={this.handlerSetHardness}/>
-          </Col>
-          <Col>
-            <Button onClick={this.handleSetScore}>设定分值</Button>
-          </Col>
-        </Row>
-        <Row >
-          <Col span={10}>
-            注解：<div><Input onBlur={this.handleUpdateComment}/></div>
-          </Col>
-          <Col span={10} offset={2}>
-            描述：<div><Input onBlur={this.handleUpdateDescription}/></div>
-          </Col>
-        </Row>
-      </div>
-    )
-  },
+  // renderFooter(){
+  //   return (
+  //     <div className={styles.footer} >
+  //       <Row>
+  //         <Col span={6}>
+  //           <Button onClick={this.handleAddBlank}>添加填空</Button>
+  //         </Col>
+  //         <Col span={6}>
+  //           <Select style={{width:'200px'}} value={this.props.questionInfo.get('kind')} onFocus={()=>{
+  //             window.removeEventListener('click',this.handleWindowEvent)
+  //           }} onBlur={()=>{
+  //             window.addEventListener('click',this.handleWindowEvent)
+  //           }} onChange={()=>this.props.onChangeQuestionType}>
+  //           {
+  //             QUESTION_TYPE.map(v => (
+  //               <Option value={v.id} title={v.text} key={v.id}>{v.text}</Option>
+  //             ))
+  //           }
+  //           </Select>
+  //         </Col>
+  //         <Col span={6}>
+  //           难度：<Rate value={this.props.questionInfo.get('difficulty')} onChange={this.handlerSetHardness}/>
+  //         </Col>
+  //         <Col>
+  //           <Button onClick={this.handleSetScore}>设定分值</Button>
+  //         </Col>
+  //       </Row>
+  //       <Row >
+  //         <Col span={10}>
+  //           注解：<div><Input onBlur={this.handleUpdateComment}/></div>
+  //         </Col>
+  //         <Col span={10} offset={2}>
+  //           描述：<div><Input onBlur={this.handleUpdateDescription}/></div>
+  //         </Col>
+  //       </Row>
+  //     </div>
+  //   )
+  // },
   render(){
     return (
       <div className={styles.noteQuestion} >
@@ -135,7 +140,11 @@ const NestingQuestion = React.createClass({
           </div>
           <div className={styles.questionContent} onClick={this.handleEditQuestion}>
           {
-            this.state.editingQuestion?<div><Ueditor name={this.props.questionInfo.get('id')} initialContent={this.props.questionInfo.get('examination')||'请输入题目内容'} onDestory={this.handleUpdateQuestion}/></div>:<div dangerouslySetInnerHTML={{__html:this.props.questionInfo.get('examination')||'请输入题目内容'}}></div>
+            this.state.editingQuestion?<div>
+                  <Ueditor name={this.props.questionInfo.get('id')}
+                           initialContent={this.props.questionInfo.get('examination')||'请输入题目内容'}
+                           onDestory={this.handleUpdateQuestion.bind(this)} initialHeight={QUESTION_HEIGHT} />
+                </div>:<div dangerouslySetInnerHTML={{__html:addHttpPrefix(this.props.questionInfo.get('examination'))||'请输入题目内容'}}></div>
           }
           {
             this.state.showScoreSetting?<div onClick={(e)=>{e.stopPropagation()}}><InputNumber min={0} defaultValue={0}

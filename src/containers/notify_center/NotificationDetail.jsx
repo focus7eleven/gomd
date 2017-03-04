@@ -99,6 +99,7 @@ const NotificationDetail = React.createClass({
     render(){
         return(
             <div>
+
                 <div className={styles.mainHeader}>
                     <h2>{this.state.title}</h2>
                 </div>
@@ -109,7 +110,7 @@ const NotificationDetail = React.createClass({
                 </div>
 
                 <div className={styles.rightActionItems}>
-                    <Button className={styles.rightActionItem+" "+styles.backButton} onClick={()=>{this.context.router.goBack()}} icon="rollback">返回</Button>
+                    <Button type="primary" className={styles.rightActionItem+" "+styles.commitButton} onClick={()=>{this.context.router.goBack()}}>返回</Button>
                 </div>
                 <div className={styles.viewContent}>
                     <div dangerouslySetInnerHTML={{__html:this.state.content}} ></div>

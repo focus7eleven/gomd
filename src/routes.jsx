@@ -91,6 +91,7 @@ import TeachingPlanContainer from './containers/teaching-plan/TeachingPlanContai
 import KindergartenPage from './containers/teaching-plan/KindergartenPage'
 import PlanDetailPage from './containers/teaching-plan/PlanDetailPage'
 import ZTreeComponent from './components/ztree/ZTreeComponent'
+import VideoCreatePage from './containers/micro_course/VideoCreatePage'
 
 const routes = (
 	<Router history={browserHistory}>
@@ -185,6 +186,7 @@ const routes = (
 					<Route path='teachervideo' component={TeacherVideoPage}></Route>
 					<Route path='mycollection' component={CollectionVideoPage}></Route>
 					<Route path='uncheckedvideo' component={UncheckVideoPage}></Route>
+					<Route path='createvideo(/:microId)' component={VideoCreatePage}></Route>
 					<Route path='(:type)/video_detail/(:videoId)' component={VideoDetailContainer}>
 						<IndexRoute component={VideoDetailPage} />
 					</Route>

@@ -51,6 +51,7 @@
       :local(.logo){
         display:flex;
         align-items: center;
+        cursor: pointer;
         >img{
           transform: scale(0.85);
         }
