@@ -28,32 +28,38 @@ const NoteQuestion = React.createClass({
     }
   },
   //添加备注
-  handleUpdateComment(e){
+  handleUpdateComment(value){
     updateQuestion({
       qid:this.props.questionInfo.get('id'),
       examination:this.props.questionInfo.get('examination'),
-      comment:e.target.value,
+      comment:value,
       description:this.props.questionInfo.get('description'),
       difficulty:this.props.questionInfo.get('difficulty'),
       kind:this.props.questionInfo.get('kind'),
       drawZone:'',
       score:this.props.questionInfo.get('score'),
     })
-    this.props.onUpdate(this.props.questionInfo.get('id'),['comment'],e.target.value)
+    this.props.onUpdate(this.props.questionInfo.get('id'),['comment'],value)
+    this.setState({
+      editingComment:false
+    })
   },
   //添加描述
-  handleUpdateDescription(e){
+  handleUpdateDescription(value){
     updateQuestion({
       qid:this.props.questionInfo.get('id'),
       examination:this.props.questionInfo.get('examination'),
       comment:this.props.questionInfo.get('comment'),
-      description:e.target.value,
+      description:value,
       difficulty:this.props.questionInfo.get('difficulty'),
       kind:this.props.questionInfo.get('kind'),
       drawZone:'',
       score:this.props.questionInfo.get('score'),
     })
-    this.props.onUpdate(this.props.questionInfo.get('id'),['description'],e.target.value)
+    this.props.onUpdate(this.props.questionInfo.get('id'),['description'],value)
+    this.setState({
+      editingDescription:false
+    })
   },
   //显示编辑题目
   handleEditQuestion(e){
@@ -123,7 +129,13 @@ const NoteQuestion = React.createClass({
   },
   renderFooter(){
     return (
-      <div className={styles.footer} >
+      <div className={styles.footer} onClick={(e)=>{
+        e.stopPropagation()
+        this.setState({
+          editingComment:false,
+          editingDescription:false
+        })
+      }}>
         <Row>
           <Col span={6}>
             <Button onClick={this.handleAddBlank}>添加填空</Button>
@@ -149,19 +161,35 @@ const NoteQuestion = React.createClass({
           </Col>
         </Row>
         <Row >
-          <Col span={10}>
-            注解：<div><Input onBlur={this.handleUpdateComment}/></div>
-          </Col>
-          <Col span={10} offset={2}>
-            描述：<div><Input onBlur={this.handleUpdateDescription}/></div>
-          </Col>
+            <Col span={10} >
+                <span onClick={(e)=>{e.stopPropagation();this.setState({
+                  editingComment:!this.state.editingComment
+                })}}>注解：</span>{
+                  this.state.editingComment?<Ueditor
+                          name={this.props.questionInfo.getIn(['id'])+'comment'}
+                          initialContent={this.props.questionInfo.get('comment')||'添加备注'}
+                          onDestory={this.handleUpdateComment}
+                          initialHeight={OPTION_HEIGHT}/>:<span dangerouslySetInnerHTML={{__html: addHttpPrefix(this.props.questionInfo.get('comment')) || '请输入题目内容'}}></span>
+                }
+            </Col>
+            <Col span={10} offset={2}>
+                <span onClick={(e)=>{e.stopPropagation();this.setState({
+                  editingDescription:!this.state.editingDescription
+                })}}>描述：</span>{
+                  this.state.editingDescription?<Ueditor
+                          name={this.props.questionInfo.getIn(['id'])+'description'}
+                          initialContent={this.props.questionInfo.get('description')||'添加描述'}
+                          onDestory={this.handleUpdateDescription}
+                          initialHeight={OPTION_HEIGHT}/>:<span dangerouslySetInnerHTML={{__html: addHttpPrefix(this.props.questionInfo.get('description')) || '请输入描述内容'}}></span>
+                }
+            </Col>
         </Row>
       </div>
     )
   },
   render(){
     return (
-      <div className={styles.noteQuestion} >
+      <div className={styles.noteQuestion} onClick={(e)=>{e.stopPropagation()}}>
         <div className={styles.tag}>
           <span className={styles.text}>填空题</span>
         </div>
@@ -187,15 +215,15 @@ const NoteQuestion = React.createClass({
           }
           </div>
           <div className={styles.questionNo}>
-            <Icon type='close' onClick={(e)=>{e.stopPropagation();this.props.onDelete(this.props.questionInfo.get('id'))}}/>
+            <Icon style={{cursor:'pointer'}} type='close' onClick={(e)=>{e.stopPropagation();this.props.onDelete(this.props.questionInfo.get('id'))}}/>
           </div>
         </div>
         <div className={styles.moveButton}>
-            <Button onClick={(e)=>{this.props.moveUp(this.props.questionInfo.get('id'))}}><Icon type="caret-up" /></Button>
-            <Button onClick={(e)=>{this.props.moveDown(this.props.questionInfo.get('id'))}}><Icon type="caret-down" /></Button>
+            <Button onClick={(e)=>{this.props.moveUp(this.props.questionInfo.get('id'))}}><Icon style={{cursor:'pointer'}} type="caret-up" /></Button>
+            <Button onClick={(e)=>{this.props.moveDown(this.props.questionInfo.get('id'))}}><Icon style={{cursor:'pointer'}} type="caret-down" /></Button>
         </div>
         {
-          this.state.showFooter?this.renderFooter():null
+          this.renderFooter()
         }
       </div>
     )

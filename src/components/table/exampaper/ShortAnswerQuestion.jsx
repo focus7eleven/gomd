@@ -35,21 +35,24 @@ const ShortAnswerQuestion = React.createClass({
         }
     },
     //添加备注
-    handleUpdateComment(e){
+    handleUpdateComment(value){
         updateQuestion({
             qid: this.props.questionInfo.get('id'),
             examination: this.props.questionInfo.get('examination'),
-            comment: e.target.value,
+            comment: value,
             description: this.props.questionInfo.get('description'),
             difficulty: this.props.questionInfo.get('difficulty'),
             kind: this.props.questionInfo.get('kind'),
             drawZone: '',
             score: this.props.questionInfo.get('score'),
         })
-        this.props.onUpdate(this.props.questionInfo.get('id'), ['comment'], e.target.value)
+        this.props.onUpdate(this.props.questionInfo.get('id'), ['comment'], value)
+        this.setState({
+          editingComment:false,
+        })
     },
     //添加描述
-    handleUpdateDescription(e){
+    handleUpdateDescription(value){
         updateQuestion({
             qid: this.props.questionInfo.get('id'),
             examination: this.props.questionInfo.get('examination'),
@@ -60,7 +63,10 @@ const ShortAnswerQuestion = React.createClass({
             drawZone: '',
             score: this.props.questionInfo.get('score'),
         })
-        this.props.onUpdate(this.props.questionInfo.get('id'), ['description'], e.target.value)
+        this.props.onUpdate(this.props.questionInfo.get('id'), ['description'], value)
+        this.setState({
+          editingDescription:false
+        })
     },
     //设定分值
     handleChangeScore(key, value){
@@ -116,6 +122,10 @@ const ShortAnswerQuestion = React.createClass({
         return (
             <div className={styles.footer} onClick={(e) => {
                 e.stopPropagation()
+                this.setState({
+                  editingComment:false,
+                  editingDescription:false
+                })
             }}>
                 <Row>
                     <Col span={6}>
@@ -140,13 +150,27 @@ const ShortAnswerQuestion = React.createClass({
                     </Col>
                 </Row>
                 <Row >
-                    <Col span={10}>
-                        注解：
-                        <div><Input onBlur={this.handleUpdateComment}/></div>
+                    <Col span={10} >
+                        <span onClick={(e)=>{e.stopPropagation();this.setState({
+                          editingComment:!this.state.editingComment
+                        })}}>注解：</span>{
+                          this.state.editingComment?<Ueditor
+                                  name={this.props.questionInfo.getIn(['id'])+'comment'}
+                                  initialContent={this.props.questionInfo.get('comment')||'添加备注'}
+                                  onDestory={this.handleUpdateComment}
+                                  initialHeight={OPTION_HEIGHT}/>:<span dangerouslySetInnerHTML={{__html: addHttpPrefix(this.props.questionInfo.get('comment')) || '请输入题目内容'}}></span>
+                        }
                     </Col>
                     <Col span={10} offset={2}>
-                        描述：
-                        <div><Input onBlur={this.handleUpdateDescription}/></div>
+                        <span onClick={()=>{this.setState({
+                          editingDescription:!this.state.editingDescription
+                        })}}>描述：</span>{
+                          this.state.editingDescription?<Ueditor
+                                  name={this.props.questionInfo.getIn(['id'])+'description'}
+                                  initialContent={this.props.questionInfo.get('description')||'添加描述'}
+                                  onDestory={this.handleUpdateDescription}
+                                  initialHeight={OPTION_HEIGHT}/>:<span dangerouslySetInnerHTML={{__html: addHttpPrefix(this.props.questionInfo.get('description')) || '请输入描述内容'}}></span>
+                        }
                     </Col>
                 </Row>
             </div>
@@ -221,12 +245,12 @@ const ShortAnswerQuestion = React.createClass({
                 }
             }
         }, {
-            title: <Icon type='close'
+            title: <Icon style={{cursor:'pointer'}} type='close'
                          onClick={() => this.props.onDelete(this.props.questionInfo.get('id'), this.state)}/>,
             className: styles.columnsNo,
             width: 50,
             render: (text, record) => {
-                return <Icon type='close' onClick={this.handleDeleteAnswerItem}/>
+                return <Icon style={{cursor:'pointer'}} type='close' onClick={this.handleDeleteAnswerItem}/>
             }
         }]
         const tableBody = this.props.questionInfo.get('kind') == '05' ? fromJS([{
@@ -262,7 +286,7 @@ const ShortAnswerQuestion = React.createClass({
         }
         const tableData = this.getTableData()
         return (
-            <div className={styles.multipleChoiceQuestion}>
+            <div className={styles.multipleChoiceQuestion} onClick={(e)=>{e.stopPropagation()}}>
                 <div className={styles.tag}>
                     <span className={styles.text}>{questionTypeName}</span>
                 </div>
@@ -280,13 +304,13 @@ const ShortAnswerQuestion = React.createClass({
                 <div className={styles.moveButton}>
                     {this.props.questionInfo.get('questionNo') == 1 ? null : <Button onClick={(e) => {
                             this.props.moveUp(this.props.questionInfo.get('id'))
-                        }}><Icon type="caret-up"/></Button>}
+                        }}><Icon style={{cursor:'pointer'}} type="caret-up"/></Button>}
                     <Button onClick={(e) => {
                         this.props.moveDown(this.props.questionInfo.get('id'))
-                    }}><Icon type="caret-down"/></Button>
+                    }}><Icon style={{cursor:'pointer'}} type="caret-down"/></Button>
                 </div>
                 {
-                    this.state.showFooter ? this.renderFooter() : null
+                    this.renderFooter()
                 }
             </div>
         )

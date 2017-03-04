@@ -216,3 +216,7 @@
   border-color: $primary-color;
   box-shadow: none;
 }
+
+:global(.ant-select-search){
+  list-style:none;
+}

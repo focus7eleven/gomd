@@ -22,6 +22,8 @@ const Ueditor = React.createClass({
             ]],
             wordCountMsg: '',
             initialFrameHeight: this.props.initialHeight,
+            wordCount:false,
+            elementPathEnabled:false,
         });
         // this.ue.setContent(this.props.initialContent)
         // this.ue.destroy = ()=>{
@@ -40,7 +42,6 @@ const Ueditor = React.createClass({
                 ueEventEmitter.emitEvent('closeUE',[that.props.name]);
             }
         });
-
         this.ue.addListener('destroy', function (editor) {
             that.props.onDestory(that.ue.getContent());
             window.currentEditor[that.props.name] = null;

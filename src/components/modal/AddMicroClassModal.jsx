@@ -209,8 +209,9 @@ const AddMicroClassModal = React.createClass({
           <div className={styles.filters}>
             <Form>
               <Row gutter={8}>
-                <Col span={6}>
+                <Col span={5}>
                   <div className={styles.filterItem}>
+
                     <Select placeholder='选择微课类型' size="large"  value={this.state.microClassTypeOption} onChange={this.handleChangeMicroClassType}>
                     {
                       microClassTypeList.map(v => (
@@ -220,7 +221,7 @@ const AddMicroClassModal = React.createClass({
                     </Select>
                   </div>
                 </Col>
-                <Col span={6}>
+                <Col span={5}>
                   <div className={styles.filterItem}>
                     <Select placeholder='选择学科' size="large" value={this.state.subjectOption} onChange={this.handleChangeSubject}>
                     <Option value='' title='所有学科' key='-1'>所有学科</Option>
@@ -233,7 +234,7 @@ const AddMicroClassModal = React.createClass({
                   </div>
 
                 </Col>
-                <Col span={6}>
+                <Col span={5}>
                   <div className={styles.filterItem}>
                     <Select placeholder='选择版本' size="large" value={this.state.versionOption} onChange={this.handleChangeVersion}>
                     <Option value='' title='所有版本' key='-1'>所有版本</Option>
@@ -245,7 +246,7 @@ const AddMicroClassModal = React.createClass({
                     </Select>
                   </div>
                 </Col>
-                <Col span={6}>
+                <Col span={5}>
                   <div className={styles.filterItem}>
                     <Select placeholder='选择年级' size="large" value={this.state.gradeOption} onChange={this.handleChangeGrade}>
                     <Option value='' title='所有年级' key='-1'>所有年级</Option>
@@ -257,9 +258,7 @@ const AddMicroClassModal = React.createClass({
                     </Select>
                   </div>
                 </Col>
-              </Row>
-              <Row gutter={8}>
-                <Col span={8}>
+                <Col span={4}>
                   <div className={styles.filterItem}>
                     <Select placeholder='选择学期' size="large" value={this.state.termOption} onChange={this.handleChangeTerm}>
                     <Option value='' title='所有学期' key='-1'>所有学期</Option>
@@ -271,7 +270,10 @@ const AddMicroClassModal = React.createClass({
                     </Select>
                   </div>
                 </Col>
-                <Col span={8}>
+              </Row>
+              <Row gutter={8}>
+
+                <Col span={12}>
                   <div className={styles.filterItem}>
                     <Select placeholder='选择章节课程' size="large" value={this.state.charpterOption} onChange={this.handleChangeCharpter}>
                     <Option value='' title='所有章节' key='-1'>所有章节</Option>
@@ -283,7 +285,7 @@ const AddMicroClassModal = React.createClass({
                     </Select>
                   </div>
                 </Col>
-                <Col span={8}>
+                <Col span={12}>
                   <div className={styles.filterItem}>
                     <Search size="large"
                       placeholder="教师姓名、学校名称"

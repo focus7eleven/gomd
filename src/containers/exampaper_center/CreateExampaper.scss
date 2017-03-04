@@ -4,6 +4,15 @@
   width: 100%;
   height: 100%;
 
+  :local(.center){
+    :local(.paperContent){
+      display:flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+  }
+
   :local(.header){
     @include headerWithoutFilter;
   }

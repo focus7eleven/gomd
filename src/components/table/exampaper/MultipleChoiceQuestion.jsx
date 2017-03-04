@@ -97,7 +97,7 @@ const MultipleChoiceQuestion = React.createClass({
                 )
             }
         }, {
-            title: <Icon type='close' onClick={(e) => {
+            title: <Icon type='close' style={{cursor:'pointer'}} onClick={(e) => {
                 e.stopPropagation();
                 this.props.onDelete(this.props.questionInfo.get('id'))
             }}/>,
@@ -106,7 +106,7 @@ const MultipleChoiceQuestion = React.createClass({
             render: (text, record) => {
                 return <div onClick={(e) => {
                     e.stopPropagation()
-                }}><Icon type='close' onClick={this.handleDeleteAnswerItem.bind(this, record.key)}/></div>
+                }}><Icon style={{cursor:'pointer'}} type='close' onClick={this.handleDeleteAnswerItem.bind(this, record.key)}/></div>
             }
         }]
         const tableBody = this.props.questionInfo.get('optionPojoList').map((v, k) => ({
@@ -168,32 +168,38 @@ const MultipleChoiceQuestion = React.createClass({
         });
     },
     //添加备注
-    handleUpdateComment(e){
+    handleUpdateComment(value){
         updateQuestion({
             qid: this.props.questionInfo.get('id'),
             examination: this.props.questionInfo.get('examination'),
-            comment: e.target.value,
+            comment: value,
             description: this.props.questionInfo.get('description'),
             difficulty: this.props.questionInfo.get('difficulty'),
             kind: this.props.questionInfo.get('kind'),
             drawZone: '',
             score: this.props.questionInfo.get('score'),
         })
-        this.props.onUpdate(this.props.questionInfo.get('id'), ['comment'], e.target.value)
+        this.props.onUpdate(this.props.questionInfo.get('id'), ['comment'], value)
+        this.setState({
+            editingComment: false
+        });
     },
     //添加描述
-    handleUpdateDescription(e){
+    handleUpdateDescription(value){
         updateQuestion({
             qid: this.props.questionInfo.get('id'),
             examination: this.props.questionInfo.get('examination'),
             comment: this.props.questionInfo.get('comment'),
-            description: e.target.value,
+            description: value,
             difficulty: this.props.questionInfo.get('difficulty'),
             kind: this.props.questionInfo.get('kind'),
             drawZone: '',
             score: this.props.questionInfo.get('score'),
         })
-        this.props.onUpdate(this.props.questionInfo.get('id'), ['description'], e.target.value)
+        this.props.onUpdate(this.props.questionInfo.get('id'), ['description'], value)
+        this.setState({
+            editingDescription: false
+        });
     },
     //修改答案选项.
     handleUpdateOption(key, value){
@@ -293,6 +299,10 @@ const MultipleChoiceQuestion = React.createClass({
         return (
             <div className={styles.footer} onClick={(e) => {
                 e.stopPropagation()
+                this.setState({
+                  editingComment:false,
+                  editingDescription:false
+                })
             }}>
                 <Row>
                     {
@@ -323,16 +333,26 @@ const MultipleChoiceQuestion = React.createClass({
                 </Row>
                 <Row >
                     <Col span={10}>
-                        注解：
-                        <div><Input onBlur={(e) => {
-                            this.handleUpdateComment
-                        }}/></div>
+                        <span onClick={(e)=>{e.stopPropagation();this.setState({
+                          editingComment:!this.state.editingComment
+                        })}}>注解：</span>{
+                          this.state.editingComment?<Ueditor
+                                  name={this.props.questionInfo.getIn(['id'])+'comment'}
+                                  initialContent={this.props.questionInfo.get('comment')||'添加备注'}
+                                  onDestory={this.handleUpdateComment}
+                                  initialHeight={OPTION_HEIGHT}/>:<span dangerouslySetInnerHTML={{__html: addHttpPrefix(this.props.questionInfo.get('comment')) || '请输入题目内容'}}></span>
+                        }
                     </Col>
                     <Col span={10} offset={2}>
-                        描述：
-                        <div><Input onBlur={(e) => {
-                            this.handleUpdateDescription
-                        }}/></div>
+                        <span onClick={(e)=>{e.stopPropagation();this.setState({
+                          editingDescription:!this.state.editingDescription
+                        })}}>描述：</span>{
+                          this.state.editingDescription?<Ueditor
+                                  name={this.props.questionInfo.getIn(['id'])+'description'}
+                                  initialContent={this.props.questionInfo.get('description')||'添加描述'}
+                                  onDestory={this.handleUpdateDescription}
+                                  initialHeight={OPTION_HEIGHT}/>:<span dangerouslySetInnerHTML={{__html: addHttpPrefix(this.props.questionInfo.get('description')) || '请输入描述内容'}}></span>
+                        }
                     </Col>
                 </Row>
             </div>
@@ -355,7 +375,7 @@ const MultipleChoiceQuestion = React.createClass({
                 questionTypeName = ''
         }
         return (
-            <div className={styles.multipleChoiceQuestion}>
+            <div className={styles.multipleChoiceQuestion} onClick={(e)=>{e.stopPropagation()}}>
                 <div className={styles.tag}>
                     <span className={styles.text}>{questionTypeName}</span>
                 </div>
@@ -368,13 +388,13 @@ const MultipleChoiceQuestion = React.createClass({
                 <div className={styles.moveButton}>
                     {this.props.questionInfo.get('questionNo') == 1 ? null : <Button onClick={(e) => {
                             this.props.moveUp(this.props.questionInfo.get('id'))
-                        }}><Icon type="caret-up"/></Button>}
+                        }}><Icon style={{cursor:'pointer'}} type="caret-up"/></Button>}
                     <Button onClick={(e) => {
                         this.props.moveDown(this.props.questionInfo.get('id'))
-                    }}><Icon type="caret-down"/></Button>
+                    }}><Icon style={{cursor:'pointer'}} type="caret-down"/></Button>
                 </div>
                 {
-                    this.state.showFooter ? this.renderFooter() : null
+                    this.renderFooter()
                 }
             </div>
         )
