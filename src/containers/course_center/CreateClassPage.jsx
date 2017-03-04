@@ -105,27 +105,38 @@ const CreateClassPage = React.createClass({
           subjectList,
           versionList,
         } = result
-        return fetch(config.api.lesson.lastChapterTime(this.state.charpterOption[0]||charpterList.isEmpty()?'':charpterList.get(0).get('teaching_schedule_id'),
-        this.state.charpterOption[1]||charpterList.isEmpty()?'':charpterList.get(0).get('hours')),{
-          method:'get',
-          headers:{
-            'from':'nodejs',
-            'token':sessionStorage.getItem('accessToken')
-          }
-        }).then(res => res.text()).then(res => {
-          //获取上课时间
-          this.setState({
-            chapterTime:res,
-            charpterList,
-            gradeList,
-            versionList,
-            subjectList,
-          })
-          return {
-            ...result,
-            chapterTime:res
-          }
+        this.setState({
+          chapterTime:'',
+          charpterList,
+          gradeList,
+          versionList,
+          subjectList,
         })
+        return {
+          ...result,
+          // chapterTime:res
+        }
+        // return fetch(config.api.lesson.lastChapterTime(this.state.charpterOption[0]||charpterList.isEmpty()?'':charpterList.get(0).get('teaching_schedule_id'),
+        // this.state.charpterOption[1]||charpterList.isEmpty()?'':charpterList.get(0).get('hours')),{
+        //   method:'get',
+        //   headers:{
+        //     'from':'nodejs',
+        //     'token':sessionStorage.getItem('accessToken')
+        //   }
+        // }).then(res => res.text()).then(res => {
+        //   //获取上课时间
+        //   this.setState({
+        //     chapterTime:res,
+        //     charpterList,
+        //     gradeList,
+        //     versionList,
+        //     subjectList,
+        //   })
+        //   return {
+        //     ...result,
+        //     chapterTime:res
+        //   }
+        // })
       })
     })
   },
@@ -348,7 +359,7 @@ const CreateClassPage = React.createClass({
               </Col>
               <Col span={6} offset={1}>
                 <div className={styles.filterItem}>
-                上课时间：<DatePicker value={moment(this.state.chapterTime,'YYYY/MM/DD')} onChange={(date,dateString)=>{this.setState({chapterTime:dateString})}}  size='large' style={{width:'100%'}} showTime format="YYYY-MM-DD HH:mm" />
+                上课时间：<DatePicker value={moment(new Date(),'YYYY/MM/DD')} onChange={(date,dateString)=>{this.setState({chapterTime:dateString})}}  size='large' style={{width:'100%'}} showTime format="YYYY-MM-DD HH:mm" />
                 </div>
               </Col>
             </Row>

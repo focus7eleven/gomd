@@ -73,17 +73,13 @@ const AddHomeworkModal = React.createClass({
       dataIndex:'num',
       key:'num',
     },{
-      title:'布置日期',
+      title:'新建日期',
       dataIndex:'create_dt',
       key:'create_dt',
     },{
       title:'作业名称',
       dataIndex:'homework_name',
       key:'homework_name',
-    },{
-      title:'班级群组',
-      dataIndex:'target_name',
-      key:'target_name',
     },{
       title:'创建人',
       dataIndex:'create_user_name',

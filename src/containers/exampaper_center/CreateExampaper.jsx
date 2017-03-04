@@ -11,6 +11,7 @@ import ShortAnswerQuestion from '../../components/table/exampaper/ShortAnswerQue
 import NestingQuestion from '../../components/table/exampaper/NestingQuestion'
 import QuestionTitle from '../../components/table/exampaper/QuestionTitle'
 import {setExamInfo} from '../../components/exampaper_filter/utils'
+import moment from 'moment'
 import {
     deleteQuestion,
     changeQuestionPosition,
@@ -439,7 +440,7 @@ const CreateExampaper = React.createClass({
             this.setState({
                 exerciseList: this.state.exerciseList.concat(fromJS(res)),
                 uploadingExampaper: false,
-                examPaperName:fileName.split('.').slice(0,-1).join('')+Date.now()
+                examPaperName:fileName.split('.').slice(0,-1).join('')+moment().format('MMMM-Do-YYYY-h-mm')
             })
         })
     },

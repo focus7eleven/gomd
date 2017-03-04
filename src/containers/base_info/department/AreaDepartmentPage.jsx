@@ -178,11 +178,11 @@ const AreaDepartmentPage = React.createClass({
     let errors = [getFieldError('areaId'),getFieldError('departmentName')]
     if(!errors.reduce((pre,cur)=>pre||cur,false)){
       this.props.addDepartment({
-        areaId:getFieldValue('areaId'),
-        departmentName:getFieldValue('departmentName'),
-        _function:getFieldValue('function'),
-        phone:getFieldValue('phone'),
-        remark:getFieldValue('remark')
+        areaId:getFieldValue('areaId')||'',
+        departmentName:getFieldValue('departmentName')||'',
+        _function:getFieldValue('function')||'',
+        phone:getFieldValue('phone')||'',
+        remark:getFieldValue('remark')||''
       },'area')
     }
   },
@@ -298,6 +298,17 @@ const AreaDepartmentPage = React.createClass({
   handleShowAddMemberModal(key){
 
     this._currentRow = this.props.workspace.get('data').get('result').get(key)
+    fetch(config.api.areaDepartment.listOfficersByDepartmentId(this._currentRow.get('departmentId')),{
+      method:'get',
+      headers:{
+        'from':'nodejs',
+        'token':sessionStorage.getItem('accessToken')
+      }
+    }).then(res => res.json()).then(res => {
+      this.setState({
+        checkedMember:fromJS(res)
+      })
+    })
     fetch(config.api.officer.find.get('',this._currentRow.get('areaId')),{
       method:'get',
       headers:{
@@ -358,10 +369,12 @@ const AreaDepartmentPage = React.createClass({
         return (<Checkbox checked={this.state.selectedMembers.get(key)||(this.state.alreadySelectMembers[key]&&true)} onChange={this.handleSelectMember.bind(this,key)}></Checkbox>)
       }
     }]
+    console.log("-->:asdf",tableData.filter(v => this.state.checkedMember.find(n => n.get('userId')==v['userId'])).map(v => v.k))
     return (
       <Modal title="添加成员" visible={true}
       onOk={this.handleAddMember}
       onCancel={()=>{this.setState({showAddMemberModal:false})}}
+      rowSelection={{selectedRowKeys:tableData.filter(v => this.state.checkedMember.find(n => n.get('userId')==v['userId'])).map(v => v.k)}}
       >
         <div>
           <div>
