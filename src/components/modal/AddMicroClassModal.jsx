@@ -9,8 +9,8 @@ const FormItem = Form.Item
 const Search = Input.Search
 
 //获取微课列表
-const getMicrovideo = (type,currentPage,pageShow,subjectId,gradeId,textbookId,search)=>{
-  return fetch(config.api.microvideo.get(type,currentPage,pageShow,subjectId,gradeId,textbookId,search),{
+const getMicrovideo = (type,currentPage,subjectId,gradeId,textbookId,search,term='',version='')=>{
+  return fetch(config.api.microvideo.get(type,currentPage,subjectId,gradeId,textbookId,search,term,version),{
     method:'get',
     headers:{
       'from':'nodejs',
@@ -67,7 +67,7 @@ const AddMicroClassModal = React.createClass({
     }
   },
   componentDidMount(){
-    getMicrovideo(this.state.microClassTypeOption,'1','10','','','','').then(res => {
+    getMicrovideo(this.state.microClassTypeOption,'1','','','','',"").then(res => {
       this.setState({
         microVideo:fromJS(res),
       })
@@ -79,7 +79,7 @@ const AddMicroClassModal = React.createClass({
       microClassTypeOption:value,
 
     })
-    getMicrovideo(value,'1','10','','','','').then(res => {
+    getMicrovideo(value,'1','','','','',"").then(res => {
       this.setState({
         microVideo:fromJS(res)
       })
@@ -92,7 +92,7 @@ const AddMicroClassModal = React.createClass({
     })
 
     Promise.all([
-      getMicrovideo(this.state.microClassTypeOption,'1','10',value,'','',''),
+      getMicrovideo(this.state.microClassTypeOption,'1',value,'','',''),
       getGradeList(value),
       getTextbookList(value,this.state.gradeOption||'',this.state.versionOption||'',this.state.termOption||'',''),
     ]).then(result => {
@@ -110,7 +110,7 @@ const AddMicroClassModal = React.createClass({
     })
     Promise.all([
       getTextbookList(this.state.subjectOption||'',this.state.gradeOption||'',value,this.state.termOption,''),
-      getMicrovideo(this.state.microClassTypeOption,'1','10',this.state.subjectOption||'',this.state.gradeOption||'',this.state.charpterOption||'',''),
+      getMicrovideo(this.state.microClassTypeOption,'1',this.state.subjectOption||'',this.state.gradeOption||'',this.state.charpterOption||'',''),
     ]).then(result => {
       this.setState({
         charpterList:fromJS(result[0]),
@@ -123,7 +123,7 @@ const AddMicroClassModal = React.createClass({
     this.setState({
       gradeOption:value
     })
-    getMicrovideo(this.state.microClassTypeOption,'1','10',this.state.subjectOption,value,'','').then(res => {
+    getMicrovideo(this.state.microClassTypeOption,'1',this.state.subjectOption,value,'','').then(res => {
       this.setState({
         microVideo:fromJS(res)
       })
@@ -136,7 +136,7 @@ const AddMicroClassModal = React.createClass({
     })
     Promise.all([
       getTextbookList(this.state.subjectOption||'',this.state.gradeOption||'',this.state.versionOption||'',value,''),
-      getMicrovideo(this.state.microClassTypeOption,'1','10',this.state.subjectOption,this.state.gradeOption,this.state.charpterOption,'')
+      getMicrovideo(this.state.microClassTypeOption,'1',this.state.subjectOption,this.state.gradeOption,this.state.charpterOption,'')
     ]).then(result => {
       this.setState({
         charpterList:fromJS(result[0]),
@@ -148,7 +148,7 @@ const AddMicroClassModal = React.createClass({
     this.setState({
       charpterOption:value,
     })
-    getMicrovideo(this.state.microClassTypeOption,'1','10',this.state.subjectOption,this.state.gradeOption,value,'').then(res => {
+    getMicrovideo(this.state.microClassTypeOption,'1',this.state.subjectOption,this.state.gradeOption,value,'').then(res => {
       this.setState({
         microVideo:fromJS(res)
       })

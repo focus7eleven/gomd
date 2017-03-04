@@ -208,9 +208,7 @@ const EduOutlinePage = React.createClass({
   handleShowEditTextbookModal(key){
     const {setFieldsValue} = this.props.form
     this._currentRow = this.props.workspace.get('data').get('result').get(key)
-    this.setState({
-      showEditTextbookModal:true
-    })
+
     const phase = this._phaseList.find(v => v.text == this._currentRow.get('phase_name'))
     const grade = this._gradeList.find(v => v.text == this._currentRow.get('grade_name'))
     const subject = this._subjectList.find(v => v.text == this._currentRow.get('subject_name'))
@@ -218,12 +216,15 @@ const EduOutlinePage = React.createClass({
     const year = this._currentRow.get('textbook_year')
     const version = this._versionList.find(v => v.id == this._currentRow.get('textbook_version'))
     setFieldsValue({
-      phase:phase?phase.id:'',
+      phase:phase.id,
       grade:grade?grade.id:'',
       subject:subject?subject.id:'',
       term:term?term.id:'',
       year:year,
       version:version?version.id:'',
+    })
+    this.setState({
+      showEditTextbookModal:true
     })
   },
   handleAddTextbook(){
@@ -333,8 +334,9 @@ const EduOutlinePage = React.createClass({
   },
   renderAddTextbookModal(type){
     const {getFieldDecorator,getFieldValue} = this.props.form
+    console.log("Asdfasdf:",getFieldValue('comment'),type)
     return (
-      <Modal title='添加教学大纲' visible={true} onCancel={this.handleCloseAddTextbookModal.bind(this,type)} maskClosable={false}
+      <Modal title={type=='edit'?'编辑教学大纲':'添加教学大纲'} visible={this.state.showEditTextbookModal} onCancel={this.handleCloseAddTextbookModal.bind(this,type)} maskClosable={false}
       footer={[
         <Button key='cancel' type='ghost' onClick={this.handleCloseAddTextbookModal.bind(this,type)}>取消</Button>,
         <Button key='ok' type='primary'
@@ -540,7 +542,7 @@ const EduOutlinePage = React.createClass({
           </div>
         </div>
         {this.state.showAddTextbookModal?this.renderAddTextbookModal('create'):null}
-        {this.state.showEditTextbookModal?this.renderAddTextbookModal('edit'):null}
+        {this.renderAddTextbookModal('edit')}
         {this.state.showTextbookDetailModal?this.renderTextbookDetailModal():null}
         <input type='file' ref='fileInput' style={{display:'none'}} onChange={this.handleFileChange}/>
       </div>
