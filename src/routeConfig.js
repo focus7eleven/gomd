@@ -57,6 +57,9 @@ const menuRoutePath = {
     },
     "planDetail":{
         path:"/index/teaching_center/planDetail/"
+    },
+    "toVideoShow":{
+        path:"/index/resource_center/areavideo"
     }
 };
 

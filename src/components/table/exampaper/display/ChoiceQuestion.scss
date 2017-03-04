@@ -1,13 +1,20 @@
 @import '~theme.scss';
+@import '~mixins.scss';
 
 :local(.container){
   position: relative;
   margin-top: 40px;
+
+  :local(.columnsNo){
+    @include centric;
+
+    :global(.ant-radio-wrapper) {
+      margin-right:0;
+    }
+  }
+
   :local(.question){
     width: 100%;
-    display: flex;
-    justify-content: space-between;;
-    align-items: center;
   }
   :local(.tag){
     color:#1CB87F;

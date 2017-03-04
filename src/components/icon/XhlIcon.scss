@@ -38,19 +38,27 @@
 
 @mixin pngIcon($name) {
   &:before {
-    content: url("images/comment_homework/"+$name+".png");
+    content: url($name);
   }
 }
 
+@mixin pngIconComment($name) {
+  @include pngIcon("images/comment_homework/"+$name+".png");
+}
+
 :global(.xhlicon-dui-small) {
-  @include pngIcon("dui-small");
+  @include pngIconComment("dui-small");
 }
 
 :global(.xhlicon-bandui-small) {
-  @include pngIcon("bandui-small");
+  @include pngIconComment("bandui-small");
 }
 
 :global(.xhlicon-cuo-small) {
-  @include pngIcon("cuo-small");
+  @include pngIconComment("cuo-small");
+}
+
+:global(.xhlicon-course) {
+  @include pngIcon("images/homework/course.png");
 }
 

@@ -15,8 +15,11 @@
     align-items: center;
   }
   :local(.columnsNo){
-    padding:0px;
-    text-align: center;
+    @include centric;
+
+    :global(.ant-radio-wrapper) {
+      margin-right:0;
+    }
   }
   :local(.columns){
     padding:0px

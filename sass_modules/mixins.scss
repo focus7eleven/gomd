@@ -47,10 +47,10 @@
 }
 
 @mixin tableMsg {
-  //position: absolute;
-  //left: 10px;
-  //bottom: 25px;
-  margin-top: 16px;
+  position: absolute;
+  left: 10px;
+  bottom: 25px;
+  //margin-top: 16px;
 }
 
 @mixin editButton {
@@ -90,9 +90,8 @@
 }
 
 @mixin centric {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  text-align: center;
+  vertical-align: middle;
 }
 
 @mixin treeContainer {

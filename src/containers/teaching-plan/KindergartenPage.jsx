@@ -6,6 +6,7 @@ import {Icon,Input,Table,Button,Modal,Form,Spin,Select,Row,Col} from 'antd'
 import {CustomTable} from '../../components/table/CustomTable';
 import config from '../../config';
 import menuRoutePath from '../../routeConfig';
+import { findMenuInTree,findPath} from '../../reducer/menu';
 const Option = Select.Option
 
 const KindergartenPage = React.createClass({
@@ -16,10 +17,10 @@ const KindergartenPage = React.createClass({
         authList:List()
     }),
     componentWillMount(){
-        // if(!this.props.menu.get('data').isEmpty()){
-        //     this._currentMenu = findMenuInTree(this.props.menu.get('data'),'teaching_plan')
-        //     console.log('componentWillMount');
-        // }
+        if(!this.props.menu.get('data').isEmpty()){
+            this._currentMenu = findMenuInTree(this.props.menu.get('data'),'teaching_plan')
+        }
+        console.log('componentWillMount');
     },
     getDefaultProps(){
         return {}
@@ -52,13 +53,14 @@ const KindergartenPage = React.createClass({
         })
     },
     componentWillReceiveProps(nextProps){
-        console.log('componentWillReceiveProps');
+        console.log('componentWillReceiveProps type='+nextProps.params.type);
         let additionParams = this.getParamByType(nextProps.params.type);
         this.setState({
             type:nextProps.params.type,
             pageUrl:config.api.teachingPlan.teachingPlanPageUrl,
             additionParams:additionParams,
         })
+
     },
 
     getParamByType(type){
@@ -82,7 +84,7 @@ const KindergartenPage = React.createClass({
         if (this.state.modalVisiable) {
             defaultCourse = this.state.courseOptions[0].course;
         }
-        console.log('additionParams='+this.state.additionParams);
+        console.log('additionParams='+this.state.additionParams.phaseCode);
         let columns = this.getTableHeader();
         let filters = [
             {key:'subject',type:'select',placeholder:'所有学科',options:this.state.subjectOptionList},
@@ -93,13 +95,17 @@ const KindergartenPage = React.createClass({
         return (
             <div className={styles.container}>
                 <div className={styles.header}>
+                    <div className={styles.header}>
+                        <Button type="primary" style={{backgroundColor:'#FD9B09',borderColor:'#FD9B09'}}>新建</Button>:<div> </div>
+                    </div>
                 </div>
                 <div className={styles.body}>
                     <CustomTable columns={columns}
                                  showIndex={true}
                                  filters={filters}
                                  additionalParam={this.state.additionParams}
-                                 pageUrl={this.state.pageUrl}></CustomTable>
+                                 pageUrl={this.state.pageUrl}
+                    ref="customTable"></CustomTable>
                 </div>
                 <Modal
                     title='总结详情'

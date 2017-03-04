@@ -10,6 +10,11 @@
   margin-right: 5px;
 }
 
+:local(.deleteHomeworkButton) {
+  @include deleteButton;
+  margin-right: 5px;
+}
+
 :local(.ButtonGroup) {
   :local(Button:not(:first-child)) {
     margin-left: 5px;

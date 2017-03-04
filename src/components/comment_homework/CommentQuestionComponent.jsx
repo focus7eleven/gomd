@@ -21,7 +21,7 @@ export const CommentQuestionComponent = React.createClass({
         setEvaluate:React.PropTypes.func.isRequired,
     },
     render() {
-        const {studentNumber, studentName, answer, totalScore, questionType} = this.props;
+        const {studentNumber, studentName, answer, totalScore, questionType,score} = this.props;
         let scoreList = [];
         for( let i = 0; i <= totalScore; i++ ) {
             scoreList.push(i.toString());
@@ -53,13 +53,13 @@ export const CommentQuestionComponent = React.createClass({
                 </div>
                 <div className={styles.scoreView}>
                     <span>得分</span>
-                    <Select className={styles.scoreSelect} onChange={(value)=>{this.props.setScore(value)}}>
+                    <Select className={styles.scoreSelect} onChange={(value)=>{this.props.setScore(parseInt(value))}} value={score}>
                         {scoreList.map((s,i)=><Option key={i} value={s}>{s}</Option>)}
                     </Select>
                     <span className={styles.evaluteSpan}>评价</span>
-                    <Button className={styles.correctButton} onChange={()=>{this.props.setEvaluate("quandui")}}>全对</Button>
-                    <Button className={styles.halfCorrectButton} onChange={()=>{this.props.setEvaluate("bandui")}}>半对</Button>
-                    <Button className={styles.wrongButton} onChange={()=>{this.props.setEvaluate("quancuo")}}>全错</Button>
+                    <Button className={styles.correctButton} onClick={()=>{this.props.setEvaluate("quandui")}}>全对</Button>
+                    <Button className={styles.halfCorrectButton} onClick={()=>{this.props.setEvaluate("bandui")}}>半对</Button>
+                    <Button className={styles.wrongButton} onClick={()=>{this.props.setEvaluate("quancuo")}}>全错</Button>
                 </div>
             </div>
         )

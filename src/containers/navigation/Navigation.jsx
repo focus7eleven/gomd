@@ -119,7 +119,7 @@ const Navigation = React.createClass({
     return (
       <div className={styles.wrapper}>
         <div className={styles.navigation}>
-          <div className={styles.logo}><img src={logo}/></div>
+          <div className={styles.logo} onClick={()=>{this.context.router.push('/index/welcome')}}><img src={logo}/></div>
           <Menu selectedKeys={[currentUrl]} mode="horizontal" className={styles.menu} onMouseLeave={this.handleFoldSubmenu}>
             {
               this.props.menu.get('data').map( item => (

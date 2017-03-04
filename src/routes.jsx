@@ -1,7 +1,6 @@
 import React from 'react'
 import {Router, Route, browserHistory, IndexRoute, IndexRedirect} from 'react-router'
 import AppContainer from './containers/AppContainer'
-import AnnouncementEditor from './containers/editor/AnnouncementEditor'
 import BaseInfoContainer from './containers/base_info/BaseInfoContainer'
 import MainContainer from './containers/MainContainer'
 import Navigation from './containers/navigation/Navigation'
@@ -92,13 +91,13 @@ import TeachingPlanContainer from './containers/teaching-plan/TeachingPlanContai
 import KindergartenPage from './containers/teaching-plan/KindergartenPage'
 import PlanDetailPage from './containers/teaching-plan/PlanDetailPage'
 import ZTreeComponent from './components/ztree/ZTreeComponent'
+import VideoCreatePage from './containers/micro_course/VideoCreatePage'
 
 const routes = (
 	<Router history={browserHistory}>
 		<Route path="/" component={AppContainer}>
 			<Route path="test">
 				<Route path="cf" component={CourseFilterComponent}></Route>
-				<Route path="editor" component={AnnouncementEditor}></Route>
 				<Route path='navigation' component={Navigation}></Route>
 				<Route path='navigation-mini' component={NavigationMini}></Route>
 				<Route path='edu-outline' component={EduOutlinePage}></Route>
@@ -187,6 +186,7 @@ const routes = (
 					<Route path='teachervideo' component={TeacherVideoPage}></Route>
 					<Route path='mycollection' component={CollectionVideoPage}></Route>
 					<Route path='uncheckedvideo' component={UncheckVideoPage}></Route>
+					<Route path='createvideo(/:microId)' component={VideoCreatePage}></Route>
 					<Route path='(:type)/video_detail/(:videoId)' component={VideoDetailContainer}>
 						<IndexRoute component={VideoDetailPage} />
 					</Route>

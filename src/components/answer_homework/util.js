@@ -27,6 +27,12 @@ export const addHttpPrefix = function (content) {
         return content.replace(new RegExp(/src="\/|src="(?!http:\/\/)/g), 'src="' + baseURL + '/');
 }
 
+export const addHttpPrefixAndImageWidth = function (content,width) {
+    if (content != null)
+        return content.replace(new RegExp(/src="\/|src="(?!http:\/\/)/g), 'src="' + baseURL + '/')
+            .replace(new RegExp(/<img /g),'<img width='+width.toString()+' ');
+}
+
 export const addHttpPrefixToImageUrl = function (imageUrl) {
     return imageUrl.startsWith("http://") || imageUrl.startsWith("data:image/png;base64,") ? imageUrl : baseURL + "/" + imageUrl;
 }

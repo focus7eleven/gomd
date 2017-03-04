@@ -395,17 +395,24 @@ const CommentHomeworkPage = React.createClass({
     saveCommentData(studentId,questionId,commentIndex){
         const {studentIndex, questionIndex} = this.findStudentAndQuestionIndex(studentId,questionId);
 
-        this.uploadCommentResult(studentIndex,
+        const comment = this.state.studentAnswers
+            .getIn([studentIndex, "answers", questionIndex,"comment"],"");
+        const commentTemp = this.state.studentAnswers
+            .getIn([studentIndex, "answers", questionIndex,"commentTemp"],"")
+            .split("|")
+            .map((v,i)=>{return i==commentIndex||commentIndex=="ALL"?v:""})
+            .join("|");
+        const commentNew = this.mergeComment(comment,commentTemp);
+        this.uploadCommentImage(studentIndex,
             questionIndex,
-            {comment:this.state.studentAnswers.getIn([studentIndex, "answers", questionIndex,"commentTemp"],"")},
-            (commentUrl)=>{
+            commentNew,
+            ()=>{
                 const commentTemp = this.state.studentAnswers
                     .getIn([studentIndex, "answers", questionIndex,"commentTemp"],"")
                     .split("|")
-                    .map((v,i)=>{i==commentIndex?"":v})
+                    .map((v,i)=>{return i==commentIndex||commentIndex=="ALL"?"":v})
                     .join("|");
                 const studentAnswers = this.state.studentAnswers
-                    .setIn([studentIndex,"answers",questionIndex,"comment"],commentUrl)
                     .setIn([studentIndex,"answers",questionIndex,"commentTemp"],commentTemp);
                 this.setState({
                     studentAnswers:studentAnswers
@@ -417,15 +424,19 @@ const CommentHomeworkPage = React.createClass({
         const {studentIndex, questionIndex} = this.findStudentAndQuestionIndex(studentId,questionId);
 
         const comment = this.state.studentAnswers
-            .getIn([studentIndex, "answers", questionIndex,"commentTemp"],"")
-            .split("|").map((v,i)=>{i==commentIndex?"":v}).join("|");
-        this.uploadCommentResult(studentIndex,
+            .getIn([studentIndex, "answers", questionIndex,"comment"],"")
+            .split("|")
+            .map((v,i)=>{return i==commentIndex?"":v})
+            .join("|");
+        this.uploadCommentImage(studentIndex,
             questionIndex,
-            {comment:comment},
-            (commentUrl)=>{
+            comment,
+            ()=>{
+                const commentTemp = this.state.studentAnswers
+                    .getIn([studentIndex, "answers", questionIndex,"commentTemp"],"")
+                    .split("|").map((v,i)=>{return i==commentIndex?"":v}).join("|");
                 const studentAnswers = this.state.studentAnswers
-                    .setIn([studentIndex,"answers",questionIndex,"comment"],commentUrl)
-                    .setIn([studentIndex,"answers",questionIndex,"commentTemp"],comment);
+                    .setIn([studentIndex,"answers",questionIndex,"commentTemp"],commentTemp);
                 this.setState({
                     studentAnswers:studentAnswers
                 });
@@ -433,23 +444,36 @@ const CommentHomeworkPage = React.createClass({
         );
     },
     setScore(studentId,questionId,score){
-
+        const {studentIndex, questionIndex} = this.findStudentAndQuestionIndex(studentId,questionId);
+        const totalScore = this.state.questionList.getIn([questionIndex,"totalScore"]);
+        if( score < totalScore ) {
+            this.uploadCommentScoreAndRight(studentIndex,questionIndex,score,0);
+        } else {
+            this.uploadCommentScoreAndRight(studentIndex,questionIndex,totalScore,1);
+        }
     },
     setEvaluate(studentId,questionId,value){
-
+        const {studentIndex, questionIndex} = this.findStudentAndQuestionIndex(studentId,questionId);
+        const totalScore = this.state.questionList.getIn([questionIndex,"totalScore"]);
+        if( value == "quandui" ) {
+            this.uploadCommentScoreAndRight(studentIndex,questionIndex,totalScore,1);
+        } else if( value == "bandui" ){
+            this.uploadCommentScoreAndRight(studentIndex,questionIndex,totalScore/2,0);
+        } else {//quancuo
+            this.uploadCommentScoreAndRight(studentIndex,questionIndex,0,0);
+        }
     },
-    uploadCommentResult(studentIndex,questionIndex,additonalParam,callback) {
+    uploadCommentImage(studentIndex, questionIndex, comment, callback) {
         const { homeworkClassId, answerType, homeworkId } = this.props.location.state;
 
-        let questionIds = [];
+        let questionIds = List();
         const questionType = this.state.questionList.getIn([questionIndex,"type"]);
         if( questionType == QUESTION_TYPE_FILL_IN_BLANK ) {
             questionIds = this.state.questionList
                 .filter((question) => question.get("type") == QUESTION_TYPE_FILL_IN_BLANK)
-                .map((question)=>question.get("questionId"))
-                .toJS();
+                .map((question)=>question.get("questionId"));
         } else {
-            questionIds.push(this.state.questionList.getIn([questionIndex,"questionId"]));
+            questionIds = questionIds.push(this.state.questionList.getIn([questionIndex,"questionId"]));
         }
         const studentId = this.state.studentAnswers.getIn([studentIndex,"studentId"]);
         const studentAnswer = this.state.studentAnswers.getIn([studentIndex,"answers",questionIndex]);
@@ -462,23 +486,24 @@ const CommentHomeworkPage = React.createClass({
             (id)=> { formData.append("questionIds",id) }
         );
         formData.append("studentId", studentId);
-        formData.append("score", additonalParam.score?additonalParam.score:studentAnswer.get("score"));
-        formData.append("right", additonalParam.right?additonalParam.right:studentAnswer.get("right"));
+        //formData.append("score", additonalParam.score?additonalParam.score:studentAnswer.get("score"));
+        //formData.append("right", additonalParam.right?additonalParam.right:studentAnswer.get("right"));
         //String[] correctFiles
-        const commentArray = this.mergeComment(studentAnswer.get("comment"), additonalParam.comment)
-            .split("|");
-        commentArray.forEach(
+        comment.split("|").forEach(
             (comment) => {
                 if( comment.startsWith("data:image/png;base64,")) {
                     formData.append("correctFiles", "base64:"+comment.replace(/^(data).+base64,/,""));
                 } else {
-                    formData.append("correctFiles", "url"+comment);
+                    if( comment && comment.length > 0 ) {
+                        formData.append("correctFiles", "url:"+comment);
+                    } else {
+                        formData.append("correctFiles", "");
+                    }
                 }
-
             }
         );
 
-        httpFetchPost(config.api.homework.commentHomework.uploadCommentResult,formData)
+        httpFetchPost(config.api.homework.commentHomework.uploadCorrectResultForImage,formData)
             .then(
                 (result) => {
                     if( result.title == "TITLE_FAILURE" ) {
@@ -491,16 +516,64 @@ const CommentHomeworkPage = React.createClass({
                             duration:10,
                         });
                     } else {
-                        const studentAnswers = this.state.studentAnswers
-                            .setIn([studentIndex, "answers", questionIndex], studentAnswer.merge(Map(additonalParam)));
+                        const answers = this.state.studentAnswers.getIn([studentIndex,"answers"])
+                            .map(
+                                (questionAnswer) => {
+                                    if( questionIds.includes(questionAnswer.get("questionId")) ) {
+                                        return questionAnswer.set("comment",result.resultData);
+                                    } else {
+                                        return questionAnswer;
+                                    }
+                                }
+                            );
+                        const studentAnswers = this.state.studentAnswers.setIn([studentIndex, "answers"], answers);
                         this.setState({
                             studentAnswers: studentAnswers
                         }, () => {
                             if (callback) {
-                                callback(result.resultData);
+                                callback();
                             }
                         });
 
+                    }
+                }
+            )
+            .catch(()=>{})
+    },
+    uploadCommentScoreAndRight(studentIndex,questionIndex,score,right) {
+        const { homeworkClassId, answerType, homeworkId } = this.props.location.state;
+
+        const questionId = this.state.questionList.getIn([questionIndex,"questionId"]);
+        const studentId = this.state.studentAnswers.getIn([studentIndex,"studentId"]);
+
+        let formData = new FormData();
+        formData.append("homeworkClassId", homeworkClassId);
+        formData.append("homeworkId", homeworkId);
+        formData.append("answerType", answerType);
+        formData.append("questionId",questionId);
+        formData.append("studentId", studentId);
+        formData.append("score", score);
+        formData.append("right", right);
+
+        httpFetchPost(config.api.homework.commentHomework.uploadCommentResult,formData)
+            .then(
+                (result) => {
+                    if( result.title == "TITLE_FAILURE" ) {
+                        const message = "批改学生:"+this.state.studentAnswers.getIn([studentIndex,"studentName"])+
+                            "的第"+this.state.questionList.getIn([questionIndex,"index"])+"题失败:" +
+                            result.result;
+                        notification.error({
+                            message:"失败",
+                            description:message,
+                            duration:10,
+                        });
+                    } else {
+                        const studentAnswers = this.state.studentAnswers
+                            .setIn([studentIndex,"answers",questionIndex,"score"],score)
+                            .setIn([studentIndex,"answers",questionIndex,"right"],right);
+                        this.setState({
+                            studentAnswers: studentAnswers
+                        });
                     }
                 }
             )

@@ -51,6 +51,7 @@ const config = _.extend({
 				getInfo: `${baseURL}/session`,
 			},
 	   		edit:`${baseURL}/account/edit`,
+			changePass:	`${baseURL}/account/pwd`,
 		},
 		menu:{
 			get:`${baseURL}/getMenuWithTreeFormat`
@@ -140,6 +141,9 @@ const config = _.extend({
 			getStudentClass: (studentId) => `${baseURL}/student/getStuClassByStudentId?studentId=${studentId}`,
 			// 设置教师角色
 			setTeacherRole: `${baseURL}/user/role/setting`,
+			// 获取学生家长
+			getPatriarch: (studentId) => `${baseURL}/patriarch/listPatriarchsByStudent?studentId=${studentId}`,
+			findPatriarch: (name) => `${baseURL}/patriarch/find?name=${name}`,
 		},
 		department: {
 			post:`${baseURL}/cityDepartment/add`,
@@ -231,6 +235,7 @@ const config = _.extend({
 			checkVideo: `${baseURL}/microvideo/check`,
 			likeVideo: (type) => `${baseURL}/microvideo/${type}`,
 			collectVideo: (type) => `${baseURL}/microvideo/${type}`,
+			edit:`${baseURL}/microvideo/edit`,
 		},
 		homework:{
 			course:{
@@ -281,7 +286,8 @@ const config = _.extend({
 			},
 			commentHomework: {
 				getExampaperAndStudentAnswer: (homeworkClassId,answerType) => `${baseURL}/homework/getPaperAndAnswerWithTea?homeworkClassId=${homeworkClassId}&answerType=${answerType}`,
-                uploadCommentResult: `${baseURL}/exampaper/uploadCorrectResult`,
+                uploadCorrectResultForImage: `${baseURL}/exampaper/uploadCorrectResultForImage`,
+				uploadCommentResult: `${baseURL}/exampaper/uploadCorrectResult`,
 			},
 	  //查看答题卡答案
 	  lookupAnswerSheetAnwser:(anwsersheetId, homeworkId) => `${baseURL}/answersheet/answersheetkey?answersheetId=${anwsersheetId}&homeworkId=${homeworkId}`,
@@ -330,7 +336,7 @@ const config = _.extend({
 
 		},
 		exampaper:{
-			showExamSelectList:(subjectId,gradeId,term)=>`${baseURL}/exampaper/showExamSelectList?subjectId=${subjectId}&gradeId=${gradeId}&term=${term}`,
+			showExamSelectList:(subjectId,gradeId,term,version)=>`${baseURL}/exampaper/showExamSelectList?subjectId=${subjectId}&gradeId=${gradeId}&term=${term}&version=${version}`,
 			getTableData:(type,search,currentPage,subjectId='',gradeId='',isDraft=0)=>`${baseURL}/exampaper/${type}?search=${search}&currentPage=${currentPage}&subjectId=${subjectId}&gradeId=${gradeId}&isDraft=${isDraft}`,
 			createExam:`${baseURL}/exampaper/createExam`,
 			deletePaper:`${baseURL}/exampaper/deleteExam`,

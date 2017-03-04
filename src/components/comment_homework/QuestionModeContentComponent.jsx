@@ -92,7 +92,7 @@ export const QuestionModeContentComponent = React.createClass({
                                             commentDataChanged={(i,imgBase64)=>this.props.commentDataChanged(studentId,i,imgBase64)}
                                             saveCommentData={(i)=>this.props.saveCommentData(studentId,i)}
                                             clearCommentData={(i)=>this.props.clearCommentData(studentId,i)}
-                                            setScore={(score)=>this.props.clearCommentData(studentId,score)}
+                                            setScore={(score)=>this.props.setScore(studentId,score)}
                                             setEvaluate={(value)=>this.props.setEvaluate(studentId,value)}
                                         ></CommentQuestionComponent>
                                     ):(

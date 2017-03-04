@@ -13,7 +13,11 @@
   margin-left: 30px;
 }
 :local(.mainHeader) {
-  @include contentMainHeader
+  color: black;
+  background-color: $sub-header-color;
+  height: 38px;
+
+  @include centric
 }
 
 :local(.subHeader) {
@@ -30,4 +34,15 @@
   border-bottom:1px solid $border-grey;
   padding:40px;
   color:black;
+}
+
+:local(.footer){
+  display: flex;
+  width: 100%;
+  justify-content: flex-end;
+  >button{
+    width: 72px;
+    height: 32px;
+    font-size: 13px;
+  }
 }

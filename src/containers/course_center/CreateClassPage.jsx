@@ -5,6 +5,7 @@ import styles from './CreateClassPage.scss'
 import config from '../../config'
 import AddMicroClassModal from '../../components/modal/AddMicroClassModal.jsx'
 import AddHomeworkModal from '../../components/modal/AddHomeworkModal'
+import {XhlIcon} from '../../components/icon/XhlIcon.jsx'
 import moment from 'moment'
 const FormItem = Form.Item
 const Option = Select.Option
@@ -292,6 +293,9 @@ const CreateClassPage = React.createClass({
     const {getFieldDecorator} = this.props.form
     return (
       <div className={styles.container}>
+		<div className={styles.title1}>
+            <XhlIcon type="course" ></XhlIcon><span style={{marginLeft:'5px'}} className={styles.text1}>课程</span>
+        </div>
         <div className={styles.header}>
            <Button type='primary' style={{marginRight:'10px'}} onClick={this.handleShowMicroClassModal}><Icon type="plus" />微课</Button><Button type='primary' onClick={this.handleShowHomeworkModal}><Icon type="plus" />作业</Button>
         </div>
@@ -300,7 +304,7 @@ const CreateClassPage = React.createClass({
             <Row type='flex' gutter={8}>
               <Col span={4} >
                 <div className={styles.filterItem}>
-                  <Icon type='appstore'/>学科：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<Select placeholder='选择学科'size="large" value={this.state.subjectOption} onChange={this.handleFilterChange.bind(this,'subject')}>
+                  学科：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<Select placeholder='选择学科'size="large" value={this.state.subjectOption} onChange={this.handleFilterChange.bind(this,'subject')}>
                   {
                     this.state.subjectList.map(v => (
                       <Option key={v.get('subject_id')} value={v.get('subject_id')} title={v.get('subject_name')}>{v.get('subject_name')}</Option>
@@ -311,7 +315,7 @@ const CreateClassPage = React.createClass({
               </Col>
               <Col span={4} offset={1}>
                 <div className={styles.filterItem}>
-                  <Icon type='appstore'/>版本：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<Select placeholder='选择版本' size="large" value={this.state.versionOption} onChange={this.handleFilterChange.bind(this,'version')}>
+                  版本：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<Select placeholder='选择版本' size="large" value={this.state.versionOption} onChange={this.handleFilterChange.bind(this,'version')}>
                   {
                     this.state.versionList.map(v => (
                       <Option key={v.get('id')} value={v.get('id')} title={v.get('text')}>{v.get('text')}</Option>
@@ -322,7 +326,7 @@ const CreateClassPage = React.createClass({
               </Col>
               <Col span={3} offset={1}>
                 <div className={styles.filterItem}>
-                  <Icon type='appstore'/>年级：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<Select placeholder='选择年级' size="large" value={this.state.gradeOption} onChange={this.handleFilterChange.bind(this,'grade')}>
+                  年级：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<Select placeholder='选择年级' size="large" value={this.state.gradeOption} onChange={this.handleFilterChange.bind(this,'grade')}>
                   {
                     this.state.gradeList.map(v => (
                       <Option key={v.get('gradeId')} value={v.get('gradeId')} title={v.get('gradeName')}>{v.get('gradeName')}</Option>
@@ -333,7 +337,7 @@ const CreateClassPage = React.createClass({
               </Col>
               <Col span={3} offset={1}>
                 <div className={styles.filterItem}>
-                  <Icon type='appstore'/>学期：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<Select placeholder='选择学期' size="large" value={this.state.termOption} onChange={this.handleFilterChange.bind(this,'term')}>
+                  学期：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<Select placeholder='选择学期' size="large" value={this.state.termOption} onChange={this.handleFilterChange.bind(this,'term')}>
                   {
                     this.state.termList.map(v => (
                       <Option key={v.get('id')} value={v.get('id')} title={v.get('text')}>{v.get('text')}</Option>
@@ -344,14 +348,14 @@ const CreateClassPage = React.createClass({
               </Col>
               <Col span={6} offset={1}>
                 <div className={styles.filterItem}>
-                <Icon type='appstore'/>上课时间：<DatePicker value={moment(this.state.chapterTime||'2001/1/1','YYYY/MM/DD')} onChange={(date,dateString)=>{this.setState({chapterTime:dateString})}}  size='large' style={{width:'100%'}} showTime format="YYYY-MM-DD HH:mm" />
+                上课时间：<DatePicker value={moment(this.state.chapterTime,'YYYY/MM/DD')} onChange={(date,dateString)=>{this.setState({chapterTime:dateString})}}  size='large' style={{width:'100%'}} showTime format="YYYY-MM-DD HH:mm" />
                 </div>
               </Col>
             </Row>
             <Row type='flex' gutter={8}>
               <Col span={9} >
                 <div className={styles.filterItem}>
-                  <Icon type='appstore'/>章节课程：<Select placeholder='选择章节课程' size="large" value={this.state.charpterList.isEmpty()?'':this.state.charpterOption[0]} onChange={this.handleFilterChange.bind(this,'charpter')}>
+                  章节课程：<Select placeholder='选择章节课程' size="large" value={this.state.charpterList.isEmpty()?'':this.state.charpterOption[0]} onChange={this.handleFilterChange.bind(this,'charpter')}>
                   {
                     this.state.charpterList.map(v => (
                       <Option key={v.get('teaching_schedule_id')} value={v.get('teaching_schedule_id')} title={`${v.get('course')}第${v.get('hours')}课时`}>{`${v.get('course')}第${v.get('hours')}课时`}</Option>
@@ -362,14 +366,14 @@ const CreateClassPage = React.createClass({
               </Col>
               <Col span={14} offset={1}>
                 <div className={styles.filterItem}>
-                <Icon type='appstore'/>课程名称：<Input value={this.state.courseName} onChange={(e)=>{this.setState({courseName:e.target.value})}} size='large' placeholder="输入小于30个字" />
+                课程名称：<Input value={this.state.courseName} onChange={(e)=>{this.setState({courseName:e.target.value})}} size='large' placeholder="输入小于30个字" />
                 </div>
               </Col>
             </Row>
             <Row type='flex' gutter={8}>
               <Col span={24}>
                 <div className={styles.filterItem} style={{alignItems:'flex-start'}}>
-                  <Icon type='appstore' style={{lineHeight:'17px',fontSize:'12px'}}/>课程说明：<Input type='textarea' rows={3} value={this.state.courseDesc} onChange={(e)=>{this.setState({courseDesc:e.target.value})}} size='large' placeholder="请输入课程说明"/>
+                  课程说明：<Input type='textarea' rows={3} value={this.state.courseDesc} onChange={(e)=>{this.setState({courseDesc:e.target.value})}} size='large' placeholder="请输入课程说明"/>
                 </div>
               </Col>
             </Row>
@@ -379,7 +383,8 @@ const CreateClassPage = React.createClass({
           </div>
         </div>
         <div className={styles.footer}>
-          <Button type='primary' style={{marginRight:'10px'}} onClick={this.saveAsSchool.bind(this,'1')}>保存为学校课程</Button><Button type='primary' onClick={this.saveAsSchool.bind(this,'0')}>保存为个人课程</Button>
+          <Button type='primary' style={{marginRight:'10px'}} onClick={this.saveAsSchool.bind(this,'1')}>保存为学校课程</Button>
+		  <Button type='primary' style={{marginRight:'20px'}} onClick={this.saveAsSchool.bind(this,'0')}>保存为个人课程</Button>
         </div>
         {this.state.showHomeworkModal?<AddHomeworkModal currentSubject={this.state.subjectOption} onSubmit={(selectedHomeworks)=>{this.handleAddVideoHome(selectedHomeworks)}} onCancel={()=>{this.setState({showHomeworkModal:false})}} />:null}
         {this.state.showMicroClassModal?<AddMicroClassModal onSubmit={(selectedMircroVideos)=>{this.handleAddVideoHome(selectedMircroVideos)}} onCancel={()=>{this.setState({showMicroClassModal:false})}} subjectList={this.state.subjectList} versionList={this.state.versionList} termList={this.state.termList}/>:null}

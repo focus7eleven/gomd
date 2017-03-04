@@ -4,6 +4,8 @@ import styles from './NoteQuestion.scss'
 import {fromJS} from 'immutable'
 import {Row,Col,Button,Select,Rate,Input,InputNumber,Icon} from 'antd'
 import {updateQuestion,setScore,QUESTION_TYPE} from './exampaper-utils'
+import {addHttpPrefix} from '../../answer_homework/util';
+import {QUESTION_HEIGHT,OPTION_HEIGHT} from './constant';
 
 const NoteQuestion = React.createClass({
   getDefaultProps(){
@@ -76,30 +78,33 @@ const NoteQuestion = React.createClass({
   },
   //修改题目
   handleUpdateQuestion(value){
-    updateQuestion({
-      qid:this.props.questionInfo.get('id'),
-      examination:value,
-      comment:this.props.questionInfo.get('comment'),
-      description:this.props.questionInfo.get('description'),
-      difficulty:this.props.questionInfo.get('difficulty'),
-      kind:this.props.questionInfo.get('kind'),
-      drawZone:'',
-      score:this.props.questionInfo.get('score'),
-    })
-    this.props.onUpdate(this.props.questionInfo.get('id'),['examination'],value)
+      updateQuestion({
+          qid: this.props.questionInfo.get('id'),
+          examination: value,
+          comment: this.props.questionInfo.get('comment'),
+          description: this.props.questionInfo.get('description'),
+          difficulty: this.props.questionInfo.get('difficulty'),
+          kind: this.props.questionInfo.get('kind'),
+          drawZone: '',
+          score: this.props.questionInfo.get('score'),
+      })
+      this.props.onUpdate(this.props.questionInfo.get('id'), ['examination'], value)
+      this.setState({
+          editingQuestion: false,
+      });
   },
   //修改难度
   handlerSetHardness(value){
-    updateQuestion({
-      qid:this.props.questionInfo.get('id'),
-      examination:this.state.question,
-      comment:this.state.comment,
-      description:this.state.description,
-      difficulty:value,
-      kind:this.props.questionInfo.get('kind'),
-      drawZone:'',
-      score:this.state.score,
-    })
+      updateQuestion({
+          qid: this.props.questionInfo.get('id'),
+          examination: this.props.questionInfo.get('examination'),
+          comment: this.props.questionInfo.get('comment'),
+          description: this.props.questionInfo.get('description'),
+          difficulty: value,
+          kind: this.props.questionInfo.get('kind'),
+          drawZone: '',
+          score: this.props.questionInfo.get('score'),
+      });
     this.props.onUpdate(this.props.questionInfo.get('id'),['difficulty'],value)
   },
   //设定分值
@@ -124,7 +129,7 @@ const NoteQuestion = React.createClass({
             <Button onClick={this.handleAddBlank}>添加填空</Button>
           </Col>
           <Col span={6}>
-            <Select defaultValue={this.props.questionInfo.get('kind')} style={{width:'200px'}} onFocus={()=>{
+            <Select value={this.props.questionInfo.get('kind')} style={{width:'200px'}} onFocus={()=>{
               window.removeEventListener('click',this.handleWindowEvent)
             }} onBlur={()=>{
               window.addEventListener('click',this.handleWindowEvent)
@@ -168,7 +173,12 @@ const NoteQuestion = React.createClass({
           </div>
           <div className={styles.questionContent} onClick={this.handleEditQuestion} style={{padding:'20px',width:'90%'}}>
           {
-            this.state.editingQuestion?<div><Ueditor name={this.props.questionInfo.get('id')} initialContent={this.props.questionInfo.get('examination')||'请输入题目内容'} onDestory={this.handleUpdateQuestion}/></div>:<div dangerouslySetInnerHTML={{__html:this.props.questionInfo.get('examination')||'请输入题目内容'}}></div>
+            this.state.editingQuestion?<div>
+                    <Ueditor name={this.props.questionInfo.get('id')}
+                             initialContent={this.props.questionInfo.get('examination')||'请输入题目内容'}
+                             onDestory={this.handleUpdateQuestion.bind(this)}
+                             initialHeight={QUESTION_HEIGHT} />
+                </div>:<div dangerouslySetInnerHTML={{__html:addHttpPrefix(this.props.questionInfo.get('examination'))||'请输入题目内容'}}></div>
           }
           {
             this.state.showScoreSetting?<div onClick={(e)=>{e.stopPropagation()}}><InputNumber min={0} defaultValue={0}
