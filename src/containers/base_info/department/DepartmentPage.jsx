@@ -292,6 +292,7 @@ const DepartmentPage = React.createClass({
   handleShowAddMemberModal(key){
 
     this._currentRow = this.props.workspace.get('data').get('result').get(key)
+    console.log("asdasfd")
     fetch(config.api.officer.find.get('',this._currentRow.get('areaId')),{
       method:'get',
       headers:{
@@ -310,7 +311,7 @@ const DepartmentPage = React.createClass({
         },
       }).then(res => res.json()).then(res => {
         this.setState({
-          alreadySelectMembers:res.map(v => v.id),
+          alreadySelectMembers:res.map(v => v.userId),
           showAddMemberModal:true,
         })
       })

@@ -104,9 +104,9 @@ const SubjectPage = React.createClass({
     let errors = [getFieldError('subjectName'),getFieldError('subjectShortName'),getFieldError('remark')]
     if(!errors.reduce((pre,cur)=>pre||cur,false)){
       this.props.editSubject({
-        subjectName:getFieldValue('subjectName'),
-        subjectShortName:getFieldValue('subjectShortName'),
-        remark:getFieldValue('remark'),
+        subjectName:getFieldValue('subjectName')||'',
+        subjectShortName:getFieldValue('subjectShortName')||'',
+        remark:getFieldValue('remark')||'',
         action:'edit',
         subjectId:this._currentRow.get('subject_id')
       })
@@ -143,9 +143,9 @@ const SubjectPage = React.createClass({
     const {getFieldValue,getFieldError} = this.props.form
     if(getFieldValue('subjectName') && !(getFieldError('subjectName') || getFieldError('subjectShortName') || getFieldError('remark'))){
       this.props.addSubject({
-        subjectName:getFieldValue('subjectName'),
-        subjectShortName:getFieldValue('subjectShortName'),
-        remark:getFieldValue('remark')
+        subjectName:getFieldValue('subjectName')||'',
+        subjectShortName:getFieldValue('subjectShortName')||'',
+        remark:getFieldValue('remark')||''
       })
       this.setState({
         showAddSubjectModal:false

@@ -134,6 +134,8 @@ export function addMember(data){
             }).then(res => res.json()).then(res => {notification.success({message:'编辑成功'});return res})
           }
         })
+      }else{
+        notification.error({message:res.result})
       }
     })
   }
