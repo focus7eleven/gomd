@@ -1,6 +1,7 @@
 import _ from 'underscore'
 
-export const baseURL = "http://139.224.194.45:8080"
+// export const baseURL = "http://139.224.194.45:8080"
+export const baseURL = "http://192.168.168.187:8080"
 // export const baseURL = "http://127.0.0.1:8080"
 
 // App config the for development and deployment environment.
@@ -144,7 +145,7 @@ const config = _.extend({
 			// 获取学生家长
 			getPatriarch: (studentId) => `${baseURL}/patriarch/listPatriarchsByStudent?studentId=${studentId}`,
 			findPatriarch: (name) => `${baseURL}/patriarch/find?name=${name}`,
-			editPatriarch: `${baseURL}/student/patriarch/edit`,
+			editPatriarch: `${baseURL}/student/patriarch/editnew`,
 		},
 		department: {
 			post:`${baseURL}/cityDepartment/add`,

@@ -506,8 +506,8 @@ const VideoCreatePage = React.createClass({
                         </FormItem>
                     </Form>
                 </div>
-                <Row gutter={8}>
-                    <Col span={24} style={{textAlign:'right'}}>
+                <Row>
+                    <Col span={23} style={{textAlign:'right'}}>
                         <Button type='primary'  onClick={()=>this.handlePostVideo()}>保存微课</Button>
                     </Col>
                 </Row>

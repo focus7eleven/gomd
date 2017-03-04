@@ -54,7 +54,7 @@ export function editPatriarch(data){
       body: data
     }).then(res => res.json()).then(res => {
       if(res.title == 'Success'){
-        dispatch(getWorkspaceData('student','','','')).then(res => {notification.success(data.get('action')=='edit'?{message:'编辑成功'}:{message:'删除成功'});return res});
+        dispatch(getWorkspaceData('student','','','')).then(res => {notification.success({message:'编辑成功'});return res});
       }else{
         notification.error({message:'失败',description:'编辑失败'})
         return "error";

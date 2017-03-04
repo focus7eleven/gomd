@@ -73,6 +73,11 @@ const PatriarchPage = React.createClass({
       key: 'phone1',
       className:styles.tableColumn,
     },{
+      title: '电话2',
+      dataIndex: 'phone2',
+      key: 'phone2',
+      className:styles.tableColumn,
+    },{
       title: '常住地址',
       dataIndex: 'address',
       key: 'address',
