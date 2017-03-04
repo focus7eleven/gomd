@@ -7,6 +7,7 @@ import VideoModal from '../../../components/modal/VideoModal'
 import HomeworkDetailModal from '../../../components/modal/HomeworkDetailModal'
 import config,{baseURL} from '../../../config'
 import moment from 'moment'
+import {getVideoDetail} from '../../../actions/micro_course/main'
 
 const DetailPage = React.createClass({
   getInitialState(){
@@ -20,18 +21,18 @@ const DetailPage = React.createClass({
   },
   handleCheckDetail(currentRow){
     if(currentRow['content_name']=='微课'){
-      fetch(config.api.microvideo.getVideoDetailById(currentRow['content_id']),{
-        method:'get',
-        headers:{
-          'from':'nodejs',
-          'token':sessionStorage.getItem('accessToken'),
-        }
-      }).then(res => res.json()).then(res => {
-        this.setState({
-          showVidoeoDetailModal:true,
-          videoDetail: res,
-        })
+      this.props.getVideoDetail(currentRow['content_id'])
+      // fetch(config.api.microvideo.getVideoDetailById(currentRow['content_id']),{
+      //   method:'get',
+      //   headers:{
+      //     'from':'nodejs',
+      //     'token':sessionStorage.getItem('accessToken'),
+      //   }
+      // }).then(res => res.json()).then(res => {
+      this.setState({
+        showVidoeoDetailModal:true,
       })
+      // })
     }else{
       this.setState({
         showHomeworkDetailModal:true,
@@ -133,7 +134,7 @@ function mapStateToProps(state){
 }
 function mapDispatchToProps(dispatch){
   return {
-    // getTableData:bindActionCreators(getTableData,dispatch),
+    getVideoDetail:bindActionCreators(getVideoDetail,dispatch),
   }
 }
 

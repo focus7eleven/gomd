@@ -480,7 +480,7 @@ const ClassPage = React.createClass({
     const phaseList = this.props.workspace.get('phaseList');
     const gradeList = this.props.workspace.get('gradeList');
     return (
-      <Modal title={modalType==="add"?"添加班级":"编辑班级"} visible={modalVisibility}
+      <Modal maskClosable={false} title={modalType==="add"?"添加班级":"编辑班级"} visible={modalVisibility}
           onOk={modalType==="add"?this.handleAddRecord:this.handleEditRecord} data-visible={false} data-modaltype="" onCancel={this.handleModalDispaly}
         >
         <div>
@@ -634,7 +634,7 @@ const ClassPage = React.createClass({
       }
     }):[];
     return (
-      <Modal title="设置班主任" visible={classLeaderModalVisibility}
+      <Modal maskClosable={false} title="设置班主任" visible={classLeaderModalVisibility}
         onOk={this.handleSetLeader} onCancel={this.handleLeaderModalDisplay.bind(null,false,"")}
       >
         <div>
@@ -647,6 +647,9 @@ const ClassPage = React.createClass({
   renderTeacherModal(){
     const {modalSubjectTeacherData,searchSubjectTeacherName,searchSubjectTeacherWorkNum,workNumDropdownVisible,teacherNameDropdownVisible,currentSubject,teacherModalVisibility,subjectTeacherIndex} = this.state
     const columns = [{
+      title: '序号',
+      dataIndex: 'index',
+    },{
       title: '教师编号',
       dataIndex: 'workNum',
       filterDropdown: (
@@ -678,6 +681,9 @@ const ClassPage = React.createClass({
       ),
       filterDropdownVisible: teacherNameDropdownVisible,
       onFilterDropdownVisibleChange: visible => this.setState({teacherNameDropdownVisible: visible})
+    },{
+      title: '性别',
+      dataIndex: 'sex',
     }];
     const rowSelection = {
       type: "radio",
@@ -688,15 +694,19 @@ const ClassPage = React.createClass({
       },
       selectedRowKeys: subjectTeacherIndex[currentSubject],
     };
+    console.log("~~");
+    console.log(modalSubjectTeacherData);
     const data = modalSubjectTeacherData.length>=0?modalSubjectTeacherData.map((v,key) => {
       return {
+        index: key+1,
         key: v.userId,
         teacherName: v.teacherName,
         workNum: v.workNum,
+        sex: v.sexName,
       }
     }):[];
     return (
-      <Modal width={650} title="设置任课老师" visible={teacherModalVisibility}
+      <Modal maskClosable={false} width={650} title="设置任课老师" visible={teacherModalVisibility}
         onOk={this.handleSetTeacher} onCancel={this.handleTeacherModalDisplay.bind(null,false,"")}
       >
         <div>
@@ -725,6 +735,12 @@ const ClassPage = React.createClass({
     },{
       title: '学生姓名',
       dataIndex: 'stuName',
+    },{
+      title: '性别',
+      dataIndex: 'stuSexName',
+    },{
+      title: '身份证号',
+      dataIndex: 'id',
     }];
     const rowSelection = {
       onChange: (selectedRowKeys, selectedRows) => {
@@ -737,14 +753,19 @@ const ClassPage = React.createClass({
         key: v.studentId,
         stuName: v.stuName,
         stuNum: v.stuNum,
+        stuSexName: v.stuSexName,
+        id: v.id,
       }
     }):[];
     return (
-      <Modal title="设置班级学生" visible={studentModalVisibility}
+      <Modal maskClosable={false} title="设置班级学生" visible={studentModalVisibility}
         onOk={this.handleSetStudent} onCancel={this.handleStudentModalDisplay.bind(null,false,"")}
       >
         <div>
-          <Search style={{width:'260px',marginBottom:'5px'}} placeholder="请输入学生姓名或编号" value={this.state.searchStu} onChange={this.handleSearchStuChanged} onSearch={this.handleFindStudent} />
+          <div>
+            <Search style={{width:260,marginBottom:5,marginRight:10}} placeholder="请输入学生姓名或编号" value={this.state.searchStu} onChange={this.handleSearchStuChanged} onSearch={this.handleFindStudent} />
+            <span>(点击搜索按钮显示所有学生)</span>
+          </div>
           <Table pagination={false} rowSelection={rowSelection} columns={columns} dataSource={data} />
         </div>
       </Modal>

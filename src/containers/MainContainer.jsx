@@ -33,7 +33,7 @@ const MainContainer = React.createClass({
     if(temp == 'detail' || temp == 'video_detail'){
       let menuUrl2 = nextProps.location.pathname.split('/').slice(-3)[0]
       let path2 = !nextProps.menu.get('data').isEmpty()?findPath(nextProps.menu.get('data'),menuUrl2):List()
-      const tail = temp === 'detail' ? '课程内容' : '微课详情'
+      const tail = temp === 'detail' ? '课程内容' : '微课内容'
       this.setState({
         currentPath:path2.map(v => v.get('resourceName')).concat([tail])
       })

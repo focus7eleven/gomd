@@ -1,6 +1,6 @@
 import React from 'react'
 import styles from './VideoDetailPage.scss'
-import {Card,Icon,Button} from 'antd'
+import {Row,Col,Card,Icon,Button} from 'antd'
 import {likeVideo,collectVideo} from '../../../actions/micro_course/main'
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
@@ -55,23 +55,20 @@ const VideoDetailPage = React.createClass({
           </div>
           <div className={styles.body}>
             <div onClick={this.handlePlay} className={styles.videoContainer}>
-              <video ref="player" poster={baseURL+'/'+videoDetail.get('coverUrl')} className={styles.video} id={videoDetail.get('id')} controls>
+              <video ref="player" poster={baseURL+'/'+videoDetail.get('coverUrl')} style={{width:'100%'}} id={videoDetail.get('id')} controls>
                 <source src={baseURL+'/'+videoDetail.get('url')} type="video/mp4"/>
               </video>
             </div>
             <div className={styles.videoInfo}>
               <div className={styles.horiLayout}>
-                <Card className={styles.card} title={<span><Icon type='appstore'/>学科</span>} bordered={true}>
-                  {videoDetail.get('subjectName')}
-                </Card>
-                <Card className={styles.card} title={<span><Icon type='appstore'/>年级</span>} bordered={true}>
-                  {videoDetail.get('gradeName')}
-                </Card>
-                <Card className={styles.card} title={<span><Icon type='appstore'/>学期</span>} bordered={true}>
-                  {videoDetail.get('textbookMenuTerm')}
-                </Card>
-              </div>
-              <div className={styles.horiLayout}>
+                <div style={{width:'50%',display:'flex',flexDirection:'row'}}>
+                  <Card className={styles.card} title={<span><Icon type='appstore'/>学科（版本）</span>} bordered={true}>
+                    {videoDetail.get('subjectName')+"（"+videoDetail.get('versionId')+"）"}
+                  </Card>
+                  <Card className={styles.card} title={<span><Icon type='appstore'/>年级（学期）</span>} bordered={true}>
+                    {videoDetail.get('gradeName')+"（"+videoDetail.get('textbookMenuTerm')+"）"}
+                  </Card>
+                </div>
                 <Card className={styles.card} title={<span><Icon type='appstore'/>知识点</span>} bordered={true}>
                   {videoDetail.get('textBookMenuName')}
                 </Card>

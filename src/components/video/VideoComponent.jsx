@@ -112,7 +112,7 @@ const VideoComponent = React.createClass({
   renderModal(){
     const des = this.props.description;
     return (
-      <Modal width={672} wrapClassName={styles.modalWrapper} title='视频详情' visible={this.state.showVideoDetail}
+      <Modal width={672} wrapClassName={styles.modalWrapper} title='微课内容' visible={this.state.showVideoDetail}
         onCancel={this.handleCloseModal} footer={null}
       >
         <div className={styles.detailContainer}>

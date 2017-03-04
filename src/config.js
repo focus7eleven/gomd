@@ -144,6 +144,7 @@ const config = _.extend({
 			// 获取学生家长
 			getPatriarch: (studentId) => `${baseURL}/patriarch/listPatriarchsByStudent?studentId=${studentId}`,
 			findPatriarch: (name) => `${baseURL}/patriarch/find?name=${name}`,
+			editPatriarch: `${baseURL}/student/patriarch/edit`,
 		},
 		department: {
 			post:`${baseURL}/cityDepartment/add`,

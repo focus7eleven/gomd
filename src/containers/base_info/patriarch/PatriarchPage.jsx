@@ -40,6 +40,11 @@ const PatriarchPage = React.createClass({
     let tableBody = List()
     let authList = this._currentMenu.get('authList')
     tableHeader = fromJS([{
+      title: '序号',
+      dataIndex: 'key',
+      key: 'key',
+      className:styles.tableColumn,
+    },{
       title: '姓名',
       dataIndex: 'name',
       key: 'name',
@@ -53,6 +58,11 @@ const PatriarchPage = React.createClass({
         return (text=="M"?"男":(text=="F"?"女":""))
       }
     },{
+      title: '关系',
+      dataIndex: 'relation',
+      key: 'relation',
+      className:styles.tableColumn,
+    },{
       title: '身份证号',
       dataIndex: 'cid',
       key: 'cid',
@@ -61,11 +71,6 @@ const PatriarchPage = React.createClass({
       title: '电话1',
       dataIndex: 'phone1',
       key: 'phone1',
-      className:styles.tableColumn,
-    },{
-      title: '关系',
-      dataIndex: 'relation',
-      key: 'relation',
       className:styles.tableColumn,
     },{
       title: '常住地址',
@@ -96,7 +101,7 @@ const PatriarchPage = React.createClass({
     }))
     tableBody = !this.props.workspace.get('data').isEmpty()?this.props.workspace.get('data').get('result').map( (v,key) => {
       return {
-        key:key,
+        key:key+1,
         ...(v.toJS())
       }
     }):List()

@@ -43,6 +43,26 @@ export function editStaff(data,type){
   }
 }
 
+export function editPatriarch(data){
+  return dispatch => {
+    return fetch(config.api.staff.editPatriarch,{
+      method:'post',
+      headers:{
+        'from':'nodejs',
+        'token':sessionStorage.getItem('accessToken'),
+      },
+      body: data
+    }).then(res => res.json()).then(res => {
+      if(res.title == 'Success'){
+        dispatch(getWorkspaceData('student','','','')).then(res => {notification.success(data.get('action')=='edit'?{message:'编辑成功'}:{message:'删除成功'});return res});
+      }else{
+        notification.error({message:'失败',description:'编辑失败'})
+        return "error";
+      }
+    })
+  }
+}
+
 export const GET_ALL_AREAS = actionNames('GET_ALL_AREAS')
 
 export function getAllAreas(){
