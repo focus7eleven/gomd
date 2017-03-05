@@ -24,6 +24,7 @@ const Ueditor = React.createClass({
             initialFrameHeight: this.props.initialHeight,
             wordCount:false,
             elementPathEnabled:false,
+            zIndex:0,
         });
         // this.ue.setContent(this.props.initialContent)
         // this.ue.destroy = ()=>{
