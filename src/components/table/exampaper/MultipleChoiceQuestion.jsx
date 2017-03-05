@@ -68,7 +68,12 @@ const MultipleChoiceQuestion = React.createClass({
             className: styles.columnsNo,
             width: 50,
             render: (text, record) => {
-                return <div onClick={(e) => {
+                return <div style={{
+                  height: '50px',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }} onClick={(e) => {
                     e.stopPropagation()
                 }}>{selectComponent(record)}</div>
             }
