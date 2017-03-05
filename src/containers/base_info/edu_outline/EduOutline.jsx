@@ -191,6 +191,7 @@ const EduOutlinePage = React.createClass({
     });
   },
   handleCloseAddTextbookModal(type){
+    console.log("Asdf")
     switch (type) {
       case 'create':
         this.setState({
@@ -332,11 +333,106 @@ const EduOutlinePage = React.createClass({
       })
     })
   },
+  renderEditTextbookModal(type){
+    const {getFieldDecorator,getFieldValue} = this.props.form
+    return (
+      <Modal title={type=='edit'?'编辑教学大纲':'添加教学大纲'} visible={this.state.showEditTextbookModal} onCancel={this.handleCloseAddTextbookModal.bind(this,type)} maskClosable={false}
+      footer={[
+        <Button key='cancel' type='ghost' onClick={this.handleCloseAddTextbookModal.bind(this,type)}>取消</Button>,
+        <Button key='ok' type='primary'
+        disabled={!getFieldValue('phase')&&!getFieldValue('grade')&&!getFieldValue('subject')&&!getFieldValue('term')&&(type=='create')}
+        onClick={type=='edit'?this.handleEditTextbook:this.handleAddTextbook}>确认</Button>
+      ]}
+      >
+        <div>
+          <Form>
+            <FormItem
+            label='学段'
+            labelCol={{ span: 5 }}
+            wrapperCol={{ span: 12 }}
+            key='phase'>
+            {getFieldDecorator('phase', {
+              rules: [{ required: true, message: '输入学段' }],
+            })(
+              this.renderSelectBar(this._phaseList,'学段',this.filterGrade)
+            )}
+            </FormItem>
+            <FormItem
+            label='年级'
+            labelCol={{ span: 5 }}
+            wrapperCol={{ span: 12 }}
+            key='grade'>
+            {getFieldDecorator('grade', {
+              rules: [{ required: true, message: '输入年级' }],
+            })(
+              this.renderSelectBar(this.state.gradeList,'年级')
+            )}
+            </FormItem>
+            <FormItem
+            label='学科'
+            labelCol={{ span: 5 }}
+            wrapperCol={{ span: 12 }}
+            key='subject'>
+            {getFieldDecorator('subject', {
+              rules: [{ required: true, message: '输入学科' },{max:20,message:'输入不超过20个字'}],
+            })(
+              this.renderSelectBar(this._subjectList,'学科')
+            )}
+            </FormItem>
+            <FormItem
+            label='学期'
+            labelCol={{ span: 5 }}
+            wrapperCol={{ span: 12 }}
+            key='term'>
+            {getFieldDecorator('term', {
+              rules: [{ required: true, message: '输入学期' }],
+            })(
+              this.renderSelectBar(this._termList,'学期')
+            )}
+            </FormItem>
+            <FormItem
+            label='发布年份'
+            labelCol={{ span: 5 }}
+            wrapperCol={{ span: 12 }}
+            key='year'>
+            {getFieldDecorator('year', {
+              rules: [{ required: true, message: '输入发布年份' }],
+            })(
+              <InputNumber style={{width:200}} placeholder="输入发布年份"/>
+            )}
+            </FormItem>
+            <FormItem
+            label='大纲版本'
+            labelCol={{ span: 5 }}
+            wrapperCol={{ span: 12 }}
+            key='version'>
+            {getFieldDecorator('version', {
+              rules: [{ required: true, message: '输入大纲版本' }],
+            })(
+              this.renderSelectBar(this._versionList,'大纲版本')
+            )}
+            </FormItem>
+            <FormItem
+            label='备注'
+            labelCol={{ span: 5 }}
+            wrapperCol={{ span: 12 }}
+            key='comment'>
+            {getFieldDecorator('comment', {
+              rules: [],
+            })(
+              <Input style={{width:200}} placeholder="输入备注"/>
+            )}
+            </FormItem>
+          </Form>
+        </div>
+      </Modal>
+    )
+  },
   renderAddTextbookModal(type){
     const {getFieldDecorator,getFieldValue} = this.props.form
     console.log("Asdfasdf:",getFieldValue('comment'),type)
     return (
-      <Modal title={type=='edit'?'编辑教学大纲':'添加教学大纲'} visible={this.state.showEditTextbookModal} onCancel={this.handleCloseAddTextbookModal.bind(this,type)} maskClosable={false}
+      <Modal title={type=='edit'?'编辑教学大纲':'添加教学大纲'} visible={this.state.showAddTextbookModal} onCancel={this.handleCloseAddTextbookModal.bind(this,type)} maskClosable={false}
       footer={[
         <Button key='cancel' type='ghost' onClick={this.handleCloseAddTextbookModal.bind(this,type)}>取消</Button>,
         <Button key='ok' type='primary'
@@ -479,10 +575,20 @@ const EduOutlinePage = React.createClass({
     const tableData = this.getTableData()
 
     const {workspace} = this.props
+    const {setFieldsValue} = this.props.form
     return (
       <div className={styles.container}>
         <div className={styles.header}>
-          {this._currentMenu.get('authList').some(v => v.get('authUrl')=='/textbook/add')?<Button type="primary" style={{backgroundColor:'#FD9B09',borderColor:'#FD9B09'}} onClick={()=>{this.setState({showAddTextbookModal:true})}}>新建</Button>:<div> </div>}
+          {this._currentMenu.get('authList').some(v => v.get('authUrl')=='/textbook/add')?<Button type="primary" style={{backgroundColor:'#FD9B09',borderColor:'#FD9B09'}} onClick={()=>{
+            setFieldsValue({
+              phase:'',
+              grade:'',
+              subject:'',
+              term:'',
+              year:'',
+              version:'',
+            })
+            this.setState({showAddTextbookModal:true})}}>新建</Button>:<div> </div>}
           <div className={styles.headerOperation}>
             <Select
               className={styles.operation}
@@ -541,8 +647,8 @@ const EduOutlinePage = React.createClass({
             <div className={styles.tableMsg}>当前条目{workspace.get('data').get('start')}-{parseInt(workspace.get('data').get('start'))+parseInt(workspace.get('data').get('pageShow'))}/总条目{workspace.get('data').get('totalCount')}</div>
           </div>
         </div>
-        {this.state.showAddTextbookModal?this.renderAddTextbookModal('create'):null}
-        {this.renderAddTextbookModal('edit')}
+        {this.renderAddTextbookModal('create')}
+        {this.renderEditTextbookModal('edit')}
         {this.state.showTextbookDetailModal?this.renderTextbookDetailModal():null}
         <input type='file' ref='fileInput' style={{display:'none'}} onChange={this.handleFileChange}/>
       </div>

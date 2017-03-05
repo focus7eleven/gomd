@@ -61,7 +61,7 @@ const AddHomeworkModal = React.createClass({
     })
   },
   getTableData(){
-    return this.state.homeworkList.isEmpty()?[]:this.state.homeworkList.get('result').map((v,k) => v.set('key',k).set('num',k)).toJS()
+    return this.state.homeworkList.isEmpty()?[]:this.state.homeworkList.get('result').map((v,k) => v.set('key',k).set('num',k+1)).toJS()
   },
   render(){
     const microClassTypeList =fromJS([{id:'1',text:'公共微课'},{id:'2',text:'学校微课'},{id:'3',text:'个人微课'}])
