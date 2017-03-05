@@ -1,7 +1,7 @@
 import _ from 'underscore'
 
-// export const baseURL = "http://139.224.194.45:8080"
-export const baseURL = "http://192.168.168.187:8080"
+export const baseURL = "http://139.224.194.45:8080"
+// export const baseURL = "http://192.168.168.187:8080"
 // export const baseURL = "http://127.0.0.1:8080"
 
 // App config the for development and deployment environment.

@@ -8,10 +8,16 @@ import {getMenu} from '../../actions/menu'
 import styles from './NavigationMini.scss'
 import logo from 'images/logo.png'
 import ChangeUserDropDown from './ChangeUserDropdown'
+import menuRoutePath from '../../routeConfig';
+
 const SubMenu = Menu.SubMenu;
 const MenuItemGroup = Menu.ItemGroup;
 
 const NavigationMini = React.createClass({
+  contextTypes: {
+    router: React.PropTypes.object
+  },
+
   getDefaultProps(){
     return {
       menu:[]
@@ -21,21 +27,43 @@ const NavigationMini = React.createClass({
     return {
       openMenu:false,
       showChangeUser:false,
+      currentPath: '',
     }
   },
 
   componentDidMount(){
     this.props.user.get('accessToken')||sessionStorage.getItem('accessToken')?this.props.getMenu(this.props.user.get('accessToken')):null
   },
+
+  handleSelectParent(value,e){
+    console.log(value);
+    value!==''?this.setState({currentPath: value}):null;
+  },
+
+  handleSelectMenu(e){
+    const url = e.target.getAttribute('data-url');
+    if(menuRoutePath[url] != null ) {
+      /* 将3级菜单对应的route path进行重新规划，这样可以复用一些container。
+       * 如果获取不到重新规划的route path，就用之前的逻辑 */
+      this.context.router.push(menuRoutePath[url].path)
+    }else{
+      this.context.router.push(`/index/${this.state.currentPath}/${url}`)
+    }
+  },
+
   renderNavigate(menu){
     return menu.map( (v,key) => {
-      if(!v.get('childResources')){
+      if(v.get('childResources').size===0){
         return (
-          <Menu.Item key={v.get('resourceName')}>{v.get('resourceName')}</Menu.Item>
+          <Menu.Item key={v.get('resourceName')}>
+            <div data-url={v.get('resourceUrl')} onClick={this.handleSelectMenu}>
+              {v.get('resourceName')}
+            </div>
+          </Menu.Item>
         )
       }else{
         return (
-          <SubMenu key={v.get('resourceName')} title={<span>{v.get('resourceName')}</span>}>
+          <SubMenu key={v.get('resourceName')} onTitleClick={this.handleSelectParent.bind(null,v.get('resourceUrl'))} title={<span>{v.get('resourceName')}</span>}>
             {
               this.renderNavigate(v.get('childResources'))
             }
@@ -44,6 +72,7 @@ const NavigationMini = React.createClass({
       }
     })
   },
+
   render(){
     return (
         <div className={styles.navigationMini}>
@@ -68,7 +97,7 @@ const NavigationMini = React.createClass({
           <Motion defaultStyle={{x: -240}} style={this.state.openMenu ? {x: spring(0)} : {x: spring(-240)}}>
               {interpolatingStyle => (
                   <div style={{left: interpolatingStyle.x + 'px'}} className={styles.leftNavigation}>
-                    <Menu style={{width: 240, height: '100%'}} mode="horizontal">
+                    <Menu style={{width: 240, height: '100%'}} mode="inline">
                         {!this.props.menu.get('data').isEmpty() ? this.renderNavigate(this.props.menu.get('data')) : null}
                     </Menu>
                   </div>
