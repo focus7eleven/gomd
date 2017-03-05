@@ -261,7 +261,17 @@ const CreateClassPage = React.createClass({
       dataIndex:'type',
       key:'type',
       render:(text,record)=>{
-        return text=='video'?'微课':(<Select size='large' value={this.state.homeworkType} onChange={(value)=>{this.setState({homeworkType:value})}} style={{width:'200px'}}>
+        console.log("ndndndnd:",record)
+        return text=='video'?'微课':(<Select size='large' value={''+record.homeworkKind} onChange={(value)=>{
+          this.setState({
+          videoHomeworkList:this.state.videoHomeworkList.map(v => {
+            if(v.get('homework_id')==record.key){
+              return v.set('homeworkKind',value)
+            }else{
+              return v
+            }
+          })
+        })}} style={{width:'200px'}}>
             <Option value='1' title='课后作业' key='1'>课后作业</Option>
             <Option value='2' title='预习作业' key='2'>预习作业</Option>
           </Select>)
@@ -281,6 +291,7 @@ const CreateClassPage = React.createClass({
         return (<Button className={styles.deleteButton} onClick={this.handleDeleteVideoHomework.bind(this,record.key)}>删除</Button>)
       }
     }]
+    console.log("asdf-->:",this.state.videoHomeworkList.toJS())
     const tableData = this.state.videoHomeworkList.map(v => {
       if(v.get('type')=='video'){
         return {
@@ -288,6 +299,7 @@ const CreateClassPage = React.createClass({
           type:v.get('type'),
           name:v.get('name'),
           createdAt:v.get('createdAt'),
+          ...v.toJS()
         }
       }else{
         return {
@@ -295,6 +307,7 @@ const CreateClassPage = React.createClass({
           type:v.get('type'),
           name:v.get('homework_name'),
           createdAt:v.get('create_dt'),
+          ...v.toJS()
         }
       }
     }).toJS()

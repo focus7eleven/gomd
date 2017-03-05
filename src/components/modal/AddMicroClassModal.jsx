@@ -167,7 +167,7 @@ const AddMicroClassModal = React.createClass({
       createdAt:v.get('createdAt'),
       description:v.get('description'),
       key:v.get('id'),
-      num:k
+      num:k+1
     })).toJS()
   },
   render(){
