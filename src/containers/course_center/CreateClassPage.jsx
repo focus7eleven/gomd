@@ -60,7 +60,7 @@ const CreateClassPage = React.createClass({
         }).then(res => res.json()).then(res => {
           return {
             subjectList:subjectList,
-            gradeList:fromJS(res)
+            gradeList:fromJS(res),
           }
         })
       }),
@@ -111,6 +111,7 @@ const CreateClassPage = React.createClass({
           gradeList,
           versionList,
           subjectList,
+          gradeOption:gradeList.get(0).get('gradeId')
         })
         return {
           ...result,
@@ -261,7 +262,6 @@ const CreateClassPage = React.createClass({
       dataIndex:'type',
       key:'type',
       render:(text,record)=>{
-        console.log("ndndndnd:",record)
         return text=='video'?'微课':(<Select size='large' value={''+record.homeworkKind} onChange={(value)=>{
           this.setState({
           videoHomeworkList:this.state.videoHomeworkList.map(v => {
@@ -291,7 +291,6 @@ const CreateClassPage = React.createClass({
         return (<Button className={styles.deleteButton} onClick={this.handleDeleteVideoHomework.bind(this,record.key)}>删除</Button>)
       }
     }]
-    console.log("asdf-->:",this.state.videoHomeworkList.toJS())
     const tableData = this.state.videoHomeworkList.map(v => {
       if(v.get('type')=='video'){
         return {
