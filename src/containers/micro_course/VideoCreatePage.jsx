@@ -286,15 +286,15 @@ const VideoCreatePage = React.createClass({
        const versionOptions = this.state.versionList.toJS();
         const {getFieldDecorator} = this.props.form;
         const {showAddVideoModal,textbook,canSelectTextbook} = this.state;
-        const formItemLayout = {labelCol:{span:5},wrapperCol:{span:12}};
+        const formItemLayout = {labelCol:{span:8},wrapperCol:{span:12}};
         return (
             <div className={styles.container}>
                 <div className={styles.body}>
                 <div className={styles.title1}>
                     <span className={styles.text1}><Icon type='file-text' />微课</span>
                 </div>
-                    <Row gutter={8} className={styles.topRow}>
-                        <Col span={6} >
+                    <div className={styles.topRow}>
+                        <div>
                             <Form>
                             <FormItem
                                 label='年级'
@@ -322,8 +322,8 @@ const VideoCreatePage = React.createClass({
                                 }
                             </FormItem>
                             </Form>
-                        </Col>
-                        <Col span={6} style={{textAlign:'left'}}>
+                        </div>
+                        <div>
                             <Form>
                             <FormItem
                                 label='学科'
@@ -351,8 +351,8 @@ const VideoCreatePage = React.createClass({
                                 }
                             </FormItem>
                             </Form>
-                        </Col>
-                        <Col span={6}>
+                        </div>
+                        <div>
                             <FormItem
                                 label='学期'
                                 {...formItemLayout}
@@ -375,8 +375,8 @@ const VideoCreatePage = React.createClass({
                                     )
                                 }
                             </FormItem>
-                        </Col>
-                        <Col span={6}>
+                        </div>
+                        <div>
                             <FormItem
                                 label='版本'
                                 {...formItemLayout}
@@ -402,14 +402,15 @@ const VideoCreatePage = React.createClass({
                                     )
                                 }
                             </FormItem>
-                        </Col>
-                    </Row>
-                    <Row gutter={8}>
-                        <Col span={12} >
+                        </div>
+                    </div>
+                    <div className={styles.secondRow}>
+                        <div>
                         <Form>
                         <FormItem
                             label='章节课程'
-                            {...formItemLayout}
+                            labelCol={{span:4}}
+                            wrapperCol={{span:18}}
                             key='textbookMenuId'
                         >
                             {
@@ -432,12 +433,13 @@ const VideoCreatePage = React.createClass({
                             }
                         </FormItem>
                         </Form>
-                        </Col>
-                        <Col span={12} >
+                        </div>
+                        <div>
                             <Form>
                                 <FormItem
-                                    label='微视频名称'
-                                    {...formItemLayout}
+                                    label='视频名称'
+                                    labelCol={{span:4}}
+                                    wrapperCol={{span:18}}
                                     key='name'
                                 >
                                     {
@@ -458,13 +460,15 @@ const VideoCreatePage = React.createClass({
                                     }
                                 </FormItem>
                             </Form>
-                        </Col>
-                    </Row>
-                <Row gutter={8}>
+                        </div>
+                    </div>
+                <div>
                     <Form>
                         <FormItem
-                            label='微视频文件'
-                            {...formItemLayout}
+                            label='视频文件'
+                            labelCol={{span:2}}
+                            wrapperCol={{span:4}}
+                            // {...formItemLayout}
                             key='file'
                         >
                             {
@@ -478,7 +482,9 @@ const VideoCreatePage = React.createClass({
                     <Form>
                         <FormItem
                             label='简介'
-                            {...formItemLayout}
+                            labelCol={{span:2}}
+                            wrapperCol={{span:21}}
+                            // {...formItemLayout}
                             key='description'
                         >
                             {
@@ -499,9 +505,9 @@ const VideoCreatePage = React.createClass({
                             }
                         </FormItem>
                     </Form>
-                </Row>
-                <Row gutter={8}>
-                    <Col span={24} style={{textAlign:'right'}}>
+                </div>
+                <Row>
+                    <Col span={23} style={{textAlign:'right'}}>
                         <Button type='primary'  onClick={()=>this.handlePostVideo()}>保存微课</Button>
                     </Col>
                 </Row>

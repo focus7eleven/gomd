@@ -220,3 +220,26 @@
 :global(.ant-select-search){
   list-style:none;
 }
+
+:global(.ant-input-preSuffix-wrapper){
+  z-index: 0;
+}
+
+:global(.ant-menu-item:hover){
+  color: $primary-color;
+}
+:global(.ant-menu-item-active){
+  color: $primary-color;
+}
+:global(.ant-menu-submenu-active){
+  color: $primary-color;
+}
+:global(.ant-menu-submenu-title:hover){
+  color: $primary-color;
+}
+:global(.ant-menu-item-selected){
+  color: $primary-color;
+}
+:global(.ant-menu-inline .ant-menu-item-selected){
+  border-right: 3px solid $primary-color;
+}

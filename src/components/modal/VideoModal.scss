@@ -6,6 +6,8 @@
     flex-direction: column;
 
     >div:first-child{
+      width: 90%;
+      margin: 0 auto;
       :local(.microVideo){
         top: 0px;
         left: 0px;

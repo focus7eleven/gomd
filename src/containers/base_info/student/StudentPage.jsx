@@ -4,7 +4,7 @@ import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
 import {Row,Col,Upload,Select,DatePicker,Icon,Input,Table,Button,Modal,Form} from 'antd'
 import PermissionDic from '../../../utils/permissionDic'
-import {downloadExcel,importExcel,editStaff,addStaff,getWorkspaceData} from '../../../actions/workspace'
+import {editPatriarch,downloadExcel,importExcel,editStaff,addStaff,getWorkspaceData} from '../../../actions/workspace'
 import {fromJS,Map,List} from 'immutable'
 import {findMenuInTree} from '../../../reducer/menu'
 import TableComponent from '../../../components/table/TableComponent'
@@ -36,9 +36,13 @@ const StudentPage = React.createClass({
       studentClassList: [],
       classModalVisibility: false,
       // 设置家长
+      listLoading: false,
+      initialRelated: [],
+      currentList: [], // 有关系的家长
       studentPatriarchList: [], // 有关系的家长
       patriarchList: [], // 所有家长
       patriarchModalVisibility: false,
+      setPatriarchLoading: false,
     }
   },
 
@@ -81,7 +85,10 @@ const StudentPage = React.createClass({
       key: 'classCount',
       className:styles.tableColumn,
       render: (text,record) => {
-        return <a onClick={this.handleClassModalDisplay.bind(null,true,record.key)}>所属班级个数：{text}</a>
+        const classNames = !record.classes?'':record.classes.slice(0,2).reduce((pre,cur)=>{
+          return (pre.className||'') + cur.className + '、'
+        },'').slice(0,-1)
+        return <a onClick={this.handleClassModalDisplay.bind(null,true,record.key)}>所属班级个数：{text}{text>0?("【"+classNames+"】"):null}</a>
       }
     },{
       title: '家长',
@@ -89,7 +96,7 @@ const StudentPage = React.createClass({
       key: 'patriarchCount',
       className:styles.tableColumn,
       render: (text,record) => {
-        return <a onClick={this.handlePatriarchModalDisplay.bind(null,true,record.key)}>{this.props.userStyle=='15'?<Icon type="edit"/>:null}家长个数：{text}</a>
+        return <a onClick={this.handlePatriarchModalDisplay.bind(null,true,record.key)}>{this.props.userStyle=='15'?<Icon type="edit"/>:null}家长人数：{text}</a>
       }
     }])
     tableHeader = tableHeader.concat(authList.filter(v => (v.get('authUrl').split('/')[2] != 'import')&&(v.get('authUrl').split('/')[2] != 'view')&&(v.get('authUrl').split('/')[2] != 'add')).map( v => {
@@ -124,6 +131,7 @@ const StudentPage = React.createClass({
     const editMode = this.props.userStyle == '15'
     if(visibility){
       this._studentId = this.props.workspace.get('data').get('result').get(key).get('studentId');
+      this.setState({listLoading: true, patriarchModalVisibility: visibility})
       if(!editMode){
         fetch(config.api.staff.getPatriarch(this._studentId),{
           method:'GET',
@@ -132,7 +140,7 @@ const StudentPage = React.createClass({
             'token':sessionStorage.getItem('accessToken'),
           }
         }).then(res => res.json()).then((json)=>{
-          this.setState({patriarchModalVisibility: visibility,studentPatriarchList: json})
+          this.setState({listLoading: false,studentPatriarchList: fromJS(json)})
         })
       }else{
         fetch(config.api.staff.getPatriarch(this._studentId),{
@@ -151,7 +159,7 @@ const StudentPage = React.createClass({
           }).then(res => res.json()).then((list)=>{
             const xor = _.xorBy(list,json,'userId')
             const studentPatriarchList = json.concat(xor)
-            this.setState({patriarchModalVisibility: visibility,studentPatriarchList})
+            this.setState({listLoading: false,initialRelated:json,currentList:fromJS(studentPatriarchList),studentPatriarchList: fromJS(studentPatriarchList)})
           })
         })
       }
@@ -314,12 +322,28 @@ const StudentPage = React.createClass({
     })
   },
 
-  handleLoadPatriarch(value){
-    console.log(value);
+  handleLoadPatriarch(index,value){
+    let studentPatriarchList = this.state.studentPatriarchList;
+    studentPatriarchList = studentPatriarchList.update(index, v => v.set('relation',value))
+    this.setState({studentPatriarchList})
   },
 
   handleSetPatriarch(){
-
+    this.setState({setPatriarchLoading: true})
+    const {studentPatriarchList} = this.state;
+    const related = studentPatriarchList.filter((v)=>v.get('relation'))
+    let result = []
+    related.forEach((item)=>{
+      result.push({patriarchId: item.get('userId'), relation: item.get('relation')})
+    })
+    console.log(result);
+    console.log(JSON.stringify(result));
+    let formData = new FormData()
+    formData.append('studentId', this._studentId)
+    formData.append('currList', JSON.stringify(result))
+    this.props.editPatriarch(formData).then(res => {
+      this.setState({setPatriarchLoading: false})
+    })
   },
 
   renderImportModal(){
@@ -522,14 +546,17 @@ const StudentPage = React.createClass({
   },
 
   renderPatriarchModal(){
-    const {patriarchModalVisibility, studentPatriarchList,patriarchList} = this.state
+    const {setPatriarchLoading,listLoading,patriarchModalVisibility, studentPatriarchList,patriarchList} = this.state
     const editMode = this.props.userStyle == '15'
     const columns = editMode?[{
       title: '姓名',
       dataIndex: 'name',
     },{
-      title: '电话',
+      title: '电话1',
       dataIndex: 'phone1',
+    },{
+      title: '电话2',
+      dataIndex: 'phone2',
     },{
       title: '常住地址',
       dataIndex: 'address',
@@ -538,10 +565,10 @@ const StudentPage = React.createClass({
       dataIndex: 'relation',
       render: (text,record) => {
         return (
-          <Select style={{'width':80}} value={text} onChange={this.handleLoadPatriarch}>
+          <Select style={{'width':80}} value={text} onChange={this.handleLoadPatriarch.bind(null,record.key)}>
             {
               relations.map((item,index)=>{
-                return <Option key={item.code} value={item.name}>{item.name}</Option>
+                return <Option key={item.code} value={item.value}>{item.name}</Option>
               })
             }
           </Select>
@@ -553,8 +580,11 @@ const StudentPage = React.createClass({
       title: '姓名',
       dataIndex: 'name',
     },{
-      title: '电话',
+      title: '电话1',
       dataIndex: 'phone1',
+    },{
+      title: '电话2',
+      dataIndex: 'phone2',
     },{
       title: '常住地址',
       dataIndex: 'address',
@@ -562,21 +592,23 @@ const StudentPage = React.createClass({
       title: '关系',
       dataIndex: 'relation',
     }];
-    const data = studentPatriarchList.length>=0?studentPatriarchList.map((v,key) => {
+    const data = studentPatriarchList.size>=0?studentPatriarchList.map((v,key) => {
       return {
         key: key,
-        name: v.name,
-        phone1: v.phone1,
-        address: v.address,
-        relation: v.relation||'无关系',
+        name: v.get('name'),
+        phone1: v.get('phone1'),
+        phone2: v.get('phone2'),
+        address: v.get('address'),
+        userId: v.get('userId'),
+        relation: v.get('relation')||'无关系',
       }
-    }):[];
+    }).toJS():[];
     return (
-      <Modal title={editMode?"设置学生家长":"学生家长"} visible={patriarchModalVisibility}
-        onOk={this.handleSetPatriarch} onCancel={this.handlePatriarchModalDisplay.bind(null,false,"")}
+      <Modal maskClosable={!editMode} title={editMode?"设置学生家长":"学生家长"} visible={patriarchModalVisibility}
+        confirmLoading={setPatriarchLoading} onOk={this.handleSetPatriarch} onCancel={this.handlePatriarchModalDisplay.bind(null,false,"")}
       >
         <div>
-          <Table pagination={false} columns={columns} dataSource={data} />
+          <Table loading={listLoading} pagination={false} columns={columns} dataSource={data} />
         </div>
       </Modal>
     )
@@ -593,6 +625,9 @@ const StudentPage = React.createClass({
     },{
       title: '所属年级',
       dataIndex: 'gradeName',
+    },{
+      title: '班主任',
+      dataIndex: 'classAdviserName',
     }];
     const data = studentClassList.length>=0?studentClassList.map((v,key) => {
       return {
@@ -600,10 +635,11 @@ const StudentPage = React.createClass({
         className: v.className,
         schoolName: v.schoolName,
         gradeName: v.gradeName,
+        classAdviserName: v.classAdviserName,
       }
     }):[];
     return (
-      <Modal title="查看学生所在班级" visible={classModalVisibility}
+      <Modal title="学生所在班级" visible={classModalVisibility}
         onOk={this.handleClassModalDisplay.bind(null,false,"")} onCancel={this.handleClassModalDisplay.bind(null,false,"")}
       >
         <div>
@@ -660,6 +696,7 @@ function mapDispatchToProps(dispatch){
     getWorkspaceData: bindActionCreators(getWorkspaceData,dispatch),
     addStaff: bindActionCreators(addStaff,dispatch),
     editStaff: bindActionCreators(editStaff,dispatch),
+    editPatriarch: bindActionCreators(editPatriarch,dispatch),
     downloadExcel: bindActionCreators(downloadExcel,dispatch),
     importExcel: bindActionCreators(importExcel,dispatch),
   }

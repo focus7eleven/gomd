@@ -12,8 +12,21 @@
     }
     :local(.topRow){
       margin-top:20px;
-      :local(.leftCol){
-        border-right:1px solid #cccccc;
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      >div{
+        width: 25%;
+      }
+    }
+    :local(.secondRow){
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      >div{
+        width: 50%;
       }
     }
     :local(.tableDarkRow) {

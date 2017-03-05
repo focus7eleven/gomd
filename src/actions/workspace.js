@@ -229,6 +229,7 @@ export const GET_ALL_AREAS = require('./staff').GET_ALL_AREAS
 export const getAllAreas = require('./staff').getAllAreas
 export const addStaff = require('./staff').addStaff
 export const editStaff = require('./staff').editStaff
+export const editPatriarch = require('./staff').editPatriarch
 export const downloadExcel = require('./staff').downloadExcel
 export const importExcel = require('./staff').importExcel
 export const setTeacherRole = require('./staff').setTeacherRole
