@@ -63,7 +63,7 @@ const VideoDetailPage = React.createClass({
               <div className={styles.horiLayout}>
                 <div style={{width:'50%',display:'flex',flexDirection:'row'}}>
                   <Card className={styles.card} title={<span><Icon type='appstore'/>学科（版本）</span>} bordered={true}>
-                    {videoDetail.get('subjectName')+"（"+videoDetail.get('versionId')+"）"}
+                    {videoDetail.get('subjectName')+"（"+videoDetail.get('versionName')+"）"}
                   </Card>
                   <Card className={styles.card} title={<span><Icon type='appstore'/>年级（学期）</span>} bordered={true}>
                     {videoDetail.get('gradeName')+"（"+videoDetail.get('textbookMenuTerm')+"）"}

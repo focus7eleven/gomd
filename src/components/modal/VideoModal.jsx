@@ -57,8 +57,7 @@ const VideoModal = React.createClass({
               </div>
             </div>
             <div style={{marginBottom:"18px"}}>
-              {/* TODO change prop */}
-              <span className={styles.firstLine}><span>学科（版本）：</span>{videoDetail.subjectName+"（"+videoDetail.versionId+"）"}</span>
+              <span className={styles.firstLine}><span>学科（版本）：</span>{videoDetail.subjectName+"（"+videoDetail.versionName+"）"}</span>
               <span className={styles.firstLineEnd}><span>年级（学期）：</span>{videoDetail.gradeName+"（"+videoDetail.textbookMenuTerm+"）"}</span>
             </div>
             <div style={{marginBottom:"18px"}}>

@@ -580,6 +580,9 @@ const StudentPage = React.createClass({
       title: '姓名',
       dataIndex: 'name',
     },{
+      title: '关系',
+      dataIndex: 'relation',
+    },{
       title: '电话1',
       dataIndex: 'phone1',
     },{
@@ -588,9 +591,6 @@ const StudentPage = React.createClass({
     },{
       title: '常住地址',
       dataIndex: 'address',
-    },{
-      title: '关系',
-      dataIndex: 'relation',
     }];
     const data = studentPatriarchList.size>=0?studentPatriarchList.map((v,key) => {
       return {

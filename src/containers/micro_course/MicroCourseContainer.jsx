@@ -9,14 +9,12 @@ const MicroCourseContainer = React.createClass({
   componentDidMount(){
     if(this.props.location.pathname.split('/').length<=4){
         const pathname = this.props.location.pathname.split('/').slice(-1)[0];
-        console.log('pathname1 ='+pathname)
         pathname === 'createvideo' ? null:this.props.getTableData(pathname,'',1)
     }
   },
 
   componentWillReceiveProps(nextProps){
       const pathname = nextProps.location.pathname.split('/').slice(-1)[0];
-      console.log('pathname ='+pathname)
     if(nextProps.location.pathname.split('/').length<=4 && !this.props.microCourse.get('loading') && (nextProps.microCourse.get('data').isEmpty() || (this.props.location.pathname != nextProps.location.pathname))){
         pathname === 'createvideo'?null:this.props.getTableData(nextProps.location.pathname.split('/').slice(-1)[0],'',1)
     }

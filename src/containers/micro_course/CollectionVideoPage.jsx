@@ -62,9 +62,6 @@ const CollectionVideoPage = React.createClass({
                 <Menu.Item key="hot">
                   热门
                 </Menu.Item>
-                <Menu.Item key="recommend">
-                  推荐
-                </Menu.Item>
                 <Menu.Item key="newest">
                   最新
                 </Menu.Item>
