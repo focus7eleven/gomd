@@ -16,6 +16,7 @@ import {
   FIND_STUDENT,
   GET_STUDENT_FOR_CLASS,
   SEARCH_SCHOOL,
+  GET_GROUP_STAFF,
 } from '../actions/workspace'
 import {findPath} from '../reducer/menu'
 import {fromJS} from 'immutable'
@@ -37,6 +38,8 @@ const initialState = fromJS({
   classSubject: [],
   classSubjectTeacher: [],
   studentForClassList: [],
+  groupTeacher: [],
+  groupPatriarch: [],
 })
 
 export default (state = initialState,action)=>{
@@ -81,6 +84,10 @@ export default (state = initialState,action)=>{
       return state.set('loading',true)
     case SEARCH_SCHOOL[1]:
       return state.set('data',fromJS(action.data.mainData)).set('loading',false).set('otherMsg',fromJS(action.data.otherMsg))
+    case GET_GROUP_STAFF:
+      const {type,result} = action.payload
+      state = type==='teacher'?state.set('groupTeacher',result):state.set('groupPatriarch',result)
+      return state
     default:
       return state
   }

@@ -68,3 +68,33 @@ export function editSubject(data){
     })
   }
 }
+
+export function editGroupStaff(data){
+  return dispatch => {
+    return fetch(config.api.staff.editGroupStaff,{
+      method:'post',
+      headers:{
+        'from':'nodejs',
+        'token':sessionStorage.getItem('accessToken'),
+      },
+      body: data
+    }).then(res => res.json()).then(res => {
+      if(res.title == 'Success'){
+        dispatch({
+          types:GET_WORKSPACEDATA,
+          callAPI:()=>{
+            return fetch(config.api.workspace.baseInfo.baseData.get('group/made','','',''),{
+              method:'GET',
+              headers:{
+                'from':'nodejs',
+                'token':sessionStorage.getItem('accessToken'),
+              }
+            }).then(res => res.json()).then(res => {notification.success({message:'编辑成功'});return res})
+          }
+        })
+      }else{
+        notification.error({message:'编辑失败',description:res.result})
+      }
+    })
+  }
+}
