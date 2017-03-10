@@ -243,3 +243,30 @@
 :global(.ant-menu-inline .ant-menu-item-selected){
   border-right: 3px solid $primary-color;
 }
+
+:global(.ant-radio-button-wrapper-checked){
+  color: $primary-color;
+  border-color: $primary-color;
+  box-shadow: none;
+
+  &:first-child{
+    color: $primary-color;
+    border-color: $primary-color;
+  }
+
+  &:hover{
+    box-shadow: none;
+    color: $primary-color;
+    border-color: $primary-color;
+  }
+}
+
+:global(.ant-radio-button-wrapper:hover){
+  color: $primary-color;
+  border-color: $primary-color;
+}
+
+:global(.ant-radio-button-wrapper-focused){
+  color: $primary-color;
+  border-color: $primary-color;
+}

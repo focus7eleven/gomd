@@ -2,12 +2,14 @@ import React from 'react'
 import styles from './MadeGroupPage.scss'
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
-import {Icon,Input,Table,Button,Modal,Form} from 'antd'
+import {Radio,Icon,Input,Table,Button,Modal,Form} from 'antd'
 import PermissionDic from '../../../utils/permissionDic'
 import {addMadeGroup,getWorkspaceData} from '../../../actions/workspace'
 import {fromJS,Map,List} from 'immutable'
 import {findMenuInTree} from '../../../reducer/menu'
 
+const RadioButton = Radio.Button;
+const RadioGroup = Radio.Group;
 const FormItem = Form.Item
 const Search = Input.Search
 
@@ -23,8 +25,10 @@ const MadeGroupPage = React.createClass({
   getInitialState(){
     return {
       searchStr: "",
+      searchMemberStr: "",
       modalVisibility: false,
       modalType: "",
+      memberModalVisibility: false,
     }
   },
 
@@ -63,6 +67,11 @@ const MadeGroupPage = React.createClass({
       dataIndex: 'memberCount',
       key: 'memberCount',
       className:styles.tableColumn,
+      render: (text, record) => {
+        return (
+          <a onClick={this.handleMemberModalVisibility.bind(null,true)}>群组人数：{text}</a>
+        )
+      }
     }])
     tableHeader = tableHeader.concat(authList.filter(v => (v.get('authUrl').split('/')[2] != 'view')&&(v.get('authUrl').split('/')[2] != 'add')).map( v => {
       return {
@@ -113,6 +122,14 @@ const MadeGroupPage = React.createClass({
     this.props.getWorkspaceData('madegroup',this.props.workspace.get('data').get('nowPage'),this.props.workspace.get('data').get('pageShow'),value)
   },
 
+  handleSearchMemberStrChanged(e){
+    this.setState({searchMemberStr: e.target.value});
+  },
+
+  handleSearchMember(value){
+    console.log(value);
+  },
+
   handleEditGroup(key){
     console.log(key);
   },
@@ -137,6 +154,37 @@ const MadeGroupPage = React.createClass({
       })
       this.setState({modalVisibility: visibility,modalType: 'edit'});
     }
+  },
+
+  handleMemberModalVisibility(visibility){
+    this.setState({memberModalVisibility:visibility})
+  },
+
+  handleMemberConfirm(){
+  },
+
+  handleMemberTypeChanged(e){
+    const value = e.target.value;
+    console.log(value);
+  },
+
+  renderMemberModal(){
+    const {memberModalVisibility} = this.state
+    return (
+      <Modal title="群组人员" visible={memberModalVisibility} maskClosable={false}
+        onOk={this.handleMemberConfirm} onCancel={this.handleMemberModalVisibility.bind(null,false)}>
+        <div>
+          <div className={styles.modalHeader}>
+            <RadioGroup onChange={this.handleMemberTypeChanged} defaultValue="teacher">
+              <RadioButton value="teacher">教师</RadioButton>
+              <RadioButton value="patriarch">家长</RadioButton>
+            </RadioGroup>
+            <Search style={{width:'200px'}} placeholder="请输入人员姓名" value={this.state.searchMemberStr} onChange={this.handleSearchMemberStrChanged} onSearch={this.handleSearchMember} />
+          </div>
+
+        </div>
+      </Modal>
+    )
   },
 
   renderModal(){
@@ -243,6 +291,7 @@ const MadeGroupPage = React.createClass({
           </div>
         </div>
         {this.renderModal()}
+        {this.renderMemberModal()}
       </div>
     )
   }
