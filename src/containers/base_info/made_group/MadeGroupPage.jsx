@@ -7,6 +7,8 @@ import PermissionDic from '../../../utils/permissionDic'
 import {editGroupStaff,getGroupStaff,addMadeGroup,getWorkspaceData} from '../../../actions/workspace'
 import {fromJS,Map,List} from 'immutable'
 import {findMenuInTree} from '../../../reducer/menu'
+import config from '../../../config.js'
+import _ from 'lodash'
 
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
@@ -28,6 +30,9 @@ const MadeGroupPage = React.createClass({
       searchMemberStr: "",
       modalVisibility: false,
       modalType: "",
+      memberType: "teacher",
+      memberIndex: [],
+      memberList: [],
       memberModalVisibility: false,
     }
   },
@@ -70,7 +75,7 @@ const MadeGroupPage = React.createClass({
       className:styles.tableColumn,
       render: (text, record) => {
         return (
-          <a onClick={this.handleMemberModalVisibility.bind(null,true)}>群组人数：{text}</a>
+          <a onClick={this.handleMemberModalVisibility.bind(null,true,record.groupId)}>群组人数：{text}</a>
         )
       }
     }])
@@ -128,7 +133,8 @@ const MadeGroupPage = React.createClass({
   },
 
   handleSearchMember(value){
-    console.log(value);
+    const {memberType,searchMemberStr} = this.state
+    this.props.getGroupStaff(memberType,searchMemberStr);
   },
 
   handleEditGroup(key){
@@ -148,7 +154,6 @@ const MadeGroupPage = React.createClass({
     }else{
       const {setFieldsValue} = this.props.form
       this._currentRow = this.props.workspace.get('data').get('result').get(type)
-      console.log(this._currentRow.toJS());
       setFieldsValue({
         'groupName':this._currentRow.get('groupName'),
         'groupDesc':this._currentRow.get('groupDesc'),
@@ -157,32 +162,84 @@ const MadeGroupPage = React.createClass({
     }
   },
 
-  handleMemberModalVisibility(visibility){
-    this.setState({memberModalVisibility:visibility})
+  handleMemberModalVisibility(visibility,key){
+    if(visibility){
+      this.props.getGroupStaff('teacher','');
+      this._groupId = key
+      fetch(config.api.group.getCurrentGroupMember(this._groupId),{
+        method:'GET',
+        headers:{
+          'from':'nodejs',
+          'token':sessionStorage.getItem('accessToken'),
+        }
+      }).then(res => res.json()).then((json)=>{
+        const memberIndex = json.map((item)=>item.userId)
+        this.setState({memberIndex,memberList:json,memberType:'teacher',memberModalVisibility:visibility})
+      })
+    }else{
+      this.setState({memberModalVisibility:visibility})
+    }
   },
 
   handleMemberConfirm(){
+    const {memberIndex} = this.state
+    let formData = new FormData()
+    formData.append('groupId',this._groupId)
+    formData.append('addList',memberIndex)
+    this.editGroupStaff(formData)
+    this.setState({memberModalVisibility:false})
   },
 
   handleMemberTypeChanged(e){
     const value = e.target.value;
-    console.log(value);
+    this.setState({memberType: value})
   },
 
   renderMemberModal(){
-    const {memberModalVisibility} = this.state
+    const {memberIndex,memberList,memberType,memberModalVisibility} = this.state
+    console.log("current: ",memberList);
+    const teacherList = this.props.workspace.get('groupTeacher')
+    const patriarchList = this.props.workspace.get('groupPatriarch')
+    const columns = [{
+      title: '用户编号',
+      dataIndex: 'userCode',
+    },{
+      title: '姓名',
+      dataIndex: 'realName',
+    },{
+      title: '电话号码',
+      dataIndex: 'phoneNum',
+    }];
+    let dataList = memberType === 'teacher' ? teacherList.toJS() : patriarchList.toJS();
+    dataList = _.unionBy(memberList,dataList,'userId')
+
+    const data = dataList.length>=0?dataList.map((v,key) => {
+      return {
+        key: v.userId,
+        userId: v.userId,
+        userCode: v.userCode,
+        realName: v.realName,
+        phoneNum: v.phoneNum,
+      }
+    }):[];
+    const rowSelection = {
+      onChange: (selectedRowKeys, selectedRows) => {
+        this.setState({memberIndex: selectedRowKeys, memberList: selectedRows});
+      },
+      selectedRowKeys: memberIndex,
+    };
     return (
       <Modal title="群组人员" visible={memberModalVisibility} maskClosable={false}
-        onOk={this.handleMemberConfirm} onCancel={this.handleMemberModalVisibility.bind(null,false)}>
+        onOk={this.handleMemberConfirm} onCancel={this.handleMemberModalVisibility.bind(null,false,'')}>
         <div>
           <div className={styles.modalHeader}>
-            <RadioGroup onChange={this.handleMemberTypeChanged} defaultValue="teacher">
+            <RadioGroup onChange={this.handleMemberTypeChanged} value={memberType} defaultValue="teacher">
               <RadioButton value="teacher">教师</RadioButton>
               <RadioButton value="patriarch">家长</RadioButton>
             </RadioGroup>
             <Search style={{width:'200px'}} placeholder="请输入人员姓名" value={this.state.searchMemberStr} onChange={this.handleSearchMemberStrChanged} onSearch={this.handleSearchMember} />
           </div>
-
+          <Table pagination={false} rowSelection={rowSelection} columns={columns} dataSource={data} />
         </div>
       </Modal>
     )

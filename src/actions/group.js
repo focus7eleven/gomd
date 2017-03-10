@@ -1,4 +1,5 @@
 import {GET_WORKSPACEDATA} from './workspace'
+import {actionNames} from '../utils/action-utils'
 import config from '../config.js'
 import {notification} from 'antd'
 
@@ -96,5 +97,21 @@ export function editGroupStaff(data){
         notification.error({message:'编辑失败',description:res.result})
       }
     })
+  }
+}
+
+export const GET_CURRENT_GROUP_MEMBER = actionNames('GET_CURRENT_GROUP_MEMBER')
+export function getCurrentGroupMember(groupId){
+  return {
+    types: GET_CURRENT_GROUP_MEMBER,
+    callAPI: () => {
+      return fetch(config.api.group.getCurrentGroupMember(groupId),{
+        method:'GET',
+        headers:{
+          'from':'nodejs',
+          'token':sessionStorage.getItem('accessToken'),
+        }
+      }).then(res => res.json())
+    }
   }
 }

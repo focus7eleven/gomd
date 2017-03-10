@@ -225,6 +225,8 @@ export const GET_ALL_RESOURCES = require('./resource').GET_ALL_RESOURCES
 
 export const addMadeGroup = require('./group').addMadeGroup
 export const editGroupStaff = require('./group').editGroupStaff
+export const GET_CURRENT_GROUP_MEMBER = require('./group').GET_CURRENT_GROUP_MEMBER
+export const getCurrentGroupMember = require('./group').getCurrentGroupMember
 
 export const GET_ALL_AREAS = require('./staff').GET_ALL_AREAS
 export const getAllAreas = require('./staff').getAllAreas

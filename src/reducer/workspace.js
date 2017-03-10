@@ -19,7 +19,7 @@ import {
   GET_GROUP_STAFF,
 } from '../actions/workspace'
 import {findPath} from '../reducer/menu'
-import {fromJS} from 'immutable'
+import {fromJS,List} from 'immutable'
 import _ from 'lodash'
 
 const initialState = fromJS({
@@ -38,8 +38,8 @@ const initialState = fromJS({
   classSubject: [],
   classSubjectTeacher: [],
   studentForClassList: [],
-  groupTeacher: [],
-  groupPatriarch: [],
+  groupTeacher: List(),
+  groupPatriarch: List(),
 })
 
 export default (state = initialState,action)=>{
@@ -86,7 +86,7 @@ export default (state = initialState,action)=>{
       return state.set('data',fromJS(action.data.mainData)).set('loading',false).set('otherMsg',fromJS(action.data.otherMsg))
     case GET_GROUP_STAFF:
       const {type,result} = action.payload
-      state = type==='teacher'?state.set('groupTeacher',result):state.set('groupPatriarch',result)
+      state = type==='teacher'?state.set('groupTeacher',fromJS(result)):state.set('groupPatriarch',fromJS(result))
       return state
     default:
       return state

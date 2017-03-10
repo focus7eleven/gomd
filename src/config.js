@@ -129,6 +129,7 @@ const config = _.extend({
 			editMadeGroup: `${baseURL}/group/edit`,
 			getByTeacherForHomework:`${baseURL}/group/getByTeacherForHomework`,
 			getAllGroupByType:`${baseURL}/group/getAllGroupByType`,
+			getCurrentGroupMember: (groupId) => `${baseURL}/group/custom_users?groupId=${groupId}`,
 		},
 		staff: {
 			addStaff: (type) => `${baseURL}/${type}/add`,
