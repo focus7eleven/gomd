@@ -4,7 +4,7 @@ import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
 import {Radio,Icon,Input,Table,Button,Modal,Form} from 'antd'
 import PermissionDic from '../../../utils/permissionDic'
-import {editGroupStaff,getGroupStaff,addMadeGroup,getWorkspaceData} from '../../../actions/workspace'
+import {editGroupStaff,getGroupStaff,editMadeGroup,addMadeGroup,getWorkspaceData} from '../../../actions/workspace'
 import {fromJS,Map,List} from 'immutable'
 import {findMenuInTree} from '../../../reducer/menu'
 import config from '../../../config.js'
@@ -14,6 +14,7 @@ const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
 const FormItem = Form.Item
 const Search = Input.Search
+const confirm = Modal.confirm
 
 const MadeGroupPage = React.createClass({
   _currentMenu:Map({
@@ -38,7 +39,6 @@ const MadeGroupPage = React.createClass({
   },
 
   componentWillMount(){
-    // this.props.getGroupStaff('teacher','');
     if(!this.props.menu.get('data').isEmpty()){
       this._currentMenu = findMenuInTree(this.props.menu.get('data'),'madegroup')
     }
@@ -74,8 +74,9 @@ const MadeGroupPage = React.createClass({
       key: 'memberCount',
       className:styles.tableColumn,
       render: (text, record) => {
+        const hasAuth = authList.find(v => v.get('authName') === '操作')
         return (
-          <a onClick={this.handleMemberModalVisibility.bind(null,true,record.groupId)}>群组人数：{text}</a>
+          hasAuth?<a onClick={this.handleMemberModalVisibility.bind(null,true,record.groupId)}>群组人数：{text}</a>:<span>群组人数：{text}</span>
         )
       }
     }])
@@ -89,7 +90,7 @@ const MadeGroupPage = React.createClass({
           return (
             <div>
               <Button className={styles.editButton} type="primary" onClick={this.handleModalDispaly.bind(this,true,record.key)}>编辑</Button>
-              <Button className={styles.deleteButton} type="primary" onClick={this.handleDeleteGroup.bind(this,record.key)}>删除</Button>
+              <Button className={styles.deleteButton} type="primary" onClick={this.handleDeleteGroup.bind(this,record.groupId)}>删除</Button>
             </div>
           )
         }
@@ -137,12 +138,35 @@ const MadeGroupPage = React.createClass({
     this.props.getGroupStaff(memberType,searchMemberStr);
   },
 
-  handleEditGroup(key){
-    console.log(key);
+  handleEditGroup(){
+    const {getFieldValue,getFieldError} = this.props.form
+    if(getFieldValue('groupName') && !(getFieldError('groupName') || getFieldError('groupDesc'))){
+      this.props.editMadeGroup({
+        groupId: this._groupId,
+        groupName:getFieldValue('groupName'),
+        groupDesc:getFieldValue('groupDesc'),
+        action: 'edit'
+      })
+      this.setState({
+        modalVisibility:false
+      })
+    }
   },
 
   handleDeleteGroup(key){
-    console.log(key);
+    const that = this
+    confirm({
+      title: '确定删除这条记录吗？',
+      content: '删除后不可恢复',
+      onOk() {
+        that.props.editMadeGroup({
+          groupId: key,
+          action: 'delete'
+        })
+      },
+      onCancel() {},
+    });
+
   },
 
   handleModalDispaly(visibility,type){
@@ -154,6 +178,7 @@ const MadeGroupPage = React.createClass({
     }else{
       const {setFieldsValue} = this.props.form
       this._currentRow = this.props.workspace.get('data').get('result').get(type)
+      this._groupId = this._currentRow.get('groupId')
       setFieldsValue({
         'groupName':this._currentRow.get('groupName'),
         'groupDesc':this._currentRow.get('groupDesc'),
@@ -186,7 +211,7 @@ const MadeGroupPage = React.createClass({
     let formData = new FormData()
     formData.append('groupId',this._groupId)
     formData.append('addList',memberIndex)
-    this.editGroupStaff(formData)
+    this.props.editGroupStaff(formData)
     this.setState({memberModalVisibility:false})
   },
 
@@ -197,7 +222,6 @@ const MadeGroupPage = React.createClass({
 
   renderMemberModal(){
     const {memberIndex,memberList,memberType,memberModalVisibility} = this.state
-    console.log("current: ",memberList);
     const teacherList = this.props.workspace.get('groupTeacher')
     const patriarchList = this.props.workspace.get('groupPatriarch')
     const columns = [{
@@ -365,6 +389,7 @@ function mapDispatchToProps(dispatch){
   return {
     getWorkspaceData: bindActionCreators(getWorkspaceData,dispatch),
     addMadeGroup: bindActionCreators(addMadeGroup,dispatch),
+    editMadeGroup: bindActionCreators(editMadeGroup,dispatch),
     getGroupStaff: bindActionCreators(getGroupStaff,dispatch),
     editGroupStaff: bindActionCreators(editGroupStaff,dispatch),
   }

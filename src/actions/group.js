@@ -36,13 +36,16 @@ export function addMadeGroup(data){
   }
 }
 
-export function editSubject(data){
+export function editMadeGroup(data){
   return dispatch => {
     let formData = new FormData()
-    formData.append('groupName',data.groupName)
-    formData.append('groupDesc',data.groupDesc)
+    formData.append('groupId',data.groupId)
     formData.append('action',data.action)
-    return fetch(config.api.group.edit,{
+    if(data.action=='edit'){
+      formData.append('groupName',data.groupName)
+      formData.append('groupDesc',data.groupDesc)
+    }
+    return fetch(config.api.group.editMadeGroup,{
       method:'post',
       headers:{
         'from':'nodejs',
@@ -54,7 +57,7 @@ export function editSubject(data){
         dispatch({
           types:GET_WORKSPACEDATA,
           callAPI:()=>{
-            return fetch(config.api.workspace.baseInfo.baseData.get('subject','','',''),{
+            return fetch(config.api.workspace.baseInfo.baseData.get('group/made','','',''),{
               method:'GET',
               headers:{
                 'from':'nodejs',
@@ -64,7 +67,7 @@ export function editSubject(data){
           }
         })
       }else{
-        notification.error({message:'失败',description:'编辑失败'})
+        notification.error({message:'失败',description:'操作失败'})
       }
     })
   }

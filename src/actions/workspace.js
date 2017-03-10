@@ -224,6 +224,7 @@ export const updateAuth = require('./resource').updateAuth
 export const GET_ALL_RESOURCES = require('./resource').GET_ALL_RESOURCES
 
 export const addMadeGroup = require('./group').addMadeGroup
+export const editMadeGroup = require('./group').editMadeGroup
 export const editGroupStaff = require('./group').editGroupStaff
 export const GET_CURRENT_GROUP_MEMBER = require('./group').GET_CURRENT_GROUP_MEMBER
 export const getCurrentGroupMember = require('./group').getCurrentGroupMember
