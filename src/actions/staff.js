@@ -144,3 +144,26 @@ export function setTeacherRole(data){
     })
   }
 }
+
+export const GET_GROUP_STAFF = 'GET_GROUP_STAFF'
+export function getGroupStaff(type,filter){
+  return dispatch => {
+    return fetch(config.api.staff.getGroupStaff(type,filter),{
+      method:'GET',
+      headers:{
+        'from':'nodejs',
+        'token':sessionStorage.getItem('accessToken'),
+      },
+    }).then(res => res.json()).then(res => {
+      if(res.length > 0){
+        dispatch({
+          type: GET_GROUP_STAFF,
+          payload: {
+            type,
+            result: res
+          }
+        })
+      }
+    })
+  }
+}

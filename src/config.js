@@ -146,6 +146,8 @@ const config = _.extend({
 			getPatriarch: (studentId) => `${baseURL}/patriarch/listPatriarchsByStudent?studentId=${studentId}`,
 			findPatriarch: (name) => `${baseURL}/patriarch/find?name=${name}`,
 			editPatriarch: `${baseURL}/student/patriarch/editnew`,
+			getGroupStaff: (type,filter) => `${baseURL}/${type}/findWithAdd?filter=${filter}&addList=`,
+			editGroupStaff: `${baseURL}/group/users/edit`,
 		},
 		department: {
 			post:`${baseURL}/cityDepartment/add`,

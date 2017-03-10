@@ -4,7 +4,7 @@ import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
 import {Radio,Icon,Input,Table,Button,Modal,Form} from 'antd'
 import PermissionDic from '../../../utils/permissionDic'
-import {addMadeGroup,getWorkspaceData} from '../../../actions/workspace'
+import {editGroupStaff,getGroupStaff,addMadeGroup,getWorkspaceData} from '../../../actions/workspace'
 import {fromJS,Map,List} from 'immutable'
 import {findMenuInTree} from '../../../reducer/menu'
 
@@ -33,6 +33,7 @@ const MadeGroupPage = React.createClass({
   },
 
   componentWillMount(){
+    // this.props.getGroupStaff('teacher','');
     if(!this.props.menu.get('data').isEmpty()){
       this._currentMenu = findMenuInTree(this.props.menu.get('data'),'madegroup')
     }
@@ -307,6 +308,8 @@ function mapDispatchToProps(dispatch){
   return {
     getWorkspaceData: bindActionCreators(getWorkspaceData,dispatch),
     addMadeGroup: bindActionCreators(addMadeGroup,dispatch),
+    getGroupStaff: bindActionCreators(getGroupStaff,dispatch),
+    editGroupStaff: bindActionCreators(editGroupStaff,dispatch),
   }
 }
 

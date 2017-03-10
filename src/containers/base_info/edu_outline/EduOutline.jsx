@@ -581,12 +581,12 @@ const EduOutlinePage = React.createClass({
         <div className={styles.header}>
           {this._currentMenu.get('authList').some(v => v.get('authUrl')=='/textbook/add')?<Button type="primary" style={{backgroundColor:'#FD9B09',borderColor:'#FD9B09'}} onClick={()=>{
             setFieldsValue({
-              phase:'',
-              grade:'',
-              subject:'',
-              term:'',
+              phase:undefined,
+              grade:undefined,
+              subject:undefined,
+              term:undefined,
               year:'',
-              version:'',
+              version:undefined,
             })
             this.setState({showAddTextbookModal:true})}}>新建</Button>:<div> </div>}
           <div className={styles.headerOperation}>

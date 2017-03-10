@@ -16,7 +16,7 @@
   }
   :local(.columnsNo){
     @include centric;
-
+    padding:0;
     :global(.ant-radio-wrapper) {
       margin-right:0;
     }
